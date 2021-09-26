@@ -1,5 +1,7 @@
 package com.api.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -12,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.model.Group;
+import com.api.model.SPRSResponse;
 import com.api.model.User;
+import com.api.services.GroupServices;
 import com.api.services.UserServices;
 
 @RestController
@@ -23,6 +28,9 @@ public class UserController {
 	@Autowired
 	UserServices userService; 
 	
+	@Autowired
+	GroupServices groupServ;
+	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public User getUser(@Validated @RequestBody User bean) {
 		logger.info("Start save User");
@@ -32,11 +40,24 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	public User saveEmployee(@Validated @RequestBody User bean) {
+	public ResponseEntity<?> saveEmployee(@Validated @RequestBody User bean) {
 		logger.info("Start save User");
 		User u = userService.findByUsername(bean.getUsername());
-		logger.info("Start save Success");
-		return userService.save(bean);
+		if(u!=null) {
+			return ResponseEntity.ok(new SPRSResponse("201", "", "Username is existed!"));
+		}else {
+			List<Group> lstTem = bean.getGroups_user();
+			for (Group group : lstTem) {
+				Group grTemp = groupServ.getById(group.getId());
+				if(grTemp == null) {
+					return ResponseEntity.ok(new SPRSResponse("202","","Group not Found!"));
+				}else {
+					userService.save(bean);
+				}
+			}
+		}
+		logger.info("End save User");
+		return ResponseEntity.ok(new SPRSResponse("101", "Create user success!", ""));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.PUT)

@@ -54,6 +54,8 @@ public class User extends BaseEntity implements Serializable{
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
 	private List<Group> groups_user = new ArrayList<Group>();
+	
+	
 
 //	@OneToMany(mappedBy = "user_rp")
 //	private List<ReliefPoint> reliefPoints = new ArrayList<ReliefPoint>();
@@ -77,12 +79,12 @@ public class User extends BaseEntity implements Serializable{
 //		this.devices = devices;
 //	}
 
-	public List<Group> getGroups() {
+	public List<Group> getGroups_user() {
 		return groups_user;
 	}
 
-	public void setGroups(List<Group> groups) {
-		this.groups_user = groups;
+	public void setGroups_user(List<Group> groups_user) {
+		this.groups_user = groups_user;
 	}
 
 	public String getUsername() {
@@ -147,9 +149,5 @@ public class User extends BaseEntity implements Serializable{
 
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 }
