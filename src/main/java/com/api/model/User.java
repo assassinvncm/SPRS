@@ -53,7 +53,7 @@ public class User extends BaseEntity implements Serializable{
 	@JoinTable(name = "user_group",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
-	private List<Group> groups = new ArrayList<Group>();
+	private List<Group> groups_user = new ArrayList<Group>();
 
 //	@OneToMany(mappedBy = "user_rp")
 //	private List<ReliefPoint> reliefPoints = new ArrayList<ReliefPoint>();
@@ -78,11 +78,11 @@ public class User extends BaseEntity implements Serializable{
 //	}
 
 	public List<Group> getGroups() {
-		return groups;
+		return groups_user;
 	}
 
 	public void setGroups(List<Group> groups) {
-		this.groups = groups;
+		this.groups_user = groups;
 	}
 
 	public String getUsername() {

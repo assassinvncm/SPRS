@@ -29,15 +29,15 @@ public class Permission extends BaseEntity implements Serializable{
 	@Column(name = "description")
 	private String description;
 
-	@ManyToMany(mappedBy = "permissions")
-	private List<Group> groups = new ArrayList<Group>();
+	@ManyToMany(mappedBy = "group_permission")
+	private List<Group> groups_link = new ArrayList<Group>();
 	
 	public List<Group> getGroups() {
-		return groups;
+		return groups_link;
 	}
 
 	public void setGroups(List<Group> groups) {
-		this.groups = groups;
+		this.groups_link = groups;
 	}
 
 	public static long getSerialversionuid() {

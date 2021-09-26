@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
-@Table(name = "Group")
+@Table(name = "Groups")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Group extends BaseEntity implements Serializable{
 	/**
@@ -27,26 +27,26 @@ public class Group extends BaseEntity implements Serializable{
 	@Column(name = "level")
 	private int level;
 	
-	@ManyToMany(mappedBy = "groups")
-	private List<User> users = new ArrayList<User>();
+	@ManyToMany(mappedBy = "groups_user")
+	private List<User> users_groups = new ArrayList<User>();
 	
 	@ManyToMany
 	@JoinTable(name = "group_permission",
 			joinColumns = @JoinColumn(name = "group_id"),
 			inverseJoinColumns = @JoinColumn(name = "permission_id"))
-	List<Permission> permissions = new ArrayList<Permission>();
+	List<Permission> group_permission = new ArrayList<Permission>();
 	
 	public List<Permission> getPermissions() {
-		return permissions;
+		return group_permission;
 	}
 	public void setPermissions(List<Permission> permissions) {
-		this.permissions = permissions;
+		this.group_permission = permissions;
 	}
 	public List<User> getUsers() {
-		return users;
+		return users_groups;
 	}
 	public void setUsers(List<User> users) {
-		this.users = users;
+		this.users_groups = users;
 	}
 	public String getName() {
 		return name;
