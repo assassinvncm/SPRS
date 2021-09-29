@@ -1,6 +1,8 @@
 package com.api.controller;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +48,10 @@ public class UserController {
 		if(u!=null) {
 			return ResponseEntity.ok(new SPRSResponse("201", "", "Username is existed!"));
 		}else {
-			List<Group> lstTem = bean.getGroups_user();
+			Collection<Group> lstTem = bean.getGroups_user();
 			for (Group group : lstTem) {
-				Group grTemp = groupServ.getById(group.getId());
-				if(grTemp == null) {
+				Optional<Group> grTemp = groupServ.findById(group.getId());
+				if(grTemp.isEmpty()) {
 					return ResponseEntity.ok(new SPRSResponse("202","","Group not Found!"));
 				}else {
 					userService.save(bean);
@@ -63,14 +65,14 @@ public class UserController {
 	@RequestMapping(value = "/user", method = RequestMethod.PUT)
 	public ResponseEntity<User> updateEmployee(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
 		logger.info("Start update User id: "+id);
-		User employee = userService.getOne(id);
-		if(employee == null) {
+		User user = userService.getOne(id);
+		if(user == null) {
 			ResponseEntity.notFound().build();
 		}
 		
-		BeanUtils.copyProperties(bean, employee);
+		BeanUtils.copyProperties(bean, user);
 
 		logger.info("End update User id: "+id);
-		return ResponseEntity.ok(userService.save(employee));
+		return ResponseEntity.ok(userService.save(user));
 	}
 }

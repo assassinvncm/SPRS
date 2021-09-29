@@ -2,8 +2,10 @@ package com.api.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -12,7 +14,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "Permission")
+@Table(name = "SPRS_Permission")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Permission extends BaseEntity implements Serializable{
 
@@ -30,9 +32,9 @@ public class Permission extends BaseEntity implements Serializable{
 	private String description;
 
 	@ManyToMany(mappedBy = "group_permission")
-	private List<Group> groups_link = new ArrayList<Group>();
+	private Collection<Group> groups_link = new ArrayList<Group>();
 	
-	public List<Group> getGroups() {
+	public Collection<Group> getGroups() {
 		return groups_link;
 	}
 

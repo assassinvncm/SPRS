@@ -2,10 +2,13 @@ package com.api.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -13,7 +16,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
-@Table(name = "Groups")
+@Table(name = "SPRS_Group")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Group extends BaseEntity implements Serializable{
 	/**
@@ -28,21 +31,21 @@ public class Group extends BaseEntity implements Serializable{
 	private int level;
 	
 	@ManyToMany(mappedBy = "groups_user")
-	private List<User> users_groups = new ArrayList<User>();
+	private Collection<User> users_groups = new ArrayList<User>();
 	
-	@ManyToMany
-	@JoinTable(name = "group_permission",
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name = "SPRS_group_permission",
 			joinColumns = @JoinColumn(name = "group_id"),
 			inverseJoinColumns = @JoinColumn(name = "permission_id"))
-	List<Permission> group_permission = new ArrayList<Permission>();
+	Collection<Permission> group_permission = new ArrayList<Permission>();
 	
-	public List<Permission> getPermissions() {
+	public Collection<Permission> getPermissions() {
 		return group_permission;
 	}
 	public void setPermissions(List<Permission> permissions) {
 		this.group_permission = permissions;
 	}
-	public List<User> getUsers() {
+	public Collection<User> getUsers() {
 		return users_groups;
 	}
 	public void setUsers(List<User> users) {

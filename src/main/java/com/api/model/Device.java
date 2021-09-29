@@ -11,7 +11,7 @@
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //
 //@Entity
-//@Table(name = "Device")
+//@Table(name = "SPRS_Device")
 //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 //public class Device  extends BaseEntity implements Serializable{
 //
@@ -29,17 +29,17 @@
 //	@Column(name = "location")
 //	private String location;
 //
-////	@ManyToOne
-////	@JoinColumn(name = "user_id",referencedColumnName="id")
-////	private User user_dv;
-////
-////	public User getUser_dv() {
-////		return user_dv;
-////	}
-////
-////	public void setUser_dv(User user_dv) {
-////		this.user_dv = user_dv;
-////	}
+//	@ManyToOne
+//	@JoinColumn(name = "user_id", referencedColumnName="id")
+//	private User user_dv;
+//
+//	public User getUser_dv() {
+//		return user_dv;
+//	}
+//
+//	public void setUser_dv(User user_dv) {
+//		this.user_dv = user_dv;
+//	}
 //
 //	public static long getSerialversionuid() {
 //		return serialVersionUID;

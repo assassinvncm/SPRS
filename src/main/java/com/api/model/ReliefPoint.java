@@ -12,7 +12,7 @@
 //import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //
 //@Entity
-//@Table(name = "Relief_Point")
+//@Table(name = "SPRS_Relief_Point")
 //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 //public class ReliefPoint  extends BaseEntity implements Serializable{
 //
