@@ -66,17 +66,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	@Bean
-	public WebMvcConfigurer corsconfiguer() {
-		return new WebMvcConfigurer() {
-			
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-				.allowedMethods("GET","POST","PUT","DELETE")
-				.allowedHeaders("*")
-				.allowedOrigins("*");
-			}
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsconfiguer() {
+//		return new WebMvcConfigurer() {
+//			
+//			@Override
+//			public void addCorsMappings(CorsRegistry registry) {
+//				registry.addMapping("/**")
+//				.allowedMethods("GET","POST","PUT","DELETE")
+//				.allowedHeaders("*")
+//				.allowedOrigins("*");
+//			}
+//		};
+//	}
 }
