@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import com.api.services.GroupServices;
 
 @RestController
 @RequestMapping("/sprs/api")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GroupController {
 	
 	public static Logger logger = LoggerFactory.getLogger(GroupController.class);
