@@ -33,10 +33,10 @@ public class Group extends BaseEntity implements Serializable{
 	@ManyToMany(mappedBy = "groups_user")
 	private Collection<User> users_groups = new ArrayList<User>();
 	
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "SPRS_group_permission",
-			joinColumns = @JoinColumn(name = "group_id"),
-			inverseJoinColumns = @JoinColumn(name = "permission_id"))
+			joinColumns = @JoinColumn(name = "group_id", nullable = false, updatable = false),
+			inverseJoinColumns = @JoinColumn(name = "permission_id", nullable = false, updatable = false))
 	Collection<Permission> group_permission = new ArrayList<Permission>();
 	
 	public Collection<Permission> getPermissions() {
