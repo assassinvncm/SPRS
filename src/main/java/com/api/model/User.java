@@ -13,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -52,10 +51,10 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "isActive")
 	private String isActive;
 
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "SPRS_user_group",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name ="group_id"))
+			joinColumns = @JoinColumn(name = "user_id", nullable = false, updatable = false),
+			inverseJoinColumns = @JoinColumn(name ="group_id", nullable = false, updatable = false))
 	private Collection<Group> groups_user = new ArrayList<Group>();
 	
 	

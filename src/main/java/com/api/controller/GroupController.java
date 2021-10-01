@@ -1,5 +1,6 @@
 package com.api.controller;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.model.Group;
+import com.api.model.Permission;
 import com.api.model.SPRSResponse;
-import com.api.services.GroupServices;
+import com.api.repositories.GroupRepository;
+import com.api.repositories.PermissionRepository;
+import com.ultils.Constants;
 
 @RestController
 @RequestMapping("/sprs/api")
@@ -27,7 +31,10 @@ public class GroupController {
 	public static Logger logger = LoggerFactory.getLogger(GroupController.class);
 	
 	@Autowired
-	GroupServices groupServ;
+	GroupRepository groupServ;
+	
+	@Autowired
+	PermissionRepository perRepo;
 	
 	@RequestMapping(value = "/group", method = RequestMethod.GET)
 	public ResponseEntity<List<Group>> listAllContact(){
@@ -81,12 +88,32 @@ public class GroupController {
 	@RequestMapping(value = "/group/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteGroup(@PathVariable(value = "id") Long id) {
 		logger.info("Start delete Group id: "+id);
-		Group gr = groupServ.getOne(id);
-		if(gr == null) {
+		Optional<Group> gr = groupServ.findById(id);
+		if(gr.isEmpty()) {
 			return ResponseEntity.ok(new SPRSResponse("203", "", "Group is not existed!"));
 		}
-		groupServ.delete(gr);
+		groupServ.deleteById(gr.get().getId());
 		logger.info("End delete Group id: "+id);
 	    return ResponseEntity.ok().build();
+	}
+	
+	public ResponseEntity<?> grantPermission(@Validated @RequestBody Group group){
+		logger.info("Start grant permission!");
+		Optional<Group> g = groupServ.findById(group.getId());
+		if(g.isEmpty()) {
+			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!"));
+		}else {
+			Collection<Permission> lstTem = group.getPermissions();
+			for (Permission permis : lstTem) {
+				Optional<Permission> perTemp = perRepo.findById(permis.getId());
+				if(perTemp.isEmpty()) {
+					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Permission not Found!"));
+				}else {
+					groupServ.save(group);
+				}
+			}
+		}
+		logger.info("End grant permission!");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Grant permission success!", ""));
 	}
 }
