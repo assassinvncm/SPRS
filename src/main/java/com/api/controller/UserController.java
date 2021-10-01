@@ -25,7 +25,7 @@ import com.api.services.UserServices;
 
 @RestController
 @RequestMapping("/sprs/api")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 	public static Logger logger = LoggerFactory.getLogger(UserController.class);
 	

@@ -21,7 +21,7 @@ import com.jwt.entity.JwtResponse;
 import com.jwt.service.JwtUserDetailsService;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class JwtAuthenticationController {
 
 	@Autowired

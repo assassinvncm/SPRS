@@ -23,7 +23,7 @@ import com.api.services.GroupServices;
 
 @RestController
 @RequestMapping("/sprs/api")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GroupController {
 	
 	public static Logger logger = LoggerFactory.getLogger(GroupController.class);
