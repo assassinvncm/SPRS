@@ -3,10 +3,8 @@ package com.api.model;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -51,11 +49,12 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "isActive")
 	private String isActive;
 
-	@ManyToMany(fetch=FetchType.LAZY)
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_user_group",
-			joinColumns = @JoinColumn(name = "user_id", nullable = false, updatable = false),
-			inverseJoinColumns = @JoinColumn(name ="group_id", nullable = false, updatable = false))
-	private Collection<Group> groups_user = new ArrayList<Group>();
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name ="group_id"))
+	private List<Group> groups_user = new ArrayList<Group>();
 	
 	
 
@@ -81,7 +80,7 @@ public class User extends BaseEntity implements Serializable{
 //		this.devices = devices;
 //	}
 
-	public Collection<Group> getGroups_user() {
+	public List<Group> getGroups_user() {
 		return groups_user;
 	}
 
