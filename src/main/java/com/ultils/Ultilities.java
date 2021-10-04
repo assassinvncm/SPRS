@@ -22,4 +22,14 @@ public class Ultilities {
 		}
 		return null;
 	}
+	
+	public static boolean isExistedIn(String origin, String[] match) {
+		boolean check = false;
+		for (String string : match) {
+			if(string.equals(origin)) {
+				check = true;
+			}
+		}
+		return check;
+	}
 }

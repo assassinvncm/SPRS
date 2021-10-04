@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,15 +30,16 @@ public class Group extends BaseEntity implements Serializable{
 	@Column(name = "level")
 	private int level;
 	
-	@ManyToMany(mappedBy = "groups_user", fetch = FetchType.LAZY)
-	private List<User> users_groups = new ArrayList<User>();
-	
-	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinTable(name = "SPRS_group_permission",
 			joinColumns = @JoinColumn(name = "group_id"),
 			inverseJoinColumns = @JoinColumn(name = "permission_id"))
 	List<Permission> group_permission = new ArrayList<Permission>();
+
+	@ManyToMany(fetch = FetchType.LAZY,mappedBy = "groups_user")
+	@JsonIgnore
+	private List<User> users_groups = new ArrayList<User>();
 	
 	public List<Permission> getPermissions() {
 		return group_permission;

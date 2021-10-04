@@ -49,8 +49,8 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "isActive")
 	private Boolean isActive;
 
-	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinTable(name = "SPRS_user_group",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
