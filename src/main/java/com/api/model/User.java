@@ -47,7 +47,7 @@ public class User extends BaseEntity implements Serializable{
 	private Date create_time;
 	
 	@Column(name = "isActive")
-	private String isActive;
+	private Boolean isActive;
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -144,11 +144,11 @@ public class User extends BaseEntity implements Serializable{
 		this.create_time = create_time;
 	}
 
-	public String getIsActive() {
+	public Boolean getIsActive() {
 		return isActive;
 	}
 
-	public void setIsActive(String isActive) {
+	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -28,11 +29,11 @@ public class Group extends BaseEntity implements Serializable{
 	@Column(name = "level")
 	private int level;
 	
-	@ManyToMany(mappedBy = "groups_user")
+	@ManyToMany(mappedBy = "groups_user", fetch = FetchType.LAZY)
 	private List<User> users_groups = new ArrayList<User>();
 	
 	@JsonIgnore
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_group_permission",
 			joinColumns = @JoinColumn(name = "group_id"),
 			inverseJoinColumns = @JoinColumn(name = "permission_id"))

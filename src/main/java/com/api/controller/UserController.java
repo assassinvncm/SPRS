@@ -1,5 +1,6 @@
 package com.api.controller;
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import com.api.model.User;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
 import com.ultils.Constants;
+import com.ultils.Ultilities;
 
 @RestController
 @RequestMapping("/sprs/api")
@@ -66,21 +68,27 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	public ResponseEntity<?> saveEmployee(@Validated @RequestBody User bean) {
+	public ResponseEntity<?> saveEmployee(@Validated @RequestBody User user) {
 		logger.info("Start save User");
-		User u = userService.findByUsername(bean.getUsername());
+		User u = userService.findByUsername(user.getUsername());
+		boolean checkGr = true;
 		if(u!=null) {
 			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED, "", "Username is existed!"));
 		}else {
-			Collection<Group> lstTem = bean.getGroups_user();
+			List<Group> lstTem = user.getGroups_user();
 			for (Group group : lstTem) {
 				Optional<Group> grTemp = groupServ.findById(group.getId());
 				if(grTemp.isEmpty()) {
 					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!"));
 				}else {
-					userService.save(bean);
+					if(group.getLevel() == 1) {
+						checkGr = false;
+					}
 				}
 			}
+			user.setIsActive(checkGr);
+			user.setCreate_time((Date) Ultilities.getCurrentDate("dd/MM/yyyy"));
+			userService.save(user);
 		}
 		logger.info("End save User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", ""));
