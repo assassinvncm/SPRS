@@ -56,10 +56,10 @@ public class UserController {
 			lst = userService.findAll();
 		} catch (Exception e) {
 			logger.info("Error get all User: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage()));
+			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
 		}
 		logger.info("End get all User");
-		return new ResponseEntity<List<User>>(lst, HttpStatus.OK);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, lst));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -76,14 +76,14 @@ public class UserController {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
 				System.out.println("Unable to get JWT Token");
-				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","Unable to get JWT Token"));
+				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","Unable to get JWT Token", null, null));
 			} catch (ExpiredJwtException e) {
 				System.out.println("JWT Token has expired");
-				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token has expired"));
+				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token has expired", null, null));
 			}
 		} else {
 			logger.warn("JWT Token does not begin with Bearer String");
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token does not begin with Bearer String"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token does not begin with Bearer String", null, null));
 		}
 		
 		Optional<User> user = null;
@@ -91,10 +91,10 @@ public class UserController {
 			user = Optional.ofNullable(userService.findByUsername(username));
 		} catch (Exception e) {
 			logger.info("Error get User: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage()));
+			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
 		}
 		logger.info("End get User");
-		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", user.get(), null));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
@@ -103,13 +103,13 @@ public class UserController {
 		User u = userService.findByUsername(user.getUsername());
 		boolean checkGr = true;
 		if(u!=null) {
-			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED, "", "Username is existed!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED, "", "Username is existed!", null, null));
 		}else {
 			List<Group> lstTem = user.getGroups_user();
 			for (Group group : lstTem) {
 				Optional<Group> grTemp = groupServ.findById(group.getId());
 				if(grTemp.isEmpty()) {
-					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!"));
+					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!", null, null));
 				}else {
 					if(group.getLevel() == 1) {
 						checkGr = false;
@@ -121,11 +121,11 @@ public class UserController {
 			userService.save(user);
 		}
 		logger.info("End save User");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", ""));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.PUT)
-	public ResponseEntity<User> updateEmployee(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
+	public ResponseEntity<?> updateEmployee(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
 		logger.info("Start update User id: "+id);
 		User user = userService.getOne(id);
 		if(user == null) {
@@ -135,6 +135,6 @@ public class UserController {
 		BeanUtils.copyProperties(bean, user);
 
 		logger.info("End update User id: "+id);
-		return ResponseEntity.ok(userService.save(user));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update user success!", "", null, null));
 	}
 }

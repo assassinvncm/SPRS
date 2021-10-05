@@ -37,10 +37,10 @@ public class PermissionController {
 			lst = perRepo.findAll();
 		} catch (Exception e) {
 			logger.info("Error get all User: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage()));
+			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
 		}
 		logger.info("End get all Permission");
-		return new ResponseEntity<List<Permission>>(lst, HttpStatus.OK);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, lst));
 	}
 	
 	@RequestMapping(value = "/permission/{id}", method = RequestMethod.GET)
@@ -51,10 +51,10 @@ public class PermissionController {
 			per = perRepo.findById(id);
 		} catch (Exception e) {
 			logger.info("Error get Permission by id: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage()));
+			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
 		}
 		logger.info("End get User by id: "+id);
-		return new ResponseEntity<Permission>(per.get(), HttpStatus.OK);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", per.get(), null));
 	}
 	
 	@RequestMapping(value = "/permission", method = RequestMethod.POST)
@@ -64,10 +64,10 @@ public class PermissionController {
 		if(perm.isEmpty()) {
 			perRepo.save(per);
 		}else {
-			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!", null, null));
 		}
 		logger.info("End save permission id: "+per.getId());
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", ""));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/permission/{id}", method = RequestMethod.PUT)
@@ -75,10 +75,10 @@ public class PermissionController {
 		logger.info("Start update permission id: "+per.getId());
 		Optional<Permission> perm = perRepo.findById(per.getId());
 		if(perm.isEmpty()) {
-			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!", null, null));
 		}
 		perRepo.save(per);
 		logger.info("End update permission id: "+per.getId());
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", ""));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
 	}
 }

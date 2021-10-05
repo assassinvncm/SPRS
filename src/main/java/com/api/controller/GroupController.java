@@ -39,14 +39,14 @@ public class GroupController {
 	PermissionRepository perRepo;
 	
 	@RequestMapping(value = "/group", method = RequestMethod.GET)
-	public ResponseEntity<List<Group>> listAllContact(){
+	public ResponseEntity<?> listAllContact(){
 		logger.info("Start get all Group");
 		List<Group> listGroup= groupServ.findAll();
 		if(listGroup.isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is not existed!", null, null));
 		}
 		logger.info("End get all Group");
-		return new ResponseEntity<List<Group>>(listGroup, HttpStatus.OK);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, listGroup));
 	}
 	
 	@RequestMapping(value = "/group/{id}", method = RequestMethod.GET)
@@ -54,10 +54,10 @@ public class GroupController {
 		logger.info("Start get Group by id: "+id);
 		Optional<Group> gr = groupServ.findById(id);
 		if(gr.isEmpty()) {
-			return ResponseEntity.ok(new SPRSResponse("203", "", "Group is not existed!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is not existed!", null, null));
 		}
 		logger.info("End get Group by id: "+id);
-	    return new ResponseEntity<>(gr, HttpStatus.OK);
+	    return new ResponseEntity<>(new SPRSResponse(Constants.SUCCESS, "", "", gr, null), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/group", method = RequestMethod.POST)
@@ -65,12 +65,12 @@ public class GroupController {
 		logger.info("Start save Group");
 		Group gr = groupServ.findByName(bean.getName());
 		if(gr!=null) {
-			return ResponseEntity.ok(new SPRSResponse("203", "", "Group is existed!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is existed!", null, null));
 		}else {
 			groupServ.save(bean);
 		}
 		logger.info("End save Group");
-		return ResponseEntity.ok(new SPRSResponse("101", "Create group success!", ""));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create group success!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/group/{id}", method = RequestMethod.PUT)
@@ -78,7 +78,7 @@ public class GroupController {
 		logger.info("Start update Group id: "+id);
 		Optional<Group> gr = groupServ.findById(id);
 		if(gr.isEmpty()) {
-			return ResponseEntity.ok(new SPRSResponse("203", "", "Group is not existed!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is not existed!", null, null));
 		}
 		
 		BeanUtils.copyProperties(bean, gr);
@@ -92,7 +92,7 @@ public class GroupController {
 		logger.info("Start delete Group id: "+id);
 		Optional<Group> gr = groupServ.findById(id);
 		if(gr.isEmpty()) {
-			return ResponseEntity.ok(new SPRSResponse("203", "", "Group is not existed!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is not existed!", null, null));
 		}
 		groupServ.deleteById(gr.get().getId());
 		logger.info("End delete Group id: "+id);
@@ -103,19 +103,19 @@ public class GroupController {
 		logger.info("Start grant permission!");
 		Optional<Group> g = groupServ.findById(group.getId());
 		if(g.isEmpty()) {
-			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!"));
+			return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!", null, null));
 		}else {
 			Collection<Permission> lstTem = group.getPermissions();
 			for (Permission permis : lstTem) {
 				Optional<Permission> perTemp = perRepo.findById(permis.getId());
 				if(perTemp.isEmpty()) {
-					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Permission not Found!"));
+					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Permission not Found!", null, null));
 				}else {
 					groupServ.save(group);
 				}
 			}
 		}
 		logger.info("End grant permission!");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Grant permission success!", ""));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Grant permission success!", "", null, null));
 	}
 }
