@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +27,11 @@ import com.api.model.SPRSResponse;
 import com.api.model.User;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
+import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
 import com.ultils.Ultilities;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 @RestController
 @RequestMapping("/sprs/api")
@@ -39,7 +45,10 @@ public class UserController {
 	@Autowired
 	GroupRepository groupServ;
 	
-	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+	
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllUser() {
 		logger.info("Start get all User");
 		List<User> lst = null;
@@ -53,17 +62,38 @@ public class UserController {
 		return new ResponseEntity<List<User>>(lst, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getUserById(@PathVariable(value = "id") Long id){
-		logger.info("Start User by id: "+id);
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	public ResponseEntity<?> getUserById(@RequestHeader ("Authorization") String requestTokenHeader){
+//		String requestTokenHeader = request.getHeader("Authorization");
+		logger.info("Start get User");
+
+		String username = null;
+		String jwtToken = null;
+		
+		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+			jwtToken = requestTokenHeader.substring(7);
+			try {
+				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+			} catch (IllegalArgumentException e) {
+				System.out.println("Unable to get JWT Token");
+				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","Unable to get JWT Token"));
+			} catch (ExpiredJwtException e) {
+				System.out.println("JWT Token has expired");
+				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token has expired"));
+			}
+		} else {
+			logger.warn("JWT Token does not begin with Bearer String");
+			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token does not begin with Bearer String"));
+		}
+		
 		Optional<User> user = null;
 		try {
-			user = userService.findById(id);
+			user = Optional.ofNullable(userService.findByUsername(username));
 		} catch (Exception e) {
-			logger.info("Error get User by id: "+e.getMessage());
+			logger.info("Error get User: "+e.getMessage());
 			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage()));
 		}
-		logger.info("End get User by id: "+id);
+		logger.info("End get User");
 		return new ResponseEntity<User>(user.get(), HttpStatus.OK);
 	}
 	
@@ -87,7 +117,7 @@ public class UserController {
 				}
 			}
 			user.setIsActive(checkGr);
-			user.setCreate_time((Date) Ultilities.getCurrentDate("dd/MM/yyyy"));
+			user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 			userService.save(user);
 		}
 		logger.info("End save User");

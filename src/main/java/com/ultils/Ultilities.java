@@ -4,7 +4,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+
+import com.jwt.config.JwtTokenUtil;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+
 public class Ultilities {
+	
 	public static String getCurrentDateStr(String formatDate) {
 		Date d = new Date();
 		SimpleDateFormat f = new SimpleDateFormat(formatDate);
@@ -31,5 +40,10 @@ public class Ultilities {
 			}
 		}
 		return check;
+	}
+	
+	public static java.sql.Date toSqlDate(Date d) {
+        java.sql.Date sql = new java.sql.Date(d.getTime());
+        return sql;
 	}
 }
