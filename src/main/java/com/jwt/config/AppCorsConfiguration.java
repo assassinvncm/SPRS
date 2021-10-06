@@ -26,7 +26,7 @@ public class AppCorsConfiguration {
 //        bean.setOrder(0);
 //        return bean;
 //    }
-    
+
 	@Bean
 	public WebMvcConfigurer corsconfiguer() {
 		return new WebMvcConfigurer() {
