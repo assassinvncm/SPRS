@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.model.Acceptance;
-import com.api.model.Group;
-import com.api.model.SPRSResponse;
-import com.api.model.User;
+import com.api.dto.SPRSResponse;
+import com.api.entity.Acceptance;
+import com.api.entity.Group;
+import com.api.entity.User;
 import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
@@ -114,7 +114,8 @@ public class UserController {
 			for (Group group : lstTem) {
 				Optional<Group> grTemp = groupServ.findById(group.getId());
 				if(grTemp.isEmpty()) {
-					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!", null, null));
+					//return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!", null, null));
+					
 				}else {
 					if(group.getLevel() == 0) {
 						checkGr = false;

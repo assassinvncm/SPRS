@@ -1,4 +1,4 @@
-package com.api.model;
+package com.api.entity;
 
 public class Item {
 	private Long id;

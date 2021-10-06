@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.model.Permission;
-import com.api.model.SPRSResponse;
-import com.api.model.User;
+import com.api.dto.SPRSResponse;
+import com.api.entity.Permission;
+import com.api.entity.User;
 import com.api.repositories.PermissionRepository;
 import com.ultils.Constants;
 

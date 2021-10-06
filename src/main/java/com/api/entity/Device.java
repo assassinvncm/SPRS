@@ -1,3 +1,4 @@
+package com.api.entity;
 //package com.api.model;
 //
 //import java.io.Serializable;

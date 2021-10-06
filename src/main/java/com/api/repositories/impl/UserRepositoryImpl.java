@@ -10,8 +10,8 @@ import javax.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.api.model.Group;
-import com.api.model.User;
+import com.api.entity.Group;
+import com.api.entity.User;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
 

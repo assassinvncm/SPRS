@@ -1,4 +1,4 @@
-package com.api.model;
+package com.api.entity;
 
 public class Relief_Point_Items {
 	private Long id;

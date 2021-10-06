@@ -1,4 +1,4 @@
-package com.api.model;
+package com.api.dto;
 
 import java.io.Serializable;
 import java.util.List;
