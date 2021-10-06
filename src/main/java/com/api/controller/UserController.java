@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.model.Acceptance;
 import com.api.model.Group;
 import com.api.model.SPRSResponse;
 import com.api.model.User;
+import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
 import com.jwt.config.JwtTokenUtil;
@@ -44,6 +46,9 @@ public class UserController {
 	
 	@Autowired
 	GroupRepository groupServ;
+	
+	@Autowired
+	AcceptanceRepository accServ;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -111,7 +116,7 @@ public class UserController {
 				if(grTemp.isEmpty()) {
 					return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!", null, null));
 				}else {
-					if(group.getLevel() == 1) {
+					if(group.getLevel() == 0) {
 						checkGr = false;
 					}
 				}
@@ -119,9 +124,39 @@ public class UserController {
 			user.setIsActive(checkGr);
 			user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 			userService.save(user);
+			if(checkRqUser(user)) {
+				createRequestAccept("Account accepting", "Account accepting", user);
+			}
 		}
 		logger.info("End save User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
+	}
+	
+	public boolean checkRqUser(User user) {
+		List<Group> lstTem = user.getGroups_user();
+		for (Group group : lstTem) {
+			Optional<Group> grTemp = groupServ.findById(group.getId());
+			if(grTemp.isEmpty()) {
+				return false;
+			}else {
+				if(group.getLevel() == 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void createRequestAccept(String request_name, String type, User u) {
+		logger.info("Start create request type: "+type);
+		Acceptance a = new Acceptance();
+		a.setRequest_name(request_name);
+		a.setType(type);
+		a.setRequest_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+		a.setStatus(false);
+		a.setUser(u);
+		accServ.save(a);
+		logger.info("End create request type: "+type);
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.PUT)

@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -56,8 +57,10 @@ public class User extends BaseEntity implements Serializable{
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
 	private List<Group> groups_user = new ArrayList<Group>();
 	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@JsonIgnore
+    private List<Acceptance> acceptances;
 	
-
 //	@OneToMany(mappedBy = "user_rp")
 //	private List<ReliefPoint> reliefPoints = new ArrayList<ReliefPoint>();
 //
@@ -82,6 +85,33 @@ public class User extends BaseEntity implements Serializable{
 
 	public List<Group> getGroups_user() {
 		return groups_user;
+	}
+
+	public User(String username, String phone, String password, String full_name, String dob, String address,
+		Date create_time, Boolean isActive, List<Group> groups_user, List<Acceptance> acceptances) {
+	super();
+	this.username = username;
+	this.phone = phone;
+	this.password = password;
+	this.full_name = full_name;
+	this.dob = dob;
+	this.address = address;
+	this.create_time = create_time;
+	this.isActive = isActive;
+	this.groups_user = groups_user;
+	this.acceptances = acceptances;
+}
+
+	public User() {
+		super();
+	}
+
+	public List<Acceptance> getAcceptances() {
+		return acceptances;
+	}
+
+	public void setAcceptances(List<Acceptance> acceptances) {
+		this.acceptances = acceptances;
 	}
 
 	public void setGroups_user(List<Group> groups_user) {
