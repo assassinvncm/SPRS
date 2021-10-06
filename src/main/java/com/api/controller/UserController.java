@@ -29,6 +29,7 @@ import com.api.entity.User;
 import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
+import com.api.service.UserService;
 import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
 import com.ultils.Ultilities;
@@ -42,7 +43,7 @@ public class UserController {
 	public static Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
-	UserRepository userService; 
+	UserService userService; 
 	
 	@Autowired
 	GroupRepository groupServ;
