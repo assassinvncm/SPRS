@@ -5,16 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -28,7 +25,6 @@ import com.api.entity.Group;
 import com.api.entity.User;
 import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
-import com.api.repositories.UserRepository;
 import com.api.service.UserService;
 import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
@@ -56,20 +52,12 @@ public class UserController {
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllUser() {
-		logger.info("Start get all User");
-		List<User> lst = null;
-		try {
-			lst = userService.findAll();
-		} catch (Exception e) {
-			logger.info("Error get all User: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
-		}
-		logger.info("End get all User");
+		List<User> lst = userService.getAllUser();
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, lst));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
-	public ResponseEntity<?> getUserById(@RequestHeader ("Authorization") String requestTokenHeader){
+	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){
 //		String requestTokenHeader = request.getHeader("Authorization");
 		logger.info("Start get User");
 

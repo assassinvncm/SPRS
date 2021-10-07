@@ -7,6 +7,9 @@ import com.api.entity.User;
 
 public interface UserService {
 	
+	
+	List<User> getAllUser();
+	
 	/**
 	 * 
 	 * @param userDto
