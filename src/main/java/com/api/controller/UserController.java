@@ -26,6 +26,7 @@ import com.api.entity.User;
 import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
 import com.api.service.UserService;
+import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
 import com.ultils.Ultilities;
@@ -58,7 +59,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){
-//		String requestTokenHeader = request.getHeader("Authorization");
+
 		logger.info("Start get User");
 
 		String username = null;
@@ -70,14 +71,14 @@ public class UserController {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
 				System.out.println("Unable to get JWT Token");
-				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","Unable to get JWT Token", null, null));
+				throw new AppException(501,"Unable to get JWT Token");
 			} catch (ExpiredJwtException e) {
 				System.out.println("JWT Token has expired");
-				return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token has expired", null, null));
+				throw new AppException(501,"JWT Token has expired");
 			}
 		} else {
 			logger.warn("JWT Token does not begin with Bearer String");
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"","JWT Token does not begin with Bearer String", null, null));
+			throw new AppException(501,"JWT Token does not begin with Bearer String");
 		}
 		
 		Optional<User> user = null;
@@ -85,72 +86,20 @@ public class UserController {
 			user = Optional.ofNullable(userService.findByUsername(username));
 		} catch (Exception e) {
 			logger.info("Error get User: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
+			throw new AppException(501,"Error when query to get user");
 		}
 		logger.info("End get User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", user.get(), null));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	public ResponseEntity<?> saveEmployee(@Validated @RequestBody User user) {
-		logger.info("Start save User");
-		User u = userService.findByUsername(user.getUsername());
-		boolean checkGr = true;
-		if(u!=null) {
-			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED, "", "Username is existed!", null, null));
-		}else {
-			List<Group> lstTem = user.getGroups_user();
-			for (Group group : lstTem) {
-				Optional<Group> grTemp = groupServ.findById(group.getId());
-				if(grTemp.isEmpty()) {
-					//return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not Found!", null, null));
-					
-				}else {
-					if(group.getLevel() == 0) {
-						checkGr = false;
-					}
-				}
-			}
-			user.setIsActive(checkGr);
-			user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
-			userService.save(user);
-			if(checkRqUser(user)) {
-				createRequestAccept("Account accepting", "Account accepting", user);
-			}
-		}
-		logger.info("End save User");
+	public ResponseEntity<?> registerUser(@Validated @RequestBody User user) {
+		userService.registerUser(user);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
 	}
 	
-	public boolean checkRqUser(User user) {
-		List<Group> lstTem = user.getGroups_user();
-		for (Group group : lstTem) {
-			Optional<Group> grTemp = groupServ.findById(group.getId());
-			if(grTemp.isEmpty()) {
-				return false;
-			}else {
-				if(group.getLevel() == 0) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public void createRequestAccept(String request_name, String type, User u) {
-		logger.info("Start create request type: "+type);
-		Acceptance a = new Acceptance();
-		a.setRequest_name(request_name);
-		a.setType(type);
-		a.setRequest_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
-		a.setStatus(false);
-		a.setUser(u);
-		accServ.save(a);
-		logger.info("End create request type: "+type);
-	}
-	
 	@RequestMapping(value = "/user", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateEmployee(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
+	public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
 		logger.info("Start update User id: "+id);
 		User user = userService.getOne(id);
 		if(user == null) {

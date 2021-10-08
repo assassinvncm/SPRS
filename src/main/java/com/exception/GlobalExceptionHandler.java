@@ -10,11 +10,16 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
+	
+	public GlobalExceptionHandler() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	@ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
@@ -29,8 +34,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         List<String> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse(ex.getCode(),ex.getLocalizedMessage(), details);
-        return new ResponseEntity(error, HttpStatus.OK);
+        return ResponseEntity.status(200).body(error);
     }
+    
+//	@ExceptionHandler(AppException.class)
+//	public final ResponseEntity<Object> handleAppException(){
+//		return ResponseEntity.status(200).body("abcv");
+//	}
+	
  
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {

@@ -7,14 +7,26 @@ import com.api.entity.User;
 
 public interface UserService {
 	
-	
+	/**
+	 * 
+	 * @param userDto
+	 * @return list user
+	 */
 	List<User> getAllUser();
 	
 	/**
 	 * 
-	 * @param userDto
-	 * @return
+	 * @return user
 	 */
+	User getUserbyToken();
+	
+	/**
+	 * register user
+	 * @param userDto
+	 * @return user
+	 */
+	User registerUser(User user);
+	
 	User save(User userDto);
 	
 	/**
