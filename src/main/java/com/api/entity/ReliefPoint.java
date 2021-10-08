@@ -2,13 +2,18 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -26,10 +31,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	
 	@Column(name = "description")
 	private String description;
-	
-	@Column(name = "location")
-	private String location;
-	
+
 	@Column(name = "open_time")
 	private Date open_time;
 	
@@ -42,6 +44,15 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user_rp;
+	
+	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY)
+	@JsonIgnore
+    private List<ReliefInformation> reliefInformation;
+	
+	@OneToOne
+	@JoinColumn(name = "location_id")
+	@JsonIgnore
+    private Location location;
 
 	public String getName() {
 		return name;
@@ -57,14 +68,6 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public Date getOpen_time() {
@@ -90,14 +93,14 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public User getUsers() {
+		return user_rp;
+	}
 
-//	public User getUsers() {
-//		return user_rp;
-//	}
-//
-//	public void setUsers(User users) {
-//		this.user_rp = users;
-//	}
+	public void setUsers(User users) {
+		this.user_rp = users;
+	}
 	
 
 }

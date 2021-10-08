@@ -2,6 +2,11 @@ package com.exception;
 
 public class AppException extends RuntimeException{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5473247118246384585L;
+	
 	private int code;
     private String message;
     
