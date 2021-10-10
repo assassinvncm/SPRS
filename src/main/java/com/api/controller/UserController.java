@@ -98,7 +98,27 @@ public class UserController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
 	}
 	
-	@RequestMapping(value = "/user", method = RequestMethod.PUT)
+	@RequestMapping(value = "/users_v2/user", method = RequestMethod.POST)
+	public ResponseEntity<?> registerUser_v2(@Validated @RequestBody User user) {
+		User u = userService.registerUser_v2(user);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", u, null));
+	}
+	
+	@RequestMapping(value = "/users_v2/organizationlAdmin", method = RequestMethod.POST)
+	public ResponseEntity<?> registerOrganization_v2(@Validated @RequestBody User user) {
+		User u = userService.registerOrganization_v2(user);
+		//List<Group> g= user.getGroups_user();
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
+	}
+	
+	@RequestMapping(value = "/users_v2/organizationalUser", method = RequestMethod.POST)
+	public ResponseEntity<?> registerOrganizationalUser_v2(@Validated @RequestBody User user) {
+		User u = userService.registerOrganizationUser_v2(user);
+		//List<Group> g= user.getGroups_user();
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
+	}
+	
+	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
 		logger.info("Start update User id: "+id);
 		User user = userService.getOne(id);
