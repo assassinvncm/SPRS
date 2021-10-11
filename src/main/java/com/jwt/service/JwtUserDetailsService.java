@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.api.entity.User;
 import com.api.repositories.UserRepository;
+import com.exception.AppException;
+import com.exception.AuthenException;
 import com.jwt.entity.UserDetailsImpl;
 
 
@@ -21,8 +23,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 	UserRepository userRepository;
 	
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,AuthenException {
 		User user = Optional.ofNullable(userRepository.findByUsername(username)).orElseThrow(() -> new UsernameNotFoundException("User not found with username: "+username));
+		if(user.getIsActive() == false) {
+			throw new AuthenException("Account is not active");
+		}
 		return UserDetailsImpl.build(user);
 		
 	}

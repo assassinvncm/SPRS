@@ -27,6 +27,27 @@ public interface UserService {
 	 */
 	User registerUser(User user);
 	
+	/**
+	 * register user
+	 * @param userDto
+	 * @return user
+	 */
+	User registerUser_v2(User user);
+	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	User registerOrganization_v2(User user);
+	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	User registerOrganizationUser_v2(User user);
+	
 	User save(User userDto);
 	
 	/**

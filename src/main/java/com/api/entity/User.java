@@ -5,17 +5,22 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "SPRS_Users")
@@ -32,6 +37,7 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "phone")
 	private String phone;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name = "password")
 	private String password;
 	
@@ -41,17 +47,22 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "dob")
 	private String dob;
 	
-	@Column(name = "address")
-	private String address;
-	
 	@Column(name = "create_time")
 	private Date create_time;
 	
 	@Column(name = "isActive")
 	private Boolean isActive;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id")
+	private Address address;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "organization_id",referencedColumnName="id")
+	private Organization organization;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JsonIgnore
+	//@JsonIgnore
 	@JoinTable(name = "SPRS_user_group",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
@@ -60,6 +71,10 @@ public class User extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
     private List<Acceptance> acceptances;
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<Request> request;
 	
 //	@OneToMany(mappedBy = "user_rp")
 //	private List<ReliefPoint> reliefPoints = new ArrayList<ReliefPoint>();
@@ -87,7 +102,7 @@ public class User extends BaseEntity implements Serializable{
 		return groups_user;
 	}
 
-	public User(String username, String phone, String password, String full_name, String dob, String address,
+	public User(String username, String phone, String password, String full_name, String dob, Address address,
 		Date create_time, Boolean isActive, List<Group> groups_user, List<Acceptance> acceptances) {
 	super();
 	this.username = username;
@@ -158,11 +173,11 @@ public class User extends BaseEntity implements Serializable{
 		this.dob = dob;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 
@@ -181,4 +196,23 @@ public class User extends BaseEntity implements Serializable{
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public List<Request> getRequest() {
+		return request;
+	}
+
+	public void setRequest(List<Request> request) {
+		this.request = request;
+	}
+	
+	
+	
 }
