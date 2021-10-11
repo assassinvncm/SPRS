@@ -61,7 +61,7 @@ public class OTPController {
 	}
 
 	@RequestMapping(value = "/validateOtp", method = RequestMethod.POST)
-	public @ResponseBody String validateOtp(@Validated @RequestBody SmsPojo pojo) {
+	public ResponseEntity<?> validateOtp(@Validated @RequestBody SmsPojo pojo) {
 
 		final String SUCCESS = "Entered Otp is valid";
 
@@ -79,15 +79,15 @@ public class OTPController {
 			if (serverOtp > 0) {
 				if (otpnum == serverOtp) {
 					otpService.clearOTP(username);
-					return ("Entered Otp is valid");
+					return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, SUCCESS, "", null, null));
 				} else {
-					return SUCCESS;
+					return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
 				}
 			} else {
-				return FAIL;
+				return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
 			}
 		} else {
-			return FAIL;
+			return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
 		}
 	}
 }
