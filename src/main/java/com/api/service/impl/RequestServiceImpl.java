@@ -42,6 +42,13 @@ public class RequestServiceImpl implements RequestService{
 		// TODO Auto-generated method stub
 		Request req = requestRepository.findById(request.getId()).orElseThrow(()-> new AppException(405,"Request not exist!"));
 		req.setStatus(request.getStatus());
+		if(req.getStatus().equals("accept")) {
+			req.getUser().setIsActive(true);
+		}
+		if(req.getStatus().equals("reject")) {
+			req.getUser().setIsActive(false);
+		}
+		
 		//BeanUtils.copyProperties(request, req);
 		return requestRepository.save(req);
 	}
