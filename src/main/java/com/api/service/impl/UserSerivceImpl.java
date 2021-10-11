@@ -219,6 +219,30 @@ public class UserSerivceImpl implements UserService {
 		return user;
 	}
 	
+	@Override
+	public User registerStoreUser_v2(User user) {
+		// TODO Auto-generated method stub
+		logger.info("Start save Organizational User");
+		User u = userRepository.findByUsername(user.getUsername());
+		if (u != null) {
+			throw new AppException(403, "Username is existed!");
+		}
+		List<Group> lstTem = user.getGroups_user();
+		for (Group group : lstTem) {
+			Optional<Group> grTemp = groupRepository.findById(group.getId());
+			if (grTemp.isEmpty()) {
+				throw new AppException(403, "Group is not exist!");
+			}
+		}
+		
+		
+		return null;
+	}
+	
+	
+	private void checkRoleAndUser() {
+		
+	}
 
 //	public boolean checkRq_v2(User user) {
 //		
@@ -284,5 +308,7 @@ public class UserSerivceImpl implements UserService {
 		}
 		return null;
 	}
+
+
 
 }

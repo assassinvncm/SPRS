@@ -118,6 +118,13 @@ public class UserController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
 	}
 	
+	@RequestMapping(value = "/users_v2/ownStore", method = RequestMethod.POST)
+	public ResponseEntity<?> registerOownStore_v2(@Validated @RequestBody User user) {
+		User u = userService.registerOrganizationUser_v2(user);
+		//List<Group> g= user.getGroups_user();
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
+	}
+	
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
 		logger.info("Start update User id: "+id);

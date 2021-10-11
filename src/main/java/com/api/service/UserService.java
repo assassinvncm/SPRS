@@ -55,6 +55,13 @@ public interface UserService {
 	 */
 	User registerOrganizationUser_v2(User user);
 	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	User registerStoreUser_v2(User user);
+	
 	User save(User userDto);
 	
 	/**
