@@ -16,6 +16,13 @@ public interface UserService {
 	
 	/**
 	 * 
+	 * @param phone number
+	 * @return username
+	 */
+	String getUsernameByPhone(String phone);
+	
+	/**
+	 * 
 	 * @return user
 	 */
 	User getUserbyToken();

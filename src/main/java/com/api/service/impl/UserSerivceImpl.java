@@ -294,6 +294,21 @@ public class UserSerivceImpl implements UserService {
 		logger.info("End create request type: " + type);
 	}
 
+	@SuppressWarnings("null")
+	@Override
+	public String getUsernameByPhone(String phone) {
+		if(phone !=null || !phone.equals("")) {
+			phone = "0"+phone.substring(3);
+			Optional<User> u = userRepository.findByPhone(phone);
+			if(!u.isEmpty()) {
+				return u.get().getUsername();
+			}
+		}else {
+			throw new AppException(404, "Phone number not Found");
+		}
+		return null;
+	}
+
 
 
 }
