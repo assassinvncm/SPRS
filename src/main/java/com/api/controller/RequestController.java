@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
@@ -31,7 +33,7 @@ public class RequestController {
 	private JwtTokenUtil jwtTokenUtil;
 	
 	@RequestMapping("/request-organizationalAdmin")
-	public ResponseEntity<?> getRequestOr(@RequestHeader("Authorization") String requestTokenHeader){
+	public ResponseEntity<?> getRequestOrgAdmin(@RequestHeader("Authorization") String requestTokenHeader){
 		List<Request> requests = null;
 		String jwtToken = requestTokenHeader.substring(7);
 		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
@@ -41,4 +43,43 @@ public class RequestController {
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requests, null));
 	}
+	
+	@RequestMapping("/request-systemAdmin")
+	public ResponseEntity<?> getRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader){
+		List<Request> requests = null;
+		String jwtToken = requestTokenHeader.substring(7);
+		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+		User user = userService.findByUsername(username);
+		
+		requests = requestService.getRequestbySysAdmin(user.getGroups_user().get(0).getId());
+		
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requests, null));
+	}
+	
+	@RequestMapping(value = "/request-systemAdmin", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader, @RequestBody Request request){
+
+		String jwtToken = requestTokenHeader.substring(7);
+		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+		User user = userService.findByUsername(username);
+		
+		Request req = requestService.handleRequest(request);
+		
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Request success!", "", req, null));
+	}
+	
+	@RequestMapping(value = "/request-organizationalAdmin", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateRequestOrgAdmin(@RequestHeader("Authorization") String requestTokenHeader, @RequestBody Request request){
+
+		String jwtToken = requestTokenHeader.substring(7);
+		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+		User user = userService.findByUsername(username);
+		
+		Request req = requestService.handleRequest(request);
+		
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Request success!", "", req, null));
+	}
+	
+	
+	
 }

@@ -1,5 +1,7 @@
 package com.common.enums;
 
-public class ERole {
-
+public enum ERole {
+	uncheck,
+	accept,
+	reject
 }

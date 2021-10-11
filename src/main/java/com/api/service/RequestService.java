@@ -8,4 +8,8 @@ import com.api.entity.Request;
 public interface RequestService {
 	
 	List<Request> getRequestbyOrganization(Long id);
+	
+	List<Request> getRequestbySysAdmin(Long id);
+	
+	Request handleRequest(Request req);
 }
