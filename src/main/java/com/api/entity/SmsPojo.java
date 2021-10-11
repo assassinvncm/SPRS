@@ -4,6 +4,7 @@ public class SmsPojo {
 
 	private String to;
     private String message;
+    private int otp;
     
 	public String getTo() {
 		return to;
@@ -16,6 +17,12 @@ public class SmsPojo {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public int getOtp() {
+		return otp;
+	}
+	public void setOtp(int otp) {
+		this.otp = otp;
 	}
  
 }
