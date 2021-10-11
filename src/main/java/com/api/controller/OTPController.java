@@ -26,6 +26,7 @@ import com.api.dto.SPRSResponse;
 import com.api.entity.SmsPojo;
 import com.api.service.OtpService;
 import com.api.service.SmsService;
+import com.api.service.UserService;
 import com.ultils.Constants;
 
 @RestController
@@ -35,17 +36,22 @@ public class OTPController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	public OtpService otpService;
+	OtpService otpService;
 	
 	@Autowired
-	public SmsService smsService;
+	SmsService smsService;
+	
+	@Autowired
+	UserService userService;
 
 	@RequestMapping(value = "/generateOtp", method = RequestMethod.POST)
 	public ResponseEntity<?> generateOtp(@Validated @RequestBody SmsPojo pojo) {
 		logger.info("Start generate OTP and send to: "+pojo.getTo());
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
+//
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		String username = auth.getName();
+		
+		String username = userService.getUsernameByPhone(pojo.getTo());
 		int otp = otpService.generateOTP(username);
 		logger.info("OTP : " + otp +" of user: "+username);
 		pojo.setMessage(Constants.OTP_MESSAGE+otp);
@@ -54,15 +60,16 @@ public class OTPController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Send OTP Success!", "", null, null));
 	}
 
-	@RequestMapping(value = "/validateOtp", method = RequestMethod.GET)
-	public @ResponseBody String validateOtp(@RequestParam("otpnum") int otpnum) {
+	@RequestMapping(value = "/validateOtp", method = RequestMethod.POST)
+	public @ResponseBody String validateOtp(@Validated @RequestBody SmsPojo pojo) {
 
 		final String SUCCESS = "Entered Otp is valid";
 
 		final String FAIL = "Entered Otp is NOT valid. Please Retry!";
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
+		int otpnum = pojo.getOtp();
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		String username = auth.getName();
+		String username = userService.getUsernameByPhone(pojo.getTo());
 		logger.info("Otp Number : " + otpnum +" of user: "+username);
 
 		//Validate the Otp 
