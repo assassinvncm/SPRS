@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,22 +21,6 @@ public class Address extends BaseEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = -3712148124115036984L;
 	
-	@Column(name = "city")
-	@JsonProperty("city")
-	private String city;
-	
-	@Column(name = "province")
-	@JsonProperty("province")
-	private String province;
-	
-	@Column(name = "district")
-	@JsonProperty("district")
-	private String district;
-	
-	@Column(name = "subDistrict")
-	@JsonProperty("subDistrict")
-	private String subDistrict;
-	
 	@Column(name = "addressLine")
 	@JsonProperty("addressLine")
 	private String addressLine;
@@ -46,38 +32,11 @@ public class Address extends BaseEntity implements Serializable {
 	@Column(name = "GPS_Lati")
 	@JsonProperty("GPS_Lati")
 	private String GPS_Lati;
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	public String getDistrict() {
-		return district;
-	}
-
-	public void setDistrict(String district) {
-		this.district = district;
-	}
-
-	public String getSubDistrict() {
-		return subDistrict;
-	}
-
-	public void setSubDistrict(String subDistrict) {
-		this.subDistrict = subDistrict;
-	}
+	
+	@ManyToOne
+	@JoinColumn(name = "subDistrict_id",referencedColumnName="id")
+	SubDistrict subDistrict;
+	
 
 	public String getAddressLine() {
 		return addressLine;
@@ -107,12 +66,9 @@ public class Address extends BaseEntity implements Serializable {
 		super();
 	}
 
-	public Address(String city, String province, String district, String subDistrict, String addressLine,
+	public Address(String city, String province, String district, SubDistrict subDistrict, String addressLine,
 			String gPS_Long, String gPS_Lati) {
 		super();
-		this.city = city;
-		this.province = province;
-		this.district = district;
 		this.subDistrict = subDistrict;
 		this.addressLine = addressLine;
 		GPS_Long = gPS_Long;

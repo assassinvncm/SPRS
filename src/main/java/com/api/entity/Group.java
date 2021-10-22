@@ -54,6 +54,7 @@ public class Group extends BaseEntity implements Serializable{
 	public void setPermissions(List<Permission> permissions) {
 		this.group_permission = permissions;
 	}
+	@JsonIgnore
 	public List<User> getUsers() {
 		return users_groups;
 	}

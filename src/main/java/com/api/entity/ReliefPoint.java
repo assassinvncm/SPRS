@@ -50,9 +50,9 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
     private List<ReliefInformation> reliefInformation;
 	
 	@OneToOne
-	@JoinColumn(name = "location_id")
+	@JoinColumn(name = "address_id")
 	@JsonIgnore
-    private Location location;
+    private Address location;
 
 	public String getName() {
 		return name;
