@@ -6,7 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.api.entity.Location;
+import com.api.entity.Address;
 import com.api.entity.ReliefPoint;
 import com.api.entity.User;
 import com.api.repositories.ReliefPointRepository;
@@ -32,13 +32,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
-	public List<ReliefPoint> getReliefPointByLocation(Location location) {
+	public List<ReliefPoint> getReliefPointByLocation(Address address) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ReliefPoint> getReliefPointByArea(Location location) {
+	public List<ReliefPoint> getReliefPointByArea(Address address) {
 		// TODO Auto-generated method stub
 		return null;
 	}

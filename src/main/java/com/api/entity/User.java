@@ -61,12 +61,14 @@ public class User extends BaseEntity implements Serializable{
 	@JoinColumn(name = "organization_id",referencedColumnName="id")
 	private Organization organization;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	
 	//@JsonIgnore
+	@JsonProperty("groups_user")
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_user_group",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
-	private List<Group> groups_user = new ArrayList<Group>();
+	private List<Group> groups_user;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
@@ -97,7 +99,7 @@ public class User extends BaseEntity implements Serializable{
 //	public void setDevices(List<Device> devices) {
 //		this.devices = devices;
 //	}
-
+	@JsonIgnore
 	public List<Group> getGroups_user() {
 		return groups_user;
 	}

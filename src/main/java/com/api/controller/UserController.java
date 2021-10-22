@@ -120,7 +120,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/users_v2/ownStore", method = RequestMethod.POST)
 	public ResponseEntity<?> registerOownStore_v2(@Validated @RequestBody User user) {
-		User u = userService.registerOrganizationUser_v2(user);
+		User u = userService.registerStoreUser_v2(user);
 		//List<Group> g= user.getGroups_user();
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
 	}

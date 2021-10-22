@@ -12,4 +12,8 @@ public interface RequestService {
 	List<Request> getRequestbySysAdmin(Long id);
 	
 	Request handleRequest(Request req);
+	
+	void acceptRequest(List<Long> rId ,Long uid);
+	
+	void RejectRequest(List<Long> rId ,Long uid);
 }

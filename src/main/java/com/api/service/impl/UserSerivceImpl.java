@@ -42,10 +42,10 @@ public class UserSerivceImpl implements UserService {
 
 	@Autowired
 	AcceptanceRepository accRepository;
-	
+
 	@Autowired
 	RequestRepository requestRepository;
-	
+
 	@Autowired
 	OrganizationRepository organizationRepository;
 
@@ -67,7 +67,9 @@ public class UserSerivceImpl implements UserService {
 	@Override
 	public User findByUsername(String username) {
 		// TODO Auto-generated method stub
-		return userRepository.findByUsername(username);
+		User u = userRepository.findByUsername(username);
+		//u.getGroups_user();
+		return u;
 	}
 
 	@Override
@@ -96,7 +98,7 @@ public class UserSerivceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Transactional
 	@Override
 	public User registerUser(User user) {
@@ -105,22 +107,22 @@ public class UserSerivceImpl implements UserService {
 		User u = userRepository.findByUsername(user.getUsername());
 		boolean checkGr = true;
 		if (u != null) {
-			// return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED, "", "Username is
-			// existed!", null, null));
 			throw new AppException(403, "Username is existed!");
 		}
+
+		userRepository.findByPhone(user.getPhone()).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
+
 		List<Group> lstTem = user.getGroups_user();
 		for (Group group : lstTem) {
 			Optional<Group> grTemp = groupRepository.findById(group.getId());
 			if (grTemp.isEmpty()) {
-				// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not
-				// Found!", null, null));
 				throw new AppException(403, "Group is not exist!");
 			}
 			if (group.getLevel() == 0) {
 				checkGr = false;
 			}
 		}
+
 		user.setIsActive(checkGr);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -141,6 +143,7 @@ public class UserSerivceImpl implements UserService {
 		if (u != null) {
 			throw new AppException(403, "Username is existed!");
 		}
+		userRepository.findByPhone(user.getPhone()).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
 		List<Group> lstTem = user.getGroups_user();
 		for (Group group : lstTem) {
 			Optional<Group> grTemp = groupRepository.findById(group.getId());
@@ -148,6 +151,7 @@ public class UserSerivceImpl implements UserService {
 				throw new AppException(403, "Group is not exist!");
 			}
 		}
+		// User u = userRepository.getByPhone(user.getPhone());
 		user.setIsActive(true);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -175,9 +179,9 @@ public class UserSerivceImpl implements UserService {
 		user.setIsActive(false);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		//user.setGroups_user(lstTem);G
+		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to register", null, user);
-		
+
 		userRepository.save(user);
 		logger.info("End save Organization");
 		logger.info("Start save Request");
@@ -185,7 +189,7 @@ public class UserSerivceImpl implements UserService {
 		logger.info("End save Request");
 		return user;
 	}
-	
+
 	@Transactional
 	@Override
 	public User registerOrganizationUser_v2(User user) {
@@ -194,6 +198,7 @@ public class UserSerivceImpl implements UserService {
 		if (u != null) {
 			throw new AppException(403, "Username is existed!");
 		}
+		userRepository.findByPhone(user.getPhone()).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
 		List<Group> lstTem = user.getGroups_user();
 		for (Group group : lstTem) {
 			Optional<Group> grTemp = groupRepository.findById(group.getId());
@@ -201,12 +206,13 @@ public class UserSerivceImpl implements UserService {
 				throw new AppException(403, "Group is not exist!");
 			}
 		}
-		
-		Organization organization =  organizationRepository.findById(user.getOrganization().getId()).orElseThrow(() ->  new AppException(403, "organization is not exist!"));
-		//chưa check admin organization phải tồn tại
-		
+
+		Organization organization = organizationRepository.findById(user.getOrganization().getId())
+				.orElseThrow(() -> new AppException(403, "organization is not exist!"));
+		// chưa check admin organization phải tồn tại
+
 		user.setOrganization(organization);
-		
+
 		user.setIsActive(false);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -218,15 +224,16 @@ public class UserSerivceImpl implements UserService {
 		logger.info("End save Request");
 		return user;
 	}
-	
+
 	@Override
 	public User registerStoreUser_v2(User user) {
 		// TODO Auto-generated method stub
-		logger.info("Start save Organizational User");
+		logger.info("Start save Own Store");
 		User u = userRepository.findByUsername(user.getUsername());
 		if (u != null) {
 			throw new AppException(403, "Username is existed!");
 		}
+		userRepository.findByPhone(user.getPhone()).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
 		List<Group> lstTem = user.getGroups_user();
 		for (Group group : lstTem) {
 			Optional<Group> grTemp = groupRepository.findById(group.getId());
@@ -234,36 +241,46 @@ public class UserSerivceImpl implements UserService {
 				throw new AppException(403, "Group is not exist!");
 			}
 		}
-		
-		
-		return null;
+		user.setIsActive(false);
+		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		// user.setGroups_user(lstTem);G
+		Request req = createRequestRegister("request to create store", "Create Store", user);
+
+		userRepository.save(user);
+		logger.info("End save Organization");
+		logger.info("Start save Request");
+		requestRepository.save(req);
+		logger.info("End save Request");
+		return user;
 	}
-	
-	
+
 	private void checkRoleAndUser() {
-		
+
 	}
 
 //	public boolean checkRq_v2(User user) {
 //		
 //	}
-	
-	public Request createRequestRegister(String message,String type,User u) {
+
+	public Request createRequestRegister(String message, String type, User u) {
 		logger.info("Start create request type: ");
 		Request req = new Request();
 		req.setUser(u);
 		req.setMessage(message);
 		req.setType(type);
-		req.setStatus("uncheck");
+		req.setStatus(Constants.REQUEST_STATUS_UNCHECK);
 		req.setTimestamp(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
-		if(u.getGroups_user().get(0).getId()==2) {
+		// đang hardcode (nên xem, check quyền tạo)
+		if (u.getGroups_user().get(0).getId() == 4) {
 			req.setOrganization(u.getOrganization());
-		}else {
+		} else {
 			Group g = new Group();
-			g.setId(4);
+			// sai set id. ID phải là id của admin
+			g.setId(10);
 			req.setGroup(g);
 		}
-		
+
 		return req;
 	}
 
@@ -297,18 +314,16 @@ public class UserSerivceImpl implements UserService {
 	@SuppressWarnings("null")
 	@Override
 	public String getUsernameByPhone(String phone) {
-		if(phone !=null || !phone.equals("")) {
-			phone = "0"+phone.substring(3);
+		if (phone != null || !phone.equals("")) {
+			phone = "0" + phone.substring(3);
 			Optional<User> u = userRepository.findByPhone(phone);
-			if(!u.isEmpty()) {
+			if (!u.isEmpty()) {
 				return u.get().getUsername();
 			}
-		}else {
+		} else {
 			throw new AppException(404, "Phone number not Found");
 		}
 		return null;
 	}
-
-
 
 }

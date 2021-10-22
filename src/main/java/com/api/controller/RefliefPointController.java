@@ -26,7 +26,7 @@ import com.ultils.Constants;
 import io.jsonwebtoken.ExpiredJwtException;
 
 @RestController
-@RequestMapping("sprs/api/reliefPoint")
+@RequestMapping("sprs/api/reliefPoint-manage")
 public class RefliefPointController {
 	
 	public static Logger logger = LoggerFactory.getLogger(RefliefPointController.class);

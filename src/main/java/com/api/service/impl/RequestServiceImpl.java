@@ -1,6 +1,7 @@
 package com.api.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.api.entity.Organization;
 import com.api.entity.Request;
+import com.api.entity.User;
 import com.api.repositories.OrganizationRepository;
 import com.api.repositories.RequestRepository;
 import com.api.service.RequestService;
 import com.exception.AppException;
+import com.ultils.Constants;
 
 @Service
 public class RequestServiceImpl implements RequestService{
@@ -33,8 +36,9 @@ public class RequestServiceImpl implements RequestService{
 	@Override
 	public List<Request> getRequestbySysAdmin(Long id) {
 		// TODO Auto-generated method stub
-		
-		return requestRepository.findByGroup_id(id);
+		List<Request> req = requestRepository.findByGroup_id(id);
+		//User r = req.getUser();
+		return req;
 	}
 
 	@Override
@@ -51,6 +55,34 @@ public class RequestServiceImpl implements RequestService{
 		
 		//BeanUtils.copyProperties(request, req);
 		return requestRepository.save(req);
+	}
+
+	@Override
+	public void acceptRequest(List<Long> rid, Long uid) {
+		// TODO Auto-generated method stub
+		rid.stream().forEach((id) ->{
+			Optional<Request> reqOpt = requestRepository.findById(id);
+			if(!reqOpt.isPresent()) {
+				throw new AppException(405,"request ID not exist");
+			}
+			Request req = reqOpt.get();
+			req.setStatus(Constants.REQUEST_STATUS_ACCEPT);
+			requestRepository.save(req);
+		});
+	}
+
+	@Override
+	public void RejectRequest(List<Long> rid, Long uid) {
+		// TODO Auto-generated method stub
+		rid.stream().forEach((id) ->{
+			Optional<Request> reqOpt = requestRepository.findById(id);
+			if(!reqOpt.isPresent()) {
+				throw new AppException(405,"request ID not exist");
+			}
+			Request req = reqOpt.get();
+			req.setStatus(Constants.REQUEST_STATUS_REJECT);
+			requestRepository.save(req);
+		});
 	}
 
 }

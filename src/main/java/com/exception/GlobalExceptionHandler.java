@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = new ErrorResponse("Server Error", details);
         logger.error(ex.getLocalizedMessage());
-        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 	
 	@ExceptionHandler(AuthenticationException.class)
@@ -55,11 +55,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         return ResponseEntity.status(200).body(error);
     }
     
-//	@ExceptionHandler(AppException.class)
-//	public final ResponseEntity<Object> handleAppException(){
-//		return ResponseEntity.status(200).body("abcv");
-//	}
-	
  
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -67,7 +62,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         for(ObjectError error : ex.getBindingResult().getAllErrors()) {
             details.add(error.getDefaultMessage());
         }
-        ErrorResponse error = new ErrorResponse("Validation Failed", details);
-        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+        logger.error(ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse(400,"Validation Failed", details);
+        return ResponseEntity.status(200).body(error);
     }
 }
