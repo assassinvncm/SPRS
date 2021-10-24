@@ -1,5 +1,5 @@
 package com.api.dto;
 
-public class Item {
+public class ItemDto {
 	
 }

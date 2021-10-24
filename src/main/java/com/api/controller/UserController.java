@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
-import com.api.entity.Acceptance;
-import com.api.entity.Group;
 import com.api.entity.User;
 import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
@@ -29,7 +27,6 @@ import com.api.service.UserService;
 import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
-import com.ultils.Ultilities;
 
 import io.jsonwebtoken.ExpiredJwtException;
 

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.entity.City;
+import com.api.entity.District;
+import com.api.entity.SubDistrict;
 import com.api.repositories.CityRepository;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -21,23 +23,44 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 @RequestMapping("/utilities")
 public class UtilitieController {
-	
+
 	@Autowired
 	CityRepository cityRepo;
-	
+
 	@RequestMapping("/loadData")
-	public ResponseEntity<?> loadData() throws JsonParseException, JsonMappingException, IOException{
+	public ResponseEntity<?> loadData() throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		String path = "E:\\Data FPT University\\Project_FPT_20210528\\SPRS\\Source\\Source_api\\address.json";
-		List<City> someClassObject = mapper.readValue(new File(path), new TypeReference<List<City>>(){});
-		//Iterable<City> iterable  = someClassObject;
-		//cityRepo.saveAll(iterable);
-		someClassObject.stream().forEach(obj -> {
-			cityRepo.save(obj);
+		String path = "E:\\Data FPT University\\Project_FPT_20210528\\SPRS\\Source\\Source_api\\address - Copy.json";
+		List<City> someClassObject = mapper.readValue(new File(path), new TypeReference<List<City>>() {
 		});
-	    System.out.println(someClassObject);
+		// Iterable<City> iterable = someClassObject;
+		// cityRepo.saveAll(iterable);
+		List<City> cv = setAss(someClassObject);
+		cv.stream().forEach(obj -> {
+			cityRepo.saveAndFlush(obj);
+		});
+		System.out.println(someClassObject);
 		return ResponseEntity.ok(someClassObject);
+	}
+
+	private List<City> setAss(List<City> citys) {
+		List<City> cs = citys;
+		for (int i = 0; i < cs.size(); i++) {
+			List<District> dis = cs.get(i).getDistricts();
+
+			for (int j = 0; j < dis.size(); j++) {
+				List<SubDistrict> sdis = dis.get(j).getSubDistrict();
+				for (int k = 0; k < sdis.size(); k++) {
+					//sdis.get(i).setDistrict(dis.get(j));
+					cs.get(i).getDistricts().get(j).getSubDistrict().get(k).setDistrict(dis.get(j));
+				}
+				//dis.get(i).setCity(cs.get(i));
+				cs.get(i).getDistricts().get(j).setCity(cs.get(i));
+
+			}
+		}
+		return cs;
 	}
 
 }
