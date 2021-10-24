@@ -35,7 +35,7 @@ public class District extends BaseEntity implements Serializable{
 	private String name;
 	
 	@ManyToOne
-	@JoinColumn(name = "city_id",referencedColumnName="id",nullable = false, updatable = false, insertable = true)
+	@JoinColumn(name = "city_id",referencedColumnName="id",nullable = false, updatable = true, insertable = true)
 	private City city;
 	
 	@OneToMany(mappedBy = "district", fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST})
