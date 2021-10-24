@@ -2,7 +2,7 @@ package com.api.service;
 
 import java.util.List;
 
-import com.api.entity.Location;
+import com.api.entity.Address;
 import com.api.entity.ReliefPoint;
 import com.api.entity.User;
 
@@ -25,14 +25,14 @@ public interface ReliefPointService {
 	 * @param location
 	 * @return
 	 */
-	List<ReliefPoint> getReliefPointByLocation(Location location);
+	List<ReliefPoint> getReliefPointByLocation(Address address);
 	
 	/**
 	 * 
 	 * @param location
 	 * @return
 	 */
-	List<ReliefPoint> getReliefPointByArea(Location location);
+	List<ReliefPoint> getReliefPointByArea(Address address);
 	
 	/**
 	 * 

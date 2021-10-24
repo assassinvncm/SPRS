@@ -40,7 +40,7 @@ public class Request extends BaseEntity implements Serializable{
 	private Date timestamp;
 	
 	@ManyToOne
-	@JsonIgnore
+	//@JsonIgnore
 	@JoinColumn(name = "user_id",referencedColumnName="id")
 	private User user;
 	
