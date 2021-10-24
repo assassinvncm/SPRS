@@ -272,7 +272,7 @@ public class UserSerivceImpl implements UserService {
 		req.setStatus(Constants.REQUEST_STATUS_UNCHECK);
 		req.setTimestamp(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		// đang hardcode (nên xem, check quyền tạo)
-		if (u.getGroups_user().get(0).getId() == 4) {
+		if (u.getGroups_user().get(0).getId() == 3) {
 			req.setOrganization(u.getOrganization());
 		} else {
 			Group g = new Group();
