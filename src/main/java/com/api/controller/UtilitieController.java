@@ -7,18 +7,24 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.AddressDto;
+import com.api.dto.SPRSResponse;
 import com.api.entity.City;
 import com.api.entity.District;
 import com.api.entity.SubDistrict;
 import com.api.repositories.CityRepository;
+import com.api.service.AddressService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ultils.Constants;
 
 @RestController
 @RequestMapping("/utilities")
@@ -26,6 +32,9 @@ public class UtilitieController {
 
 	@Autowired
 	CityRepository cityRepo;
+	
+	@Autowired
+	AddressService addressService;
 
 	@RequestMapping("/loadData")
 	public ResponseEntity<?> loadData() throws JsonParseException, JsonMappingException, IOException {
@@ -62,5 +71,11 @@ public class UtilitieController {
 		}
 		return cs;
 	}
+	@RequestMapping(value = "/testSaveAddress", method = RequestMethod.POST)
+	public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) throws JsonParseException, JsonMappingException, IOException {
+		addressService.saveAddress(addressDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Save Address Success!", "", null, null));
+	}
+	
 
 }

@@ -26,11 +26,11 @@ public class SubDistrict extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -9193587263123659992L;
 	
 	@Column
-	@JsonProperty("code")
+	//@JsonProperty("code")
 	private String code;
 	
 	@Column
-	@JsonProperty("name")
+	//@JsonProperty("name")
 	private String name;
 	
 	@ManyToOne()

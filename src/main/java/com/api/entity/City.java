@@ -26,17 +26,13 @@ public class City extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 8862061711309048786L;
 	
 	@Column
-	@JsonProperty("code")
 	private String code;
 	
 	@Column
-	@JsonProperty("name")
 	private String name;
 	
 
 	@OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "city", fetch = FetchType.LAZY)
-	@JsonProperty("districts")
-	//@JoinColumn(name = "city_id")
 	List<District> districts = new ArrayList<District>();
 
 

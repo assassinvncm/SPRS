@@ -61,6 +61,16 @@ public class Address extends BaseEntity implements Serializable {
 	public void setGPS_Lati(String gPS_Lati) {
 		GPS_Lati = gPS_Lati;
 	}
+	
+	
+
+	public SubDistrict getSubDistrict() {
+		return subDistrict;
+	}
+
+	public void setSubDistrict(SubDistrict subDistrict) {
+		this.subDistrict = subDistrict;
+	}
 
 	public Address() {
 		super();

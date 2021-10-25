@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.User;
 import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
@@ -59,34 +60,9 @@ public class UserController {
 
 		logger.info("Start get User");
 
-		String username = null;
-		String jwtToken = null;
-		
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
-			try {
-				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
-				throw new AppException(501,"Unable to get JWT Token");
-			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
-				throw new AppException(501,"JWT Token has expired");
-			}
-		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
-			throw new AppException(501,"JWT Token does not begin with Bearer String");
-		}
-		
-		Optional<User> user = null;
-		try {
-			user = Optional.ofNullable(userService.findByUsername(username));
-		} catch (Exception e) {
-			logger.info("Error get User: "+e.getMessage());
-			throw new AppException(501,"Error when query to get user");
-		}
+		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
 		logger.info("End get User");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", user.get(), null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", useDto, null));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
@@ -96,30 +72,27 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users_v2/user", method = RequestMethod.POST)
-	public ResponseEntity<?> registerUser_v2(@Validated @RequestBody User user) {
-		User u = userService.registerUser_v2(user);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", u, null));
+	public ResponseEntity<?> registerUser_v2(@Validated @RequestBody UserDto userDto) {
+		userService.registerUser_v2(userDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/users_v2/organizationlAdmin", method = RequestMethod.POST)
-	public ResponseEntity<?> registerOrganization_v2(@Validated @RequestBody User user) {
-		User u = userService.registerOrganization_v2(user);
-		//List<Group> g= user.getGroups_user();
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
+	public ResponseEntity<?> registerOrganization_v2(@Validated @RequestBody UserDto userDto) {
+		 userService.registerOrganization_v2(userDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/users_v2/organizationalUser", method = RequestMethod.POST)
-	public ResponseEntity<?> registerOrganizationalUser_v2(@Validated @RequestBody User user) {
-		User u = userService.registerOrganizationUser_v2(user);
-		//List<Group> g= user.getGroups_user();
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
+	public ResponseEntity<?> registerOrganizationalUser_v2(@Validated @RequestBody UserDto userDto) {
+		userService.registerOrganizationUser_v2(userDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/users_v2/ownStore", method = RequestMethod.POST)
-	public ResponseEntity<?> registerOownStore_v2(@Validated @RequestBody User user) {
-		User u = userService.registerStoreUser_v2(user);
-		//List<Group> g= user.getGroups_user();
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", u, null));
+	public ResponseEntity<?> registerOownStore_v2(@Validated @RequestBody UserDto userDto) {
+		userService.registerStoreUser_v2(userDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
@@ -135,4 +108,6 @@ public class UserController {
 		logger.info("End update User id: "+id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update user success!", "", null, null));
 	}
+	
+	
 }

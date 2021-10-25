@@ -2,7 +2,9 @@ package com.api.service;
 
 import java.util.List;
 
-
+import com.api.dto.AddressDto;
+import com.api.dto.UserDto;
+import com.api.entity.Address;
 import com.api.entity.User;
 
 public interface UserService {
@@ -25,7 +27,7 @@ public interface UserService {
 	 * 
 	 * @return user
 	 */
-	User getUserbyToken();
+	UserDto getUserbyToken(String requestTokenHeader);
 	
 	/**
 	 * register user
@@ -39,28 +41,29 @@ public interface UserService {
 	 * @param userDto
 	 * @return user
 	 */
-	User registerUser_v2(User user);
+	void registerUser_v2(UserDto userDto);
+
 	
 	/**
 	 * 
 	 * @param user
 	 * @return
 	 */
-	User registerOrganization_v2(User user);
+	void registerOrganization_v2(UserDto userDto);
 	
 	/**
 	 * 
 	 * @param user
 	 * @return
 	 */
-	User registerOrganizationUser_v2(User user);
+	void registerOrganizationUser_v2(UserDto userDto);
 	
 	/**
 	 * 
 	 * @param user
 	 * @return
 	 */
-	User registerStoreUser_v2(User user);
+	void registerStoreUser_v2(UserDto userDto);
 	
 	User save(User userDto);
 	
