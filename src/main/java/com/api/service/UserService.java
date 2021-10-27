@@ -83,4 +83,11 @@ public interface UserService {
 	 * @return
 	 */
 	User getOne(Long id);
+	
+	/**
+	 * 
+	 * @param 
+	 * @return char[]
+	 */
+	String generatePassword(int len);
 }
