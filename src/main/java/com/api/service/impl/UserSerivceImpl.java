@@ -187,7 +187,9 @@ public class UserSerivceImpl implements UserService {
 		}
 		User user = modelMapper.map(userDto, User.class);
 		Address address = addressService.mapAddress(userDto.getAddress());
+		Address addressOrg = addressService.mapAddress(userDto.getOrganization().getAddress());
 		user.setAddress(address);
+		user.getOrganization().setAddress(addressOrg);
 		user.setIsActive(false);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -228,7 +230,9 @@ public class UserSerivceImpl implements UserService {
 
 		User user = modelMapper.map(userDto, User.class);
 		Address address = addressService.mapAddress(userDto.getAddress());
+		Address addressOrg = addressService.mapAddress(userDto.getOrganization().getAddress());
 		user.setAddress(address);
+		user.getOrganization().setAddress(addressOrg);
 		user.setOrganization(organization);
 
 		user.setIsActive(false);
