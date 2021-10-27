@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,17 +28,12 @@ public class City extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = 8862061711309048786L;
 	
 	@Column
-	@JsonProperty("code")
 	private String code;
 	
 	@Column
-	@JsonProperty("name")
 	private String name;
 	
-
-	@OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "city", fetch = FetchType.LAZY)
-	@JsonProperty("districts")
-	//@JoinColumn(name = "city_id")
+	@OneToMany( mappedBy = "city", fetch = FetchType.LAZY)
 	List<District> districts = new ArrayList<District>();
 
 

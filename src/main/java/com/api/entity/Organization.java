@@ -56,4 +56,71 @@ public class Organization extends BaseEntity implements Serializable{
 	@JsonProperty("request")
 	private List<Request> request;
 	
+	
+
+	public Organization() {
+		super();
+	}
+
+	public Organization(String name, Date founded, String description, Address address, List<User> user,
+			List<Request> request) {
+		super();
+		this.name = name;
+		this.founded = founded;
+		this.description = description;
+		this.address = address;
+		this.user = user;
+		this.request = request;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Date getFounded() {
+		return founded;
+	}
+
+	public void setFounded(Date founded) {
+		this.founded = founded;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public List<User> getUser() {
+		return user;
+	}
+
+	public void setUser(List<User> user) {
+		this.user = user;
+	}
+
+	public List<Request> getRequest() {
+		return request;
+	}
+
+	public void setRequest(List<Request> request) {
+		this.request = request;
+	}
+	
+	
+	
 }
