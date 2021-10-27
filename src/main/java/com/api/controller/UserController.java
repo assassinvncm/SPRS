@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
+import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.User;
 import com.api.repositories.GroupRepository;
@@ -99,10 +100,13 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/user/update/password", method = RequestMethod.PUT)
-	public ResponseEntity<?> updatePassword(@RequestHeader ("Authorization") String requestTokenHeader,@Validated @RequestBody String newPassword){
+	public ResponseEntity<?> updatePassword(@RequestHeader ("Authorization") String requestTokenHeader,
+			@Validated @RequestBody UpdatePasswordDto updatePasswordDto){
 		
-		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
-		userService.updatePassword(useDto, newPassword);
+		
+		
+//		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
+//		userService.updatePassword(useDto, newPassword);
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update password success!", "", null, null));
 	}

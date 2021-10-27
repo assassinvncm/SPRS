@@ -160,6 +160,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		requestDto.setMessage(request.getMessage());
 		requestDto.setTimestamp(request.getTimestamp());
 		requestDto.setType(request.getType());
+		requestDto.setUser(userToUserDto(request.getUser()));
 		return requestDto;
 	}
 
@@ -172,6 +173,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<RequestDto> lstRequestDto =  lstRequests.stream().map(request->{
 			return requestToRequestDto(request);
 		}).collect(Collectors.toList());
+		
 		return lstRequestDto;
 	}
 

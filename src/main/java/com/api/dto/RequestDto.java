@@ -30,7 +30,6 @@ public class RequestDto {
 	private OrganizationDto organization;
 	
 	
-
 	public RequestDto() {
 		super();
 	}

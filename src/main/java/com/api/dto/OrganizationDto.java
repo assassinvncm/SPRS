@@ -16,7 +16,7 @@ public class OrganizationDto {
 		super();
 	}
 
-	public OrganizationDto(long id, String name, Date founded, String description, Address address, List<Request> request) {
+	public OrganizationDto(long id, String name, Date founded, String description, AddressDto address, List<RequestDto> request) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -34,9 +34,9 @@ public class OrganizationDto {
 
 	private String description;
 	
-	private Address address;
+	private AddressDto address;
 	
-	private List<Request> request;
+	private List<RequestDto> request;
 	
 	
 
@@ -72,19 +72,19 @@ public class OrganizationDto {
 		this.description = description;
 	}
 
-	public Address getAddress() {
+	public AddressDto getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressDto address) {
 		this.address = address;
 	}
 
-	public List<Request> getRequest() {
+	public List<RequestDto> getRequest() {
 		return request;
 	}
 
-	public void setRequest(List<Request> request) {
+	public void setRequest(List<RequestDto> request) {
 		this.request = request;
 	}
 	
