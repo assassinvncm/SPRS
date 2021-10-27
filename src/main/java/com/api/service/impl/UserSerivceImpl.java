@@ -18,14 +18,12 @@ import com.api.controller.UserController;
 import com.api.dto.GroupDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.UserDto;
-import com.api.entity.Acceptance;
 import com.api.entity.Address;
 import com.api.entity.Group;
 import com.api.entity.Organization;
 import com.api.entity.Request;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
-import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.OrganizationRepository;
 import com.api.repositories.RequestRepository;
@@ -47,9 +45,6 @@ public class UserSerivceImpl implements UserService {
 
 	@Autowired
 	GroupRepository groupRepository;
-
-	@Autowired
-	AcceptanceRepository accRepository;
 
 	@Autowired
 	RequestRepository requestRepository;
@@ -132,7 +127,7 @@ public class UserSerivceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 		if (checkRqUser(user)) {
-			createRequestAccept("Account accepting", "Account accepting", user);
+			//createRequestAccept("Account accepting", "Account accepting", user);
 		}
 		logger.info("End save User");
 		return user;
@@ -328,18 +323,6 @@ public class UserSerivceImpl implements UserService {
 			}
 		}
 		return false;
-	}
-
-	public void createRequestAccept(String request_name, String type, User u) {
-		logger.info("Start create request type: " + type);
-		Acceptance a = new Acceptance();
-		a.setRequest_name(request_name);
-		a.setType(type);
-		a.setRequest_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
-		a.setStatus(false);
-		a.setUser(u);
-		accRepository.save(a);
-		logger.info("End create request type: " + type);
 	}
 
 	@SuppressWarnings("null")
