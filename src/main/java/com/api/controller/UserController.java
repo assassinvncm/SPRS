@@ -23,6 +23,7 @@ import com.api.dto.UserDto;
 import com.api.entity.User;
 import com.api.repositories.GroupRepository;
 import com.api.service.UserService;
+import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
 
@@ -102,11 +103,11 @@ public class UserController {
 	@RequestMapping(value = "/user/update/password", method = RequestMethod.PUT)
 	public ResponseEntity<?> updatePassword(@RequestHeader ("Authorization") String requestTokenHeader,
 			@Validated @RequestBody UpdatePasswordDto updatePasswordDto){
-		
-		
-		
-//		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
-//		userService.updatePassword(useDto, newPassword);
+		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
+		if(!useDto.getPassword().equals(updatePasswordDto.getOldPassword())) {
+			throw new AppException(403,"Password is not correct");
+		}
+		userService.updatePassword(useDto, updatePasswordDto.getNewPassword());
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update password success!", "", null, null));
 	}
