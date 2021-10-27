@@ -35,7 +35,7 @@ public class UserDto {
 	
 	private AddressDto address;
 	
-	private Organization organization;
+	private OrganizationDto organization;
 	
 	private List<GroupDto> groups_user;
 	
@@ -50,7 +50,7 @@ public class UserDto {
 	
 
 	public UserDto(long id, String username, String phone, String password, String full_name, String dob,
-			Date create_time, Boolean isActive, AddressDto address, Organization organization,
+			Date create_time, Boolean isActive, AddressDto address, OrganizationDto organization,
 			List<GroupDto> groups_user, List<RequestDto> request) {
 		super();
 		this.id = id;
@@ -143,13 +143,13 @@ public class UserDto {
 
 
 
-	public Organization getOrganization() {
+	public OrganizationDto getOrganization() {
 		return organization;
 	}
 
 
 
-	public void setOrganization(Organization organization) {
+	public void setOrganization(OrganizationDto organization) {
 		this.organization = organization;
 	}
 

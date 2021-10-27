@@ -72,10 +72,6 @@ public class User extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
-    private List<Acceptance> acceptances;
-	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-	@JsonIgnore
 	private List<Request> request;
 	
 //	@OneToMany(mappedBy = "user_rp")
@@ -105,7 +101,7 @@ public class User extends BaseEntity implements Serializable{
 	}
 
 	public User(String username, String phone, String password, String full_name, String dob, Address address,
-		Date create_time, Boolean isActive, List<Group> groups_user, List<Acceptance> acceptances) {
+		Date create_time, Boolean isActive, List<Group> groups_user) {
 	super();
 	this.username = username;
 	this.phone = phone;
@@ -116,19 +112,10 @@ public class User extends BaseEntity implements Serializable{
 	this.create_time = create_time;
 	this.isActive = isActive;
 	this.groups_user = groups_user;
-	this.acceptances = acceptances;
 }
 
 	public User() {
 		super();
-	}
-
-	public List<Acceptance> getAcceptances() {
-		return acceptances;
-	}
-
-	public void setAcceptances(List<Acceptance> acceptances) {
-		this.acceptances = acceptances;
 	}
 
 	public void setGroups_user(List<Group> groups_user) {
