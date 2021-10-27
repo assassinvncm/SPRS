@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.RequestDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.Group;
 import com.api.entity.Request;
 import com.api.entity.User;
@@ -37,37 +39,48 @@ public class RequestController {
 
 	@RequestMapping("/request-organizationalAdmin")
 	public ResponseEntity<?> getRequestOrgAdmin(@RequestHeader("Authorization") String requestTokenHeader) {
-		List<Request> requests = null;
-		String jwtToken = requestTokenHeader.substring(7);
-		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-		User user = userService.findByUsername(username);
-
-		requests = requestService.getRequestbyOrganization(user.getOrganization().getId());
+		
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		List<Request> requests = requestService.getRequestbyOrganization(userDto.getOrganization().getId());
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requests, null));
+	}
+	
+	@RequestMapping("/request-organizationalAdmin/{status}")
+	public ResponseEntity<?> filterRequestOrgAdmin(@RequestHeader("Authorization") String requestTokenHeader,
+			@PathVariable("status") String status) {
+		
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		List<RequestDto> requestDtos = requestService.filterRequestOrgAdmin(userDto.getOrganization().getId(),status);
+
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requestDtos, null));
 	}
 
 	@RequestMapping("/request-systemAdmin")
 	public ResponseEntity<?> getRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader) {
-		List<Request> requests = null;
-		String jwtToken = requestTokenHeader.substring(7);
-		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-		User user = userService.findByUsername(username);
-		//user.getGroups_user();
-		requests = requestService.getRequestbySysAdmin(user.getGroups_user().get(0).getId());
+		
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		List<Request> requests = requestService.getRequestbySysAdmin(userDto.getGroups_user().get(0).getId());
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requests, null));
+	}
+	
+	@RequestMapping("/request-systemAdmin/{status}")
+	public ResponseEntity<?> filterRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
+			@PathVariable("status") String status) {
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		
+		List<RequestDto> requestDtos = requestService.filterRequestSysAdmin(userDto.getGroups_user().get(0).getId(),status);
+
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requestDtos, null));
 	}
 
 	@RequestMapping(value = "/admin/register/accept", method = RequestMethod.PUT)
 	public ResponseEntity<?> acceptRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody List<Long> rId) {
 
-		String jwtToken = requestTokenHeader.substring(7);
-		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-		User user = userService.findByUsername(username);
-
-		requestService.acceptRequest(rId,user.getId());
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		requestService.acceptRequest(rId,userDto.getId());
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Accept Request success!", "", null, null));
 	}
@@ -76,11 +89,8 @@ public class RequestController {
 	public ResponseEntity<?> rejectRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody List<Long> rId) {
 
-		String jwtToken = requestTokenHeader.substring(7);
-		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-		User user = userService.findByUsername(username);
-
-		requestService.RejectRequest(rId,user.getId());
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		requestService.RejectRequest(rId,userDto.getId());
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Request success!", "", null, null));
 	}
@@ -88,11 +98,8 @@ public class RequestController {
 	@RequestMapping(value = "/request-systemAdmin", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody Request request) {
-
-		String jwtToken = requestTokenHeader.substring(7);
-		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-		User user = userService.findByUsername(username);
-
+		
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		Request req = requestService.handleRequest(request);
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Request success!", "", req, null));
@@ -102,9 +109,7 @@ public class RequestController {
 	public ResponseEntity<?> updateRequestOrgAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody Request request) {
 
-		String jwtToken = requestTokenHeader.substring(7);
-		String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-		User user = userService.findByUsername(username);
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 
 		Request req = requestService.handleRequest(request);
 

@@ -65,25 +65,16 @@ public interface UserService {
 	 */
 	void registerStoreUser_v2(UserDto userDto);
 	
-	User save(User userDto);
-	
 	/**
 	 * 
-	 * @return
+	 * @param userDto
 	 */
-	List<User> findAll();
+	void updateUser(UserDto userDto,UserDto bean);
 	
 	/**
-	 * 
-	 * @param username
-	 * @return
+	 * @param newPassword
 	 */
-	User findByUsername(String username);
+	void updatePassword(UserDto userDto, String newPassword);
 	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	User getOne(Long id);
+	
 }

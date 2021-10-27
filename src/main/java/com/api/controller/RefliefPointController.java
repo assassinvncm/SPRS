@@ -62,7 +62,7 @@ public class RefliefPointController {
 			throw new AppException(501,"JWT Token does not begin with Bearer String");
 		}
 		
-		User user = userSerivce.findByUsername(username);
+		//User user = userSerivce.findByUsername(username);
 		//reliefPoint.setUsers(user);
 		
 		//ReliefPoint rp = reliefPointService.createReliefPoint(reliefPoint);

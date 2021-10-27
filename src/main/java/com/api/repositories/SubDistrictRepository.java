@@ -12,7 +12,7 @@ import com.api.entity.SubDistrict;
 
 public interface SubDistrictRepository extends JpaRepository<SubDistrict, Long>{
 	
-	@Query("select sb from SubDistrict sb inner join sb.district d inner join d.city c where sb.name = :subDistrictName and d.name = :ditrictName and c.name = :cityName")
+	@Query("select sb from SubDistrict sb inner join sb.district d inner join d.city c where sb.name LIKE CONCAT('%',:subDistrictName) and d.name LIKE CONCAT('%',:ditrictName) and c.name = :cityName")
 	Optional<SubDistrict> findSubDistrict(@Param("subDistrictName") String subDistrictName,@Param("ditrictName") String ditrictName,@Param("cityName") String cityName);
 	
 	@Query("select sd from SubDistrict sd inner join sd.district where sd.district.id = :districtId")

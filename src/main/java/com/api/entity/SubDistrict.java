@@ -26,15 +26,13 @@ public class SubDistrict extends BaseEntity implements Serializable{
 	private static final long serialVersionUID = -9193587263123659992L;
 	
 	@Column
-	//@JsonProperty("code")
 	private String code;
 	
 	@Column
-	//@JsonProperty("name")
 	private String name;
 	
-	@ManyToOne()
-	@JoinColumn(name = "districts_id",referencedColumnName="id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "districts_id",referencedColumnName="id",nullable = false)
 	District district;
 	
 	@OneToMany(mappedBy = "subDistrict", fetch = FetchType.LAZY)

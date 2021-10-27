@@ -3,6 +3,9 @@ package com.api.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,8 @@ import com.api.entity.City;
 import com.api.entity.District;
 import com.api.entity.SubDistrict;
 import com.api.repositories.CityRepository;
+import com.api.repositories.DistrictRepository;
+import com.api.repositories.SubDistrictRepository;
 import com.api.service.AddressService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -34,6 +39,12 @@ public class UtilitieController {
 	CityRepository cityRepo;
 	
 	@Autowired
+	DistrictRepository districtRepository;
+	
+	@Autowired
+	SubDistrictRepository subDistrictRepository;
+	
+	@Autowired
 	AddressService addressService;
 
 	@RequestMapping("/loadData")
@@ -43,34 +54,51 @@ public class UtilitieController {
 		String path = "E:\\Data FPT University\\Project_FPT_20210528\\SPRS\\Source\\Source_api\\address - Copy.json";
 		List<City> someClassObject = mapper.readValue(new File(path), new TypeReference<List<City>>() {
 		});
-		// Iterable<City> iterable = someClassObject;
-		// cityRepo.saveAll(iterable);
-		List<City> cv = setAss(someClassObject);
-		cv.stream().forEach(obj -> {
-			cityRepo.saveAndFlush(obj);
-		});
-		System.out.println(someClassObject);
-		return ResponseEntity.ok(someClassObject);
+//		List<City> cv = setAss(someClassObject);
+//		cv.stream().forEach(obj -> {
+//			cityRepo.saveAndFlush(obj);
+//		});
+		
+		saveAddress(someClassObject);
+		return ResponseEntity.ok("suscess");
 	}
-
-	private List<City> setAss(List<City> citys) {
-		List<City> cs = citys;
-		for (int i = 0; i < cs.size(); i++) {
-			List<District> dis = cs.get(i).getDistricts();
-
-			for (int j = 0; j < dis.size(); j++) {
-				List<SubDistrict> sdis = dis.get(j).getSubDistrict();
-				for (int k = 0; k < sdis.size(); k++) {
-					//sdis.get(i).setDistrict(dis.get(j));
-					cs.get(i).getDistricts().get(j).getSubDistrict().get(k).setDistrict(dis.get(j));
-				}
-				//dis.get(i).setCity(cs.get(i));
-				cs.get(i).getDistricts().get(j).setCity(cs.get(i));
+	
+	//@Transactional
+	private void saveAddress(List<City> citys) {
+		for (int i = 0; i < citys.size(); i++) {
+			City city = cityRepo.saveAndFlush(citys.get(i));
+			List<District> dis = citys.get(i).getDistricts();
+			for (int j = 0; j <dis.size(); j++) {
+				dis.get(j).setCity(city);
+				District d = districtRepository.saveAndFlush(dis.get(j));
+				List<SubDistrict> lstSubDis = dis.get(j).getSubDistrict().stream().map(subDistt ->{
+					subDistt.setDistrict(d);
+					return subDistt;
+				}).collect(Collectors.toList());
+				subDistrictRepository.saveAllAndFlush(lstSubDis);
 
 			}
 		}
-		return cs;
 	}
+
+//	private List<City> setAss(List<City> citys) {
+//		List<City> cs = citys;
+//		for (int i = 0; i < cs.size(); i++) {
+//			List<District> dis = cs.get(i).getDistricts();
+//
+//			for (int j = 0; j < dis.size(); j++) {
+//				List<SubDistrict> sdis = dis.get(j).getSubDistrict();
+//				for (int k = 0; k < sdis.size(); k++) {
+//					//sdis.get(k).setDistrict(dis.get(j));
+//					cs.get(i).getDistricts().get(j).getSubDistrict().get(k).setDistrict(dis.get(j));
+//				}
+//				//dis.get(i).setCity(cs.get(i));
+//				cs.get(i).getDistricts().get(j).setCity(cs.get(i));
+//
+//			}
+//		}
+//		return cs;
+//	}
 	@RequestMapping(value = "/testSaveAddress", method = RequestMethod.POST)
 	public ResponseEntity<?> saveAddress(@RequestBody AddressDto addressDto) throws JsonParseException, JsonMappingException, IOException {
 		addressService.saveAddress(addressDto);

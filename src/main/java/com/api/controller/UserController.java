@@ -95,18 +95,24 @@ public class UserController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
 	}
 	
-	@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateUser(@PathVariable(value = "id") Long id, @Validated @RequestBody User bean){
-		logger.info("Start update User id: "+id);
-		User user = userService.getOne(id);
-		if(user == null) {
-			ResponseEntity.notFound().build();
-		}
+	@RequestMapping(value = "/user/update/infor", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateUser(@RequestHeader ("Authorization") String requestTokenHeader,@Validated @RequestBody UserDto bean){
 		
-		BeanUtils.copyProperties(bean, user);
-
-		logger.info("End update User id: "+id);
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		logger.info("Start update User id: "+userDto.getId());
+		
+		
+		//logger.info("End update User id: "+id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update user success!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/user/update/password", method = RequestMethod.PUT)
+	public ResponseEntity<?> updatePassword(@RequestHeader ("Authorization") String requestTokenHeader,@Validated @RequestBody String newPassword){
+		
+		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
+		userService.updatePassword(useDto, newPassword);
+		
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update password success!", "", null, null));
 	}
 	
 	

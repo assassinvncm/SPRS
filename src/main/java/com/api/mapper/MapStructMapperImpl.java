@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 import com.api.dto.AddressDto;
 import com.api.dto.GroupDto;
 import com.api.dto.OrganizationDto;
+import com.api.dto.RequestDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
 import com.api.entity.Organization;
+import com.api.entity.Request;
 import com.api.entity.User;
 
 @Component
@@ -124,14 +126,53 @@ public class MapStructMapperImpl implements MapStructMapper {
 		userDto.setCreate_time(null);
 		userDto.setGroups_user(lstGroupToGroupDto(user.getGroups_user()));
 		userDto.setAddress(addressToAddressDto(user.getAddress()));
+		
 		return userDto;
 	}
 
 	@Override
 	public User userDtoToUser(UserDto userDto) {
 		// TODO Auto-generated method stub
+		if (userDto == null) {
+			return null;
+		}
+		User user = new User();
+		user.setId(userDto.getId());
+		user.setUsername(userDto.getUsername());
+		user.setPhone(userDto.getPhone());
+		user.setFull_name(userDto.getFull_name());
+		user.setDob(userDto.getDob());
+		user.setPassword(userDto.getPassword());
+		user.setIsActive(userDto.getIsActive());
+		return user;
+	}
+
+	@Override
+	public RequestDto requestToRequestDto(Request request) {
+		// TODO Auto-generated method stub
+		if (request == null) {
+			return null;
+		}
 		
-		return null;
+		RequestDto requestDto = new RequestDto();
+		requestDto.setId(request.getId());
+		requestDto.setStatus(request.getStatus());
+		requestDto.setMessage(request.getMessage());
+		requestDto.setTimestamp(request.getTimestamp());
+		requestDto.setType(request.getType());
+		return requestDto;
+	}
+
+	@Override
+	public List<RequestDto> lstRequestToRequestDto(List<Request> lstRequests) {
+		// TODO Auto-generated method stub
+		if (lstRequests == null) {
+			return null;
+		}
+		List<RequestDto> lstRequestDto =  lstRequests.stream().map(request->{
+			return requestToRequestDto(request);
+		}).collect(Collectors.toList());
+		return lstRequestDto;
 	}
 
 }

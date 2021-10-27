@@ -72,32 +72,6 @@ public class UserSerivceImpl implements UserService {
 	MapStructMapper mapStructMapper;
 
 	@Override
-	public User save(User userDto) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<User> findAll() {
-		// TODO Auto-generated method stub
-		return userRepository.findAll();
-	}
-
-	@Override
-	public User findByUsername(String username) {
-		// TODO Auto-generated method stub
-		User u = userRepository.findByUsername(username);
-		// u.getGroups_user();
-		return u;
-	}
-
-	@Override
-	public User getOne(Long id) {
-		// TODO Auto-generated method stub
-		return userRepository.getOne(id);
-	}
-
-	@Override
 	public List<User> getAllUser() {
 		// TODO Auto-generated method stub
 		logger.info("Start get all User");
@@ -380,6 +354,28 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(404, "Phone number not Found");
 		}
 		return null;
+	}
+
+	@Override
+	public void updatePassword(UserDto userDto, String newPassword) {
+		// TODO Auto-generated method stub
+		User user = mapStructMapper.userDtoToUser(userDto);
+		user.setPassword(newPassword);
+		userRepository.save(user);
+	}
+
+	@Override
+	public void updateUser(UserDto userDto,UserDto bean) {
+		// TODO Auto-generated method stub
+		userDto.setFull_name(bean.getFull_name());
+		userDto.setAddress(bean.getAddress());
+		userDto.setDob(bean.getDob());
+		userDto.setOrganization(bean.getOrganization());
+		userDto.setOrganization(null);
+		
+		User user = mapStructMapper.userDtoToUser(userDto);
+		userRepository.save(user);
+		
 	}
 
 }
