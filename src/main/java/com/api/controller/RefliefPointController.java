@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.entity.ReliefPoint;
 import com.api.entity.User;
@@ -41,7 +42,7 @@ public class RefliefPointController {
 	private JwtTokenUtil jwtTokenUtil;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody ReliefPoint reliefPoint) {
+	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody ReliefPointDto reliefPointDto) {
 		
 		String username = null;
 		String jwtToken = null;
@@ -61,11 +62,11 @@ public class RefliefPointController {
 			throw new AppException(501,"JWT Token does not begin with Bearer String");
 		}
 		
-		User user = userSerivce.findByUsername(username);
-		reliefPoint.setUsers(user);
+		//User user = userSerivce.findByUsername(username);
+		//reliefPoint.setUsers(user);
 		
-		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPoint);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", rp, null));
+		//ReliefPoint rp = reliefPointService.createReliefPoint(reliefPoint);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)

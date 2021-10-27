@@ -16,15 +16,18 @@ public class OrganizationDto {
 		super();
 	}
 
-	public OrganizationDto(String name, Date founded, String description, Address address, List<Request> request) {
+	public OrganizationDto(long id, String name, Date founded, String description, Address address, List<Request> request) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.founded = founded;
 		this.description = description;
 		this.address = address;
 		this.request = request;
 	}
-
+	
+	private long id;
+	
 	private String name;
 	
 	private Date founded;
@@ -34,6 +37,16 @@ public class OrganizationDto {
 	private Address address;
 	
 	private List<Request> request;
+	
+	
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;

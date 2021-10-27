@@ -26,7 +26,7 @@ public class ReliefInformation extends BaseEntity implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name = "reliefPoint_id", referencedColumnName="id")
-	private User reliefPoint;
+	private ReliefPoint reliefPoint;
 	
 	@ManyToOne
 	@JoinColumn(name = "item_id", referencedColumnName="id")

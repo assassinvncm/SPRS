@@ -44,8 +44,23 @@ public class GroupController {
 		logger.info("Start get all Group");
 		List<Group> listGroup = groupServ.findAll();
 		if (listGroup.isEmpty()) {
-			// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is
-			// not existed!", null, null));
+			throw new AppException(404, "Group is not existed!");
+		}
+		logger.info("End get all Group");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, listGroup));
+	}
+	
+	@RequestMapping(value = "/group/{typeAccess}", method = RequestMethod.GET)
+	public ResponseEntity<?> listGroup(@PathVariable("typeAccess") String typeAccess) {
+		
+		if(typeAccess.equals("web")) {
+			
+		}else if(typeAccess.equals("mobile")) {
+			
+		}
+		
+		List<Group> listGroup = groupServ.findAll();
+		if (listGroup.isEmpty()) {
 			throw new AppException(404, "Group is not existed!");
 		}
 		logger.info("End get all Group");
@@ -56,9 +71,7 @@ public class GroupController {
 	public ResponseEntity<?> getGroup(@PathVariable(value = "id") Long id) {
 		logger.info("Start get Group by id: " + id);
 		Optional<Group> gr = groupServ.findById(id);
-		if (gr.isEmpty()) {
-			// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is
-			// not existed!", null, null));
+		if (gr.isEmpty()) {;
 			throw new AppException(404, "Group is not existed!");
 		}
 		logger.info("End get Group by id: " + id);
@@ -70,8 +83,6 @@ public class GroupController {
 		logger.info("Start save Group");
 		Group gr = groupServ.findByName(bean.getName());
 		if (gr != null) {
-			// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is
-			// existed!", null, null));
 			throw new AppException(404, "Group is not existed!");
 		} else {
 			groupServ.save(bean);
@@ -85,8 +96,6 @@ public class GroupController {
 		logger.info("Start update Group id: " + id);
 		Optional<Group> gr = groupServ.findById(id);
 		if (gr.isEmpty()) {
-			// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is
-			// not existed!", null, null));
 			throw new AppException(404, "Group is not existed!");
 		}
 
@@ -101,8 +110,6 @@ public class GroupController {
 		logger.info("Start delete Group id: " + id);
 		Optional<Group> gr = groupServ.findById(id);
 		if (gr.isEmpty()) {
-			// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Group is
-			// not existed!", null, null));
 			throw new AppException(404, "Group is not existed!");
 		}
 		groupServ.deleteById(gr.get().getId());
@@ -114,16 +121,12 @@ public class GroupController {
 		logger.info("Start grant permission!");
 		Optional<Group> g = groupServ.findById(group.getId());
 		if (g.isEmpty()) {
-			// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND,"","Group not
-			// Found!", null, null));
 			throw new AppException(404, "Group is not Found!");
 		}
 		Collection<Permission> lstTem = group.getPermissions();
 		for (Permission permis : lstTem) {
 			Optional<Permission> perTemp = perRepo.findById(permis.getId());
 			if (perTemp.isEmpty()) {
-				// return ResponseEntity.ok(new SPRSResponse(Constants.NOTFOUND, "", "Permission
-				// not Found!", null, null));
 				throw new AppException(404, "Permission not Found!");
 			}
 			groupServ.save(group);

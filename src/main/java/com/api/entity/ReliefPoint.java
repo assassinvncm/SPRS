@@ -47,7 +47,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY)
 	@JsonIgnore
-    private List<ReliefInformation> reliefInformation;
+    private List<ReliefInformation> reliefInformations;
 	
 	@OneToOne
 	@JoinColumn(name = "address_id")

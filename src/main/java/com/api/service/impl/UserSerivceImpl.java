@@ -3,6 +3,7 @@ package com.api.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +14,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.api.controller.UserController;
+import com.api.dto.GroupDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.Acceptance;
+import com.api.entity.Address;
 import com.api.entity.Group;
 import com.api.entity.Organization;
 import com.api.entity.Request;
 import com.api.entity.User;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.AcceptanceRepository;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.OrganizationRepository;
 import com.api.repositories.RequestRepository;
 import com.api.repositories.UserRepository;
+import com.api.service.AddressService;
 import com.api.service.UserService;
 import com.exception.AppException;
+import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
 import com.ultils.Ultilities;
 
@@ -50,33 +57,19 @@ public class UserSerivceImpl implements UserService {
 	OrganizationRepository organizationRepository;
 
 	@Autowired
+	AddressService addressService;
+
+	@Autowired
+	ModelMapper modelMapper;
+
+	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	@Override
-	public User save(User userDto) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<User> findAll() {
-		// TODO Auto-generated method stub
-		return userRepository.findAll();
-	}
-
-	@Override
-	public User findByUsername(String username) {
-		// TODO Auto-generated method stub
-		User u = userRepository.findByUsername(username);
-		//u.getGroups_user();
-		return u;
-	}
-
-	@Override
-	public User getOne(Long id) {
-		// TODO Auto-generated method stub
-		return userRepository.getOne(id);
-	}
+	@Autowired
+	JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	MapStructMapper mapStructMapper;
 
 	@Override
 	public List<User> getAllUser() {
@@ -94,9 +87,19 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
-	public User getUserbyToken() {
+	public UserDto getUserbyToken(String requestTokenHeader) {
 		// TODO Auto-generated method stub
-		return null;
+		logger.info("Start get User");
+
+		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
+
+		User user = Optional.ofNullable(userRepository.findByUsername(username))
+				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
+		logger.info("End get User");
+		
+		//mapper
+		UserDto userDto= mapStructMapper.userToUserDto(user);
+		return userDto;
 	}
 
 	@Transactional
@@ -136,46 +139,59 @@ public class UserSerivceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public User registerUser_v2(User user) {
+	public void registerUser_v2(UserDto userDto) {
 		// TODO Auto-generated method stub
 		logger.info("Start save User");
-		User u = userRepository.findByUsername(user.getUsername());
+		User u = userRepository.findByUsername(userDto.getUsername());
 		if (u != null) {
 			throw new AppException(403, "Username is existed!");
 		}
-		userRepository.findByPhone(user.getPhone()).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
-		List<Group> lstTem = user.getGroups_user();
-		for (Group group : lstTem) {
-			Optional<Group> grTemp = groupRepository.findById(group.getId());
+		if (userRepository.findByPhone(userDto.getPhone()).isPresent()) {
+			throw new AppException(403, "Phone is exsit!");
+		}
+		List<GroupDto> lstTem = userDto.getGroups_user();
+		for (GroupDto groupDto : lstTem) {
+			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
 			if (grTemp.isEmpty()) {
 				throw new AppException(403, "Group is not exist!");
 			}
 		}
 		// User u = userRepository.getByPhone(user.getPhone());
+
+		User user = modelMapper.map(userDto, User.class);
+		Address address = addressService.mapAddress(userDto.getAddress());
+		user.setAddress(address);
 		user.setIsActive(true);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 		logger.info("End save User");
-		return user;
+		// return user;
 	}
 
 	@Transactional
 	@Override
-	public User registerOrganization_v2(User user) {
+	public void registerOrganization_v2(UserDto userDto) {
 		// TODO Auto-generated method stub
 		logger.info("Start save Organization");
-		User u = userRepository.findByUsername(user.getUsername());
+		User u = userRepository.findByUsername(userDto.getUsername());
 		if (u != null) {
 			throw new AppException(403, "Username is existed!");
 		}
-		List<Group> lstTem = user.getGroups_user();
-		for (Group group : lstTem) {
-			Optional<Group> grTemp = groupRepository.findById(group.getId());
+
+		if (userRepository.findByPhone(userDto.getPhone()).isPresent()) {
+			throw new AppException(403, "Phone is exsit!");
+		}
+		List<GroupDto> lstTem = userDto.getGroups_user();
+		for (GroupDto groupDto : lstTem) {
+			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
 			if (grTemp.isEmpty()) {
 				throw new AppException(403, "Group is not exist!");
 			}
 		}
+		User user = modelMapper.map(userDto, User.class);
+		Address address = addressService.mapAddress(userDto.getAddress());
+		user.setAddress(address);
 		user.setIsActive(false);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -187,30 +203,36 @@ public class UserSerivceImpl implements UserService {
 		logger.info("Start save Request");
 		requestRepository.save(req);
 		logger.info("End save Request");
-		return user;
+		// return user;
 	}
 
 	@Transactional
 	@Override
-	public User registerOrganizationUser_v2(User user) {
+	public void registerOrganizationUser_v2(UserDto userDto) {
 		logger.info("Start save Organizational User");
-		User u = userRepository.findByUsername(user.getUsername());
+		User u = userRepository.findByUsername(userDto.getUsername());
 		if (u != null) {
 			throw new AppException(403, "Username is existed!");
 		}
-		userRepository.findByPhone(user.getPhone()).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
-		List<Group> lstTem = user.getGroups_user();
-		for (Group group : lstTem) {
-			Optional<Group> grTemp = groupRepository.findById(group.getId());
+
+		if (userRepository.findByPhone(userDto.getPhone()).isPresent()) {
+			throw new AppException(403, "Phone is exsit!");
+		}
+		List<GroupDto> lstTem = userDto.getGroups_user();
+		for (GroupDto groupDto : lstTem) {
+			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
 			if (grTemp.isEmpty()) {
 				throw new AppException(403, "Group is not exist!");
 			}
 		}
 
-		Organization organization = organizationRepository.findById(user.getOrganization().getId())
+		Organization organization = organizationRepository.findById(userDto.getOrganization().getId())
 				.orElseThrow(() -> new AppException(403, "organization is not exist!"));
 		// chưa check admin organization phải tồn tại
 
+		User user = modelMapper.map(userDto, User.class);
+		Address address = addressService.mapAddress(userDto.getAddress());
+		user.setAddress(address);
 		user.setOrganization(organization);
 
 		user.setIsActive(false);
@@ -222,25 +244,33 @@ public class UserSerivceImpl implements UserService {
 		Request req = createRequestRegister("request to register", null, user);
 		requestRepository.save(req);
 		logger.info("End save Request");
-		return user;
+		// return user;
 	}
 
 	@Override
-	public User registerStoreUser_v2(User user) {
+	public void registerStoreUser_v2(UserDto userDto) {
 		// TODO Auto-generated method stub
 		logger.info("Start save Own Store");
-		User u = userRepository.findByUsername(user.getUsername());
+		User u = userRepository.findByUsername(userDto.getUsername());
 		if (u != null) {
 			throw new AppException(403, "Username is existed!");
 		}
-		userRepository.findByPhone(user.getPhone()).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
-		List<Group> lstTem = user.getGroups_user();
-		for (Group group : lstTem) {
-			Optional<Group> grTemp = groupRepository.findById(group.getId());
+
+		if (userRepository.findByPhone(userDto.getPhone()).isPresent()) {
+			throw new AppException(403, "Phone is exsit!");
+		}
+		List<GroupDto> lstTem = userDto.getGroups_user();
+		for (GroupDto groupDto : lstTem) {
+			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
 			if (grTemp.isEmpty()) {
 				throw new AppException(403, "Group is not exist!");
 			}
 		}
+
+		User user = modelMapper.map(userDto, User.class);
+		Address address = addressService.mapAddress(userDto.getAddress());
+		user.setAddress(address);
+
 		user.setIsActive(false);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -252,7 +282,7 @@ public class UserSerivceImpl implements UserService {
 		logger.info("Start save Request");
 		requestRepository.save(req);
 		logger.info("End save Request");
-		return user;
+		// return user;
 	}
 
 	private void checkRoleAndUser() {
@@ -324,6 +354,28 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(404, "Phone number not Found");
 		}
 		return null;
+	}
+
+	@Override
+	public void updatePassword(UserDto userDto, String newPassword) {
+		// TODO Auto-generated method stub
+		User user = mapStructMapper.userDtoToUser(userDto);
+		user.setPassword(newPassword);
+		userRepository.save(user);
+	}
+
+	@Override
+	public void updateUser(UserDto userDto,UserDto bean) {
+		// TODO Auto-generated method stub
+		userDto.setFull_name(bean.getFull_name());
+		userDto.setAddress(bean.getAddress());
+		userDto.setDob(bean.getDob());
+		userDto.setOrganization(bean.getOrganization());
+		userDto.setOrganization(null);
+		
+		User user = mapStructMapper.userDtoToUser(userDto);
+		userRepository.save(user);
+		
 	}
 
 }

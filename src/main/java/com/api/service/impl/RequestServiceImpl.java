@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import com.api.dto.RequestDto;
 import com.api.entity.Organization;
 import com.api.entity.Request;
 import com.api.entity.User;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.OrganizationRepository;
 import com.api.repositories.RequestRepository;
 import com.api.service.RequestService;
@@ -25,6 +27,9 @@ public class RequestServiceImpl implements RequestService{
 	
 	@Autowired
 	OrganizationRepository organizationRepository;
+	
+	@Autowired
+	MapStructMapper mapStructMapper;
 
 	@Override
 	public List<Request> getRequestbyOrganization(Long id) {
@@ -39,6 +44,23 @@ public class RequestServiceImpl implements RequestService{
 		List<Request> req = requestRepository.findByGroup_id(id);
 		//User r = req.getUser();
 		return req;
+	}
+	
+
+	@Override
+	public List<RequestDto> filterRequestSysAdmin(Long gid, String status) {
+		// TODO Auto-generated method stub
+		List<Request> req = requestRepository.filterRequestOfAdmin(gid,status);
+		 
+		return mapStructMapper.lstRequestToRequestDto(req);
+	}
+	
+	@Override
+	public List<RequestDto> filterRequestOrgAdmin(Long oid, String status) {
+		// TODO Auto-generated method stub
+		List<Request> req = requestRepository.filterRequestOfOrgAdmin(oid,status);
+		 
+		return mapStructMapper.lstRequestToRequestDto(req);
 	}
 
 	@Override
@@ -67,6 +89,7 @@ public class RequestServiceImpl implements RequestService{
 			}
 			Request req = reqOpt.get();
 			req.setStatus(Constants.REQUEST_STATUS_ACCEPT);
+			req.getUser().setIsActive(true);
 			requestRepository.save(req);
 		});
 	}
@@ -81,8 +104,12 @@ public class RequestServiceImpl implements RequestService{
 			}
 			Request req = reqOpt.get();
 			req.setStatus(Constants.REQUEST_STATUS_REJECT);
+			req.getUser().setIsActive(false);
 			requestRepository.save(req);
 		});
 	}
+
+
+
 
 }
