@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import javax.persistence.NonUniqueResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -344,13 +345,13 @@ public class UserSerivceImpl implements UserService {
 	@SuppressWarnings("null")
 	@Override
 	public String getUsernameByPhone(String phone) {
-		if (phone != null || !phone.equals("")) {
-			phone = "0" + phone.substring(3);
+		if(phone !=null || !phone.equals("")) {
+			phone = "0"+phone.substring(3);
 			Optional<User> u = userRepository.findByPhone(phone);
-			if (!u.isEmpty()) {
+			if(!u.isEmpty()) {
 				return u.get().getUsername();
 			}
-		} else {
+		}else {
 			throw new AppException(404, "Phone number not Found");
 		}
 		return null;
