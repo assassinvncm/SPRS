@@ -1,14 +1,18 @@
 package com.api.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.dto.ReliefPointDto;
 import com.api.entity.Address;
+import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.User;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.ReliefPointRepository;
 import com.api.service.ReliefPointService;
 import com.exception.AppException;
@@ -18,6 +22,9 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 
 	@Autowired
 	ReliefPointRepository reliefPointRepository;
+	
+	@Autowired
+	MapStructMapper mapStructMapper;
 	
 	@Override
 	public ReliefPoint getReliefPointById(Long id) {
@@ -44,8 +51,14 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
-	public ReliefPoint createReliefPoint(ReliefPoint reliefPoint) {
+	public ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
+		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
+		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf ->{
+			rf.setReliefPoint(reliefPoint);
+			return rf;
+		}).collect(Collectors.toList());
+		reliefPoint.setReliefInformations(lstRIfor);
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
 		return rp;
 	}

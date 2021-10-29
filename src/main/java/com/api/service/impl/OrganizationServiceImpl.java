@@ -31,4 +31,10 @@ public class OrganizationServiceImpl implements OrganizationService{
 		return orgs;
 	}
 
+	@Override
+	public void updateOrganzization(OrganizationDto organizationDto) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

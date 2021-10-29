@@ -2,6 +2,7 @@ package com.api.service;
 
 import java.util.List;
 
+import com.api.dto.ReliefPointDto;
 import com.api.entity.Address;
 import com.api.entity.ReliefPoint;
 import com.api.entity.User;
@@ -39,7 +40,7 @@ public interface ReliefPointService {
 	 * @param reliefPoint
 	 * @return 
 	 */
-	ReliefPoint createReliefPoint(ReliefPoint reliefPoint);
+	ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto);
 	
 	/**
 	 * 

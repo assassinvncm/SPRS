@@ -54,19 +54,16 @@ public class User extends BaseEntity implements Serializable{
 	private Boolean isActive;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id")
+	@JoinColumn(name = "address_id",insertable = true, updatable = false)
 	private Address address;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "organization_id",referencedColumnName="id")
+	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true, updatable = false)
 	private Organization organization;
 
-	
-	//@JsonIgnore
-	@JsonProperty("groups_user")
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_user_group",
-			joinColumns = @JoinColumn(name = "user_id"),
+			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
 	private List<Group> groups_user;
 	
@@ -74,8 +71,8 @@ public class User extends BaseEntity implements Serializable{
 	@JsonIgnore
 	private List<Request> request;
 	
-//	@OneToMany(mappedBy = "user_rp")
-//	private List<ReliefPoint> reliefPoints = new ArrayList<ReliefPoint>();
+	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+	private List<ReliefPoint> reliefPoints;
 //
 //	@OneToMany(mappedBy = "users_dv")
 //	private List<Device> devices = new ArrayList<Device>();
