@@ -27,7 +27,7 @@ public class TestCors {
 	
 	@RequestMapping(value = "/user/test", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllssUser() {
-		logger.info("Start get all User");
+		logger.info("Start get alls User");
 		return new ResponseEntity<String>("manh dep trai 2", HttpStatus.OK);
 	}
 }
