@@ -52,7 +52,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@OneToOne
 	@JoinColumn(name = "address_id")
 	@JsonIgnore
-    private Address location;
+    private Address address;
 
 	public String getName() {
 		return name;
@@ -101,6 +101,31 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	public void setUsers(User users) {
 		this.user_rp = users;
 	}
+
+	public User getUser_rp() {
+		return user_rp;
+	}
+
+	public void setUser_rp(User user_rp) {
+		this.user_rp = user_rp;
+	}
+
+	public List<ReliefInformation> getReliefInformations() {
+		return reliefInformations;
+	}
+
+	public void setReliefInformations(List<ReliefInformation> reliefInformations) {
+		this.reliefInformations = reliefInformations;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	
 	
 
 }

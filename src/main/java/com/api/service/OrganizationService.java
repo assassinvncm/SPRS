@@ -11,4 +11,6 @@ public interface OrganizationService {
 	
 	List<Organization> getAllOrganzization();
 	
+	void updateOrganzization(OrganizationDto organizationDto);
+	
 }

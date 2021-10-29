@@ -94,9 +94,8 @@ public class UserController {
 		
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		logger.info("Start update User id: "+userDto.getId());
+		userService.updateUser(userDto, bean);
 		
-		
-		//logger.info("End update User id: "+id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update user success!", "", null, null));
 	}
 	
@@ -104,10 +103,7 @@ public class UserController {
 	public ResponseEntity<?> updatePassword(@RequestHeader ("Authorization") String requestTokenHeader,
 			@Validated @RequestBody UpdatePasswordDto updatePasswordDto){
 		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
-		if(!useDto.getPassword().equals(updatePasswordDto.getOldPassword())) {
-			throw new AppException(403,"Password is not correct");
-		}
-		userService.updatePassword(useDto, updatePasswordDto.getNewPassword());
+		userService.updatePassword(useDto, updatePasswordDto);
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update password success!", "", null, null));
 	}

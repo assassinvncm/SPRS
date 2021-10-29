@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.controller.UserController;
 import com.api.dto.GroupDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
@@ -345,25 +346,37 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
-	public void updatePassword(UserDto userDto, String newPassword) {
+	public void updatePassword(UserDto userDto, UpdatePasswordDto updatePasswordDto) {
 		// TODO Auto-generated method stub
+		String encNewPass = passwordEncoder.encode(updatePasswordDto.getNewPassword());
+		if(!passwordEncoder.matches(updatePasswordDto.getOldPassword(), userDto.getPassword())) {
+			throw new AppException(402,"Old Password not correct");
+		}
+		if(encNewPass.equals(userDto.getPassword())) {
+			throw new AppException(402,"Password must not the same old passs");
+		}
+		
 		User user = mapStructMapper.userDtoToUser(userDto);
-		user.setPassword(newPassword);
+		user.setPassword(encNewPass);
 		userRepository.save(user);
 	}
 
 	@Override
 	public void updateUser(UserDto userDto,UserDto bean) {
 		// TODO Auto-generated method stub
+		
+		if(userDto.getId() != bean.getId()) {
+			throw new AppException(403,"User not valid");
+		}
+		
 		userDto.setFull_name(bean.getFull_name());
 		userDto.setAddress(bean.getAddress());
 		userDto.setDob(bean.getDob());
 		userDto.setOrganization(bean.getOrganization());
-		userDto.setOrganization(null);
+		
 		
 		User user = mapStructMapper.userDtoToUser(userDto);
 		userRepository.save(user);
 		
 	}
-
 }

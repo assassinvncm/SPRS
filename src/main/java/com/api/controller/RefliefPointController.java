@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.ReliefPoint;
 import com.api.entity.User;
 import com.api.repositories.UserRepository;
@@ -36,7 +37,7 @@ public class RefliefPointController {
 	ReliefPointService reliefPointService;
 	
 	@Autowired
-	UserService userSerivce;
+	UserService userService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -44,34 +45,16 @@ public class RefliefPointController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody ReliefPointDto reliefPointDto) {
 		
-		String username = null;
-		String jwtToken = null;
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
-			try {
-				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
-				throw new AppException(501,"Unable to get JWT Token");
-			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
-				throw new AppException(501,"JWT Token has expired");
-			}
-		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
-			throw new AppException(501,"JWT Token does not begin with Bearer String");
-		}
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		reliefPointDto.setUser_rp(userDto);
 		
-		//User user = userSerivce.findByUsername(username);
-		//reliefPoint.setUsers(user);
-		
-		//ReliefPoint rp = reliefPointService.createReliefPoint(reliefPoint);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
+		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", rp, null));
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public void getReliefPoints() {
-
+		
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
