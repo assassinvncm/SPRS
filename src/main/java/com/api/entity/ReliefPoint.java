@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -40,19 +41,21 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	
 	@Column(name = "status")
 	private String status;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user_rp;
+	@JoinColumn(name = "user_id",referencedColumnName="id", insertable = true, updatable = false)
+	private User user;
 	
-	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JsonIgnore
     private List<ReliefInformation> reliefInformations;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id")
 	@JsonIgnore
     private Address address;
+	
+
 
 	public String getName() {
 		return name;
@@ -95,19 +98,19 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	}
 	
 	public User getUsers() {
-		return user_rp;
+		return user;
 	}
 
 	public void setUsers(User users) {
-		this.user_rp = users;
+		this.user = users;
 	}
 
 	public User getUser_rp() {
-		return user_rp;
+		return user;
 	}
 
 	public void setUser_rp(User user_rp) {
-		this.user_rp = user_rp;
+		this.user = user_rp;
 	}
 
 	public List<ReliefInformation> getReliefInformations() {

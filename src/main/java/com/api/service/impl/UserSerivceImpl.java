@@ -89,13 +89,18 @@ public class UserSerivceImpl implements UserService {
 		logger.info("Start get User");
 
 		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
-
+		
 		User user = Optional.ofNullable(userRepository.findByUsername(username))
 				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
 		logger.info("End get User");
 		
 		//mapper
 		UserDto userDto= mapStructMapper.userToUserDto(user);
+		userDto.setAddress(mapStructMapper.addressToAddressDto(user.getAddress()));
+		userDto.setOrganization(mapStructMapper.organizationToOrganizationDto(user.getOrganization()));
+		userDto.setPassword(user.getPassword());
+		userDto.setGroups_user(mapStructMapper.lstGroupToGroupDto(user.getGroups_user()));
+		//userDto.setRequest();
 		return userDto;
 	}
 
@@ -357,7 +362,10 @@ public class UserSerivceImpl implements UserService {
 		}
 		
 		User user = mapStructMapper.userDtoToUser(userDto);
+		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
 		user.setPassword(encNewPass);
+		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
+		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
 		userRepository.save(user);
 	}
 

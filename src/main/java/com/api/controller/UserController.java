@@ -43,11 +43,11 @@ public class UserController {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 	
-	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public ResponseEntity<?> getAllUser() {
-		List<User> lst = userService.getAllUser();
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, lst));
-	}
+//	@RequestMapping(value = "/users", method = RequestMethod.GET)
+//	public ResponseEntity<?> getAllUser() {
+//		List<User> lst = userService.getAllUser();
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, lst));
+//	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){
@@ -59,11 +59,11 @@ public class UserController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", useDto, null));
 	}
 	
-	@RequestMapping(value = "/user", method = RequestMethod.POST)
-	public ResponseEntity<?> registerUser(@Validated @RequestBody User user) {
-		userService.registerUser(user);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
-	}
+//	@RequestMapping(value = "/user", method = RequestMethod.POST)
+//	public ResponseEntity<?> registerUser(@Validated @RequestBody User user) {
+//		userService.registerUser(user);
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
+//	}
 	
 	@RequestMapping(value = "/users_v2/user", method = RequestMethod.POST)
 	public ResponseEntity<?> registerUser_v2(@Validated @RequestBody UserDto userDto) {

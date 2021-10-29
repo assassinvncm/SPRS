@@ -3,23 +3,28 @@ package com.api.dto;
 import java.sql.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+
 import com.api.entity.ReliefInformation;
 import com.api.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
 
 public class ReliefPointDto {
 	
 	private long id;
 	
 	@JsonProperty("name")
+	@NotEmpty
 	private String name;
 	
 	@JsonProperty("description")
 	private String description;
 
-	
+	@NotEmpty
 	private Date open_time;
 
+	@NotEmpty
 	private Date close_time;
 	
 	private String status;
@@ -30,6 +35,7 @@ public class ReliefPointDto {
 	private List<ReliefInformationDto> reliefInformations;
 	
 	@JsonProperty("address")
+	@NotNull
 	private AddressDto address;
 	
 	

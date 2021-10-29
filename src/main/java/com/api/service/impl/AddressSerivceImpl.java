@@ -73,10 +73,17 @@ public class AddressSerivceImpl implements AddressService {
 	@Override
 	public Address mapAddress(AddressDto addressDto) {
 		// TODO Auto-generated method stub
-		SubDistrict sb = subDistrictRepository
-				.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),
-						addressDto.getCity().getName())
-				.orElseThrow(() -> new AppException(403, "Address Not Exits In DB"));
+		SubDistrict sb = null;
+		if (0 != addressDto.getSubDistrict().getId()) {
+			sb = subDistrictRepository.findById(addressDto.getSubDistrict().getId())
+					.orElseThrow(() -> new AppException(403, "Id address not valid"));
+			;
+		} else {
+			sb = subDistrictRepository
+					.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),
+							addressDto.getCity().getName())
+					.orElseThrow(() -> new AppException(403, "Address Not Exits In DB"));
+		}
 		// mapper
 		Address address = new Address();
 		address.setAddressLine(addressDto.getAddressLine1());

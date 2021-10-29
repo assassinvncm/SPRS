@@ -45,6 +45,8 @@ public interface MapStructMapper {
 	
 	Group groupDtoToGroup(GroupDto group);
 	
+	List<Group> lstGroupDtoToGroup(List<GroupDto> lstGroupDto);
+	
 	Organization organizationDtoToOrganization(OrganizationDto organization);
 	
 	Item itemDtoToItem(ItemDto itemDto);

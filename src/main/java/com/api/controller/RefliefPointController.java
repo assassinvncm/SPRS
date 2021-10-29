@@ -30,31 +30,32 @@ import io.jsonwebtoken.ExpiredJwtException;
 @RestController
 @RequestMapping("sprs/api/reliefPoint-manage")
 public class RefliefPointController {
-	
+
 	public static Logger logger = LoggerFactory.getLogger(RefliefPointController.class);
 
 	@Autowired
 	ReliefPointService reliefPointService;
-	
+
 	@Autowired
 	UserService userService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody ReliefPointDto reliefPointDto) {
-		
+	public ResponseEntity<?> createReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody ReliefPointDto reliefPointDto) {
+
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		reliefPointDto.setUser_rp(userDto);
 		
 		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", rp, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public void getReliefPoints() {
-		
+
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)

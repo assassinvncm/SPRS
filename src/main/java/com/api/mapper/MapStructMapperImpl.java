@@ -6,18 +6,26 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.api.dto.AddressDto;
+import com.api.dto.CityDto;
+import com.api.dto.DistrictDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
 import com.api.dto.OrganizationDto;
+import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
+import com.api.dto.SubDistrictDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
+import com.api.entity.City;
+import com.api.entity.District;
 import com.api.entity.Group;
 import com.api.entity.Item;
 import com.api.entity.Organization;
+import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
+import com.api.entity.SubDistrict;
 import com.api.entity.User;
 
 @Component
@@ -35,7 +43,12 @@ public class MapStructMapperImpl implements MapStructMapper {
 		addressDto.setId(address.getId());
 		addressDto.setGPS_lati(address.getGPS_Lati());
 		addressDto.setGPS_long(address.getGPS_Long());
-
+		SubDistrict subdistrictDto = address.getSubDistrict();
+		District district = address.getSubDistrict().getDistrict();
+		City city = address.getSubDistrict().getDistrict().getCity();
+		addressDto.setSubDistrict(new SubDistrictDto(subdistrictDto.getId(),subdistrictDto.getCode(),subdistrictDto.getName(),null,null));
+		addressDto.setDistrict(new DistrictDto(district.getId(), district.getCode(), district.getName(), null, null));
+		addressDto.setCity(new CityDto(city.getId(), city.getCode(), city.getName()));
 		return addressDto;
 	}
 
@@ -103,9 +116,16 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
-	public Group groupDtoToGroup(GroupDto group) {
+	public Group groupDtoToGroup(GroupDto groupDto) {
 		// TODO Auto-generated method stub
-		return null;
+		if (groupDto == null) {
+			return null;
+		}
+		
+		Group group = new Group();
+		group.setId(groupDto.getId());
+		group.setName(group.getName());
+		return group;
 	}
 
 	@Override
@@ -270,10 +290,31 @@ public class MapStructMapperImpl implements MapStructMapper {
 		reliefPoint.setClose_time(reliefPointDto.getClose_time());
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setAddress(addressDtoToAddress(reliefPointDto.getAddress()));
-		reliefPoint.setReliefInformations(null);
+		List<ReliefInformationDto> lstReliefInforDto = reliefPointDto.getReliefInformations();
+		List<ReliefInformation> lstReliefInfor = lstReliefInforDto.stream().map(reliefInforDto -> {
+			ReliefInformation reliefInfor = new ReliefInformation();
+			reliefInfor.setId(reliefInforDto.getId());
+			reliefInfor.setItem(reliefInforDto.getItem());
+			reliefInfor.setQuantity(reliefInforDto.getQuantity());
+			return reliefInfor;
+		}).collect(Collectors.toList());
+		reliefPoint.setReliefInformations(lstReliefInfor);
 		reliefPoint.setUser_rp(userDtoToUser(reliefPointDto.getUser_rp()));
 		
 		return reliefPoint;
+	}
+
+	@Override
+	public List<Group> lstGroupDtoToGroup(List<GroupDto> lstGroupDto) {
+		// TODO Auto-generated method stub
+		if (lstGroupDto == null) {
+			return null;
+		}
+		List<Group> lstGroup = lstGroupDto.stream().map(groupDto -> {
+			return groupDtoToGroup(groupDto);
+		}).collect(Collectors.toList());
+
+		return lstGroup;
 	}
 
 }
