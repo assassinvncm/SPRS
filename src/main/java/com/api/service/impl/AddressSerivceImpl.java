@@ -49,10 +49,16 @@ public class AddressSerivceImpl implements AddressService {
 	@Override
 	public void saveAddress(AddressDto addressDto) {
 		// TODO Auto-generated method stub
-		SubDistrict sb = subDistrictRepository
-				.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),
-						addressDto.getCity().getName())
-				.orElseThrow(() -> new AppException(403, "Address Not Exits In DB"));
+		SubDistrict sb = null;
+		if (0 != addressDto.getSubDistrict().getId()) {
+			sb = subDistrictRepository.getById(addressDto.getSubDistrict().getId());
+		} else {
+			sb = subDistrictRepository
+					.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),
+							addressDto.getCity().getName())
+					.orElseThrow(() -> new AppException(403, "Address Not Exits In DB"));
+		}
+
 		// mapper
 		Address address = new Address();
 		address.setAddressLine(addressDto.getAddressLine1());
@@ -63,7 +69,7 @@ public class AddressSerivceImpl implements AddressService {
 		// save
 		addressRepository.save(address);
 	}
-	
+
 	@Override
 	public Address mapAddress(AddressDto addressDto) {
 		// TODO Auto-generated method stub
@@ -81,8 +87,6 @@ public class AddressSerivceImpl implements AddressService {
 		// save
 		return address;
 	}
-	
-	
 
 	@Override
 	public AddressDto updateAddress() {
@@ -102,7 +106,7 @@ public class AddressSerivceImpl implements AddressService {
 		List<SubDistrict> subDistricts = subDistrictRepository.findByDistrictId(id);
 
 		List<SubDistrictDto> subDistrictDtos = subDistricts.stream().map(subDistrict -> {
-			//return modelMapper.map(subDistrict, SubDistrictDto.class);
+			// return modelMapper.map(subDistrict, SubDistrictDto.class);
 			SubDistrictDto subDistrictDto = new SubDistrictDto();
 			subDistrictDto.setId(subDistrict.getId());
 			subDistrictDto.setCode(subDistrict.getCode());
@@ -118,7 +122,7 @@ public class AddressSerivceImpl implements AddressService {
 		List<District> districts = districtRepository.findByCityId(id);
 
 		List<DistrictDto> districtDtos = districts.stream().map(district -> {
-			//return modelMapper.map(district, DistrictDto.class);
+			// return modelMapper.map(district, DistrictDto.class);
 			DistrictDto dtsDto = new DistrictDto();
 			dtsDto.setId(district.getId());
 			dtsDto.setName(district.getName());
