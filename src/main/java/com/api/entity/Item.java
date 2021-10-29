@@ -34,8 +34,45 @@ public class Item extends BaseEntity implements Serializable{
 	private String description;
 	
 	@OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
-	@JsonIgnore
     private List<ReliefInformation> reliefInformation;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<ReliefInformation> getReliefInformation() {
+		return reliefInformation;
+	}
+
+	public void setReliefInformation(List<ReliefInformation> reliefInformation) {
+		this.reliefInformation = reliefInformation;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
+	
 	
 	
 }
