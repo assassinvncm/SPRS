@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
 import com.api.entity.SmsPojo;
+import com.api.entity.User;
+import com.api.repositories.UserRepository;
 import com.api.service.OtpService;
 import com.api.service.SmsService;
 import com.api.service.UserService;
@@ -43,6 +46,12 @@ public class OTPController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	UserRepository userRepository;
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@RequestMapping(value = "/generateOtp", method = RequestMethod.POST)
 	public ResponseEntity<?> generateOtp(@Validated @RequestBody SmsPojo pojo) {
@@ -79,6 +88,43 @@ public class OTPController {
 			if (serverOtp > 0) {
 				if (otpnum == serverOtp) {
 					otpService.clearOTP(username);
+					return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, SUCCESS, "", null, null));
+				} else {
+					return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
+				}
+			} else {
+				return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
+			}
+		} else {
+			return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
+		}
+	}
+	
+	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
+	public ResponseEntity<?> forgotPassword(@Validated @RequestBody SmsPojo pojo) {
+
+		final String SUCCESS = "Reset password success!";
+
+		final String FAIL = "Reset password fail!";
+		int otpnum = pojo.getOtp();
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		String username = auth.getName();
+		String username = userService.getUsernameByPhone(pojo.getTo());
+		logger.info("Otp Number : " + otpnum +" of user: "+username);
+
+		//Validate the Otp 
+		if (otpnum >= 0) {
+			int serverOtp = otpService.getOtp(username);
+
+			if (serverOtp > 0) {
+				if (otpnum == serverOtp) {
+					otpService.clearOTP(username);
+					String new_pass = userService.generatePassword(8);
+					User u = userService.findByUsername(username);
+					u.setPassword(passwordEncoder.encode(new_pass));
+					userRepository.save(u);
+					pojo.setMessage(Constants.RESET_PASSWORD_MESSAGE+new_pass);
+					smsService.send(pojo);
 					return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, SUCCESS, "", null, null));
 				} else {
 					return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
