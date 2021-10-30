@@ -39,6 +39,8 @@ public interface MapStructMapper {
 	
 	ReliefPointDto reliefPointToreliefPointDto(ReliefPoint reliefPoint);
 	
+	List<ReliefPointDto> lstReliefPointToreliefPointDto(List<ReliefPoint> reliefPoint);
+	
 	User userDtoToUser(UserDto userDto);
 	
 	Address addressDtoToAddress(AddressDto addressDto);
