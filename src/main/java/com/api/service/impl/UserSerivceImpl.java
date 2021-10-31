@@ -392,7 +392,6 @@ public class UserSerivceImpl implements UserService {
 	@Override
 	public String generatePassword(int len) {
 		System.out.println("Generating password using random() : ");
-		System.out.print("Your new password is : ");
 
 		// A strong password has Cap_chars, Lower_chars,
 		// numeric value and symbols. So we are using all of
@@ -415,6 +414,7 @@ public class UserSerivceImpl implements UserService {
 			password[i] = values.charAt(rndm_method.nextInt(values.length()));
 
 		}
+		System.out.print("Your new password is : "+String.valueOf(password)+" ");
 		return String.valueOf(password);
 	}
 	
