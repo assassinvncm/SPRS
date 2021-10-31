@@ -6,6 +6,7 @@ import java.io.Serializable;
 import com.api.entity.SubDistrict;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
 
 @JsonIgnoreProperties({"handler"})
 public class AddressDto implements Serializable{
@@ -18,12 +19,15 @@ public class AddressDto implements Serializable{
 	private long id;
 	
 	@JsonProperty("city")
+	@NotNull
 	private CityDto city;
 	
 	@JsonProperty("district")
+	@NotNull
 	private DistrictDto district;
 	
 	@JsonProperty("subDistrict")
+	@NotNull
 	private SubDistrictDto subDistrict;
 	
 	@JsonProperty("addressLine")

@@ -9,6 +9,7 @@ public class Constants {
 	public static final String OTP_MESSAGE = "Mã xác minh SPRS của bạn là ";
 	public static final String[] NONE_AUTH = { "/utilities/**", "/swagger-ui.html", "/swagger-ui/**",
 			"/sprs/api/address/**", "/v3/**", "/sprs/api/item", "/authenticate",
+			"/sprs/api/reliefPoint-manage/get",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user", "/sprs/api/users_v2/organizationalUser",
 			"/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp", "/sprs/api/validateOtp" };// ,
