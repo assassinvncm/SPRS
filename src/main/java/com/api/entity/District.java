@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "SPRS_District")
@@ -36,6 +37,7 @@ public class District extends BaseEntity implements Serializable{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "city_id",referencedColumnName="id",nullable = false)
+	@NotNull
 	private City city;
 	
 	@OneToMany(mappedBy = "district", fetch = FetchType.LAZY)

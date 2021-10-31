@@ -56,17 +56,13 @@ public class RefliefPointController {
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public void getReliefPoints() {
-
+	public ResponseEntity<?> getReliefPointById() {
+		List<ReliefPointDto> lstReliefPoint = reliefPointService.getAllReliefPoint();
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", lstReliefPoint, null));
 	}
 
-//	@RequestMapping(value = "/get/area", method = RequestMethod.GET)
-//	public void getReliefPointById(@PathVariable(value = "id") Long id) {
-//
-//	}
-
 	@RequestMapping(value = "/get/area", method = RequestMethod.GET)
-	public ResponseEntity<?> getReliefPointByArea(@RequestParam(name = "") long id) {
+	public ResponseEntity<?> getReliefPointByCity(@RequestParam(name = "") long id) {
 		List<ReliefPointDto> rpDto = reliefPointService.getReliefPointByArea(null);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
 	}
