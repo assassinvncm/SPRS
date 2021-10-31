@@ -79,5 +79,12 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		
 		return reliefPointRepository.save(reliefPoint);
 	}
+
+	@Override
+	public List<ReliefPointDto> getAllReliefPoint() {
+		// TODO Auto-generated method stub
+		List<ReliefPoint> lstReliefPoint = reliefPointRepository.findAll();
+		return mapStructMapper.lstReliefPointToreliefPointDto(lstReliefPoint);
+	}
 	
 }

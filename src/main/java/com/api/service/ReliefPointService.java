@@ -14,6 +14,12 @@ public interface ReliefPointService {
 	 * 
 	 * @return
 	 */
+	List<ReliefPointDto> getAllReliefPoint();
+	
+	/**
+	 * 
+	 * @return
+	 */
 	ReliefPoint getReliefPointById(Long id);
 	
 	/**
