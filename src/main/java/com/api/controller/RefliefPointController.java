@@ -1,5 +1,7 @@
 package com.api.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,15 +60,16 @@ public class RefliefPointController {
 
 	}
 
-	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public void getReliefPointById(@PathVariable(value = "id") Long id) {
-
-	}
-
-//	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-//	public void getReliefPointByArea(@PathVariable(value = "id") String id ) {
-//		
+//	@RequestMapping(value = "/get/area", method = RequestMethod.GET)
+//	public void getReliefPointById(@PathVariable(value = "id") Long id) {
+//
 //	}
+
+	@RequestMapping(value = "/get/area", method = RequestMethod.GET)
+	public ResponseEntity<?> getReliefPointByArea(@RequestParam(name = "") long id) {
+		List<ReliefPointDto> rpDto = reliefPointService.getReliefPointByArea(null);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
+	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public void updateReliefPoint(@RequestBody Object reliefPoint) {

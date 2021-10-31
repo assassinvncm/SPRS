@@ -46,7 +46,8 @@ public class MapStructMapperImpl implements MapStructMapper {
 		SubDistrict subdistrictDto = address.getSubDistrict();
 		District district = address.getSubDistrict().getDistrict();
 		City city = address.getSubDistrict().getDistrict().getCity();
-		addressDto.setSubDistrict(new SubDistrictDto(subdistrictDto.getId(),subdistrictDto.getCode(),subdistrictDto.getName(),null,null));
+		addressDto.setSubDistrict(new SubDistrictDto(subdistrictDto.getId(), subdistrictDto.getCode(),
+				subdistrictDto.getName(), null, null));
 		addressDto.setDistrict(new DistrictDto(district.getId(), district.getCode(), district.getName(), null, null));
 		addressDto.setCity(new CityDto(city.getId(), city.getCode(), city.getName()));
 		return addressDto;
@@ -121,7 +122,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		if (groupDto == null) {
 			return null;
 		}
-		
+
 		Group group = new Group();
 		group.setId(groupDto.getId());
 		group.setName(group.getName());
@@ -148,9 +149,6 @@ public class MapStructMapperImpl implements MapStructMapper {
 		userDto.setFull_name(user.getFull_name());
 		userDto.setDob(user.getDob());
 		userDto.setCreate_time(null);
-		userDto.setGroups_user(lstGroupToGroupDto(user.getGroups_user()));
-		userDto.setAddress(addressToAddressDto(user.getAddress()));
-		userDto.setOrganization(organizationToOrganizationDto(user.getOrganization()));
 		userDto.setPassword(user.getPassword());
 		userDto.setIsActive(user.getIsActive());
 		return userDto;
@@ -187,7 +185,15 @@ public class MapStructMapperImpl implements MapStructMapper {
 		requestDto.setMessage(request.getMessage());
 		requestDto.setTimestamp(request.getTimestamp());
 		requestDto.setType(request.getType());
-		requestDto.setUser(userToUserDto(request.getUser()));
+		UserDto userDto = userToUserDto(request.getUser());
+		userDto.setGroups_user(lstGroupToGroupDto(request.getUser().getGroups_user()));
+		userDto.setAddress(addressToAddressDto(request.getUser().getAddress()));
+		userDto.setOrganization(organizationToOrganizationDto(request.getUser().getOrganization()));
+		requestDto.setUser(userDto);
+
+		GroupDto groupDto = new GroupDto();
+		requestDto.setGroup(groupToGroupDto(request.getGroup()));
+		requestDto.setOrganization(organizationToOrganizationDto(request.getOrganization()));
 		return requestDto;
 	}
 
@@ -272,15 +278,14 @@ public class MapStructMapperImpl implements MapStructMapper {
 		reliefPointDto.setAddress(addressToAddressDto(reliefPoint.getAddress()));
 		reliefPointDto.setReliefInformations(null);
 		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
-		
-		
+
 		return reliefPointDto;
 	}
 
 	@Override
 	public ReliefPoint reliefPointDtoToreliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
-		
+
 		if (reliefPointDto == null) {
 			return null;
 		}
@@ -300,7 +305,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}).collect(Collectors.toList());
 		reliefPoint.setReliefInformations(lstReliefInfor);
 		reliefPoint.setUser_rp(userDtoToUser(reliefPointDto.getUser_rp()));
-		
+
 		return reliefPoint;
 	}
 
@@ -315,6 +320,18 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}).collect(Collectors.toList());
 
 		return lstGroup;
+	}
+
+	@Override
+	public List<ReliefPointDto> lstReliefPointToreliefPointDto(List<ReliefPoint> lstReliefPoint) {
+		// TODO Auto-generated method stub
+		if (lstReliefPoint == null) {
+			return null;
+		}
+		List<ReliefPointDto> lstRp = lstReliefPoint.stream().map(reliefPoint -> {
+			return reliefPointToreliefPointDto(reliefPoint);
+		}).collect(Collectors.toList());
+		return lstRp;
 	}
 
 }
