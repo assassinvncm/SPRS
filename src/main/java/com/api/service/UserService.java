@@ -3,6 +3,7 @@ package com.api.service;
 import java.util.List;
 
 import com.api.dto.AddressDto;
+import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.User;
@@ -74,7 +75,21 @@ public interface UserService {
 	/**
 	 * @param newPassword
 	 */
-	void updatePassword(UserDto userDto, String newPassword);
+	void updatePassword(UserDto userDto, UpdatePasswordDto updatePasswordDto);
+	
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	User findByUsername(String username);
+	
+	/**
+	 * 
+	 * @param 
+	 * @return char[]
+	 */
+	String generatePassword(int len);
 	
 	
 	User findByUsername(String username);

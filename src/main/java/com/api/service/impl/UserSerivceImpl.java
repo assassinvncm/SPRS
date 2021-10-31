@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.controller.UserController;
 import com.api.dto.GroupDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
@@ -89,13 +90,18 @@ public class UserSerivceImpl implements UserService {
 		logger.info("Start get User");
 
 		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
-
+		
 		User user = Optional.ofNullable(userRepository.findByUsername(username))
 				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
 		logger.info("End get User");
 		
 		//mapper
 		UserDto userDto= mapStructMapper.userToUserDto(user);
+		userDto.setGroups_user(mapStructMapper.lstGroupToGroupDto(user.getGroups_user()));
+		userDto.setAddress(mapStructMapper.addressToAddressDto(user.getAddress()));
+		userDto.setOrganization(mapStructMapper.organizationToOrganizationDto(user.getOrganization()));
+		userDto.setPassword(user.getPassword());
+		//userDto.setRequest();
 		return userDto;
 	}
 
@@ -346,9 +352,46 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
+	public void updatePassword(UserDto userDto, UpdatePasswordDto updatePasswordDto) {
+		// TODO Auto-generated method stub
+		String encNewPass = passwordEncoder.encode(updatePasswordDto.getNewPassword());
+		if(!passwordEncoder.matches(updatePasswordDto.getOldPassword(), userDto.getPassword())) {
+			throw new AppException(402,"Old Password not correct");
+		}
+		if(encNewPass.equals(userDto.getPassword())) {
+			throw new AppException(402,"Password must not the same old passs");
+		}
+		
+		User user = mapStructMapper.userDtoToUser(userDto);
+		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
+		user.setPassword(encNewPass);
+		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
+		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
+		userRepository.save(user);
+	}
+
+	@Override
+	public void updateUser(UserDto userDto,UserDto bean) {
+		// TODO Auto-generated method stub
+		
+		if(userDto.getId() != bean.getId()) {
+			throw new AppException(403,"User not valid");
+		}
+		
+		userDto.setFull_name(bean.getFull_name());
+		userDto.setAddress(bean.getAddress());
+		userDto.setDob(bean.getDob());
+		userDto.setOrganization(bean.getOrganization());
+		
+		
+		User user = mapStructMapper.userDtoToUser(userDto);
+		userRepository.save(user);
+		
+	}
+
+	@Override
 	public String generatePassword(int len) {
 		System.out.println("Generating password using random() : ");
-		System.out.print("Your new password is : ");
 
 		// A strong password has Cap_chars, Lower_chars,
 		// numeric value and symbols. So we are using all of
@@ -356,9 +399,9 @@ public class UserSerivceImpl implements UserService {
 		String Capital_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		String Small_chars = "abcdefghijklmnopqrstuvwxyz";
 		String numbers = "0123456789";
-		String symbols = "!@#$%^&*_=+-/.?<>)";
+//		String symbols = "!@#$%^&*_=+-/.?<>)";
 
-		String values = Capital_chars + Small_chars + numbers + symbols;
+		String values = Capital_chars + Small_chars + numbers;
 
 		// Using random method
 		Random rndm_method = new Random();
@@ -371,26 +414,15 @@ public class UserSerivceImpl implements UserService {
 			password[i] = values.charAt(rndm_method.nextInt(values.length()));
 
 		}
+		System.out.print("Your new password is : "+String.valueOf(password)+" ");
 		return String.valueOf(password);
-
-	public void updatePassword(UserDto userDto, String newPassword) {
-		// TODO Auto-generated method stub
-		User user = mapStructMapper.userDtoToUser(userDto);
-		user.setPassword(newPassword);
-		userRepository.save(user);
 	}
-
+	
 	@Override
-	public void updateUser(UserDto userDto,UserDto bean) {
+	public User findByUsername(String username) {
 		// TODO Auto-generated method stub
-		userDto.setFull_name(bean.getFull_name());
-		userDto.setAddress(bean.getAddress());
-		userDto.setDob(bean.getDob());
-		userDto.setOrganization(bean.getOrganization());
-		userDto.setOrganization(null);
-		
-		User user = mapStructMapper.userDtoToUser(userDto);
-		userRepository.save(user);
+		User u = userRepository.findByUsername(username);
+		// u.getGroups_user();
+		return u;
 	}
-
 }

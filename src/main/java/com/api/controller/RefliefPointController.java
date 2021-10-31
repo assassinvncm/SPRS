@@ -1,5 +1,7 @@
 package com.api.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.ReliefPoint;
 import com.api.entity.User;
 import com.api.repositories.UserRepository;
@@ -29,43 +32,26 @@ import io.jsonwebtoken.ExpiredJwtException;
 @RestController
 @RequestMapping("sprs/api/reliefPoint-manage")
 public class RefliefPointController {
-	
+
 	public static Logger logger = LoggerFactory.getLogger(RefliefPointController.class);
 
 	@Autowired
 	ReliefPointService reliefPointService;
-	
+
 	@Autowired
-	UserService userSerivce;
+	UserService userService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody ReliefPointDto reliefPointDto) {
+	public ResponseEntity<?> createReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody ReliefPointDto reliefPointDto) {
+
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		reliefPointDto.setUser_rp(userDto);
 		
-		String username = null;
-		String jwtToken = null;
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
-			try {
-				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
-				throw new AppException(501,"Unable to get JWT Token");
-			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
-				throw new AppException(501,"JWT Token has expired");
-			}
-		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
-			throw new AppException(501,"JWT Token does not begin with Bearer String");
-		}
-		
-		//User user = userSerivce.findByUsername(username);
-		//reliefPoint.setUsers(user);
-		
-		//ReliefPoint rp = reliefPointService.createReliefPoint(reliefPoint);
+		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}
 
@@ -74,15 +60,16 @@ public class RefliefPointController {
 
 	}
 
-	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public void getReliefPointById(@PathVariable(value = "id") Long id) {
-
-	}
-
-//	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-//	public void getReliefPointByArea(@PathVariable(value = "id") String id ) {
-//		
+//	@RequestMapping(value = "/get/area", method = RequestMethod.GET)
+//	public void getReliefPointById(@PathVariable(value = "id") Long id) {
+//
 //	}
+
+	@RequestMapping(value = "/get/area", method = RequestMethod.GET)
+	public ResponseEntity<?> getReliefPointByArea(@RequestParam(name = "") long id) {
+		List<ReliefPointDto> rpDto = reliefPointService.getReliefPointByArea(null);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
+	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public void updateReliefPoint(@RequestBody Object reliefPoint) {

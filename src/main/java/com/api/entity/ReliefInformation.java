@@ -25,11 +25,70 @@ public class ReliefInformation extends BaseEntity implements Serializable{
 	private int quantity;
 	
 	@ManyToOne
-	@JoinColumn(name = "reliefPoint_id", referencedColumnName="id")
+	@JoinColumn(name = "reliefPoint_id", referencedColumnName="id",nullable = false)
 	private ReliefPoint reliefPoint;
 	
 	@ManyToOne
-	@JoinColumn(name = "item_id", referencedColumnName="id")
+	@JoinColumn(name = "item_id", referencedColumnName="id" , nullable = false)
 	private Item item;
+
+	
+	
+	public int getQuantity() {
+		return quantity;
+	}
+
+
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+
+
+	public ReliefPoint getReliefPoint() {
+		return reliefPoint;
+	}
+
+
+
+	public void setReliefPoint(ReliefPoint reliefPoint) {
+		this.reliefPoint = reliefPoint;
+	}
+
+
+
+	public Item getItem() {
+		return item;
+	}
+
+
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+
+
+	public ReliefInformation() {
+		super();
+	}
+
+
+
+	public ReliefInformation(int quantity, ReliefPoint reliefPoint, Item item) {
+		super();
+		this.quantity = quantity;
+		this.reliefPoint = reliefPoint;
+		this.item = item;
+	}
+	
+	
 	
 }
