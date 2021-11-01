@@ -77,5 +77,19 @@ public interface UserService {
 	 */
 	void updatePassword(UserDto userDto, UpdatePasswordDto updatePasswordDto);
 	
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	User findByUsername(String username);
+	
+	/**
+	 * 
+	 * @param 
+	 * @return char[]
+	 */
+	String generatePassword(int len);
+	
 	
 }
