@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.api.entity.District;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
 
 public class SubDistrictDto {
 	
@@ -15,6 +16,7 @@ public class SubDistrictDto {
 	@JsonProperty("name")
 	private String name;
 	
+	@NotNull
 	District district;
 	
 	List<AddressDto> address;
