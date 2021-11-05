@@ -1,5 +1,6 @@
 package com.api.mapper;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
+import com.api.dto.StoreDto;
 import com.api.dto.SubDistrictDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
@@ -25,6 +27,8 @@ import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
+import com.api.entity.Store;
+import com.api.entity.StoreDetail;
 import com.api.entity.SubDistrict;
 import com.api.entity.User;
 
@@ -283,6 +287,25 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
+	public StoreDto storeToStoreDTO(Store store) {
+		// TODO Auto-generated method stub
+		if (store == null) {
+			return null;
+		}
+		StoreDto storeDto = new StoreDto();
+		storeDto.setId(store.getId());
+		storeDto.setName(store.getName());
+		storeDto.setClose_time(store.getClose_time().toString());
+		storeDto.setOpen_time(store.getOpen_time().toString());
+		storeDto.setDescription(store.getDescription());
+		storeDto.setAddress(addressToAddressDto(store.getLocation()));
+		storeDto.setStoreDetail(null);
+		storeDto.setUser_st(userToUserDto(store.getUsers()));
+
+		return storeDto;
+	}
+
+	@Override
 	public ReliefPoint reliefPointDtoToreliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
 
@@ -332,6 +355,42 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return reliefPointToreliefPointDto(reliefPoint);
 		}).collect(Collectors.toList());
 		return lstRp;
+	}
+
+	@Override
+	public List<StoreDto> lstStoreToStoreDto(List<Store> lststore) {
+		// TODO Auto-generated method stub
+		if (lststore == null) {
+			return null;
+		}
+		List<StoreDto> lstSt = lststore.stream().map(store -> {
+			return storeToStoreDTO(store);
+		}).collect(Collectors.toList());
+		return lstSt;
+	}
+
+	@Override
+	public Store storeDtoToStore(StoreDto dto) {
+		Store rs = new Store();
+		if (dto == null) {
+			return null;
+		} 
+		rs.setId(dto.getId());
+		rs.setName(dto.getName());
+		rs.setOpen_time(Time.valueOf(dto.getOpen_time()));
+		rs.setClose_time(Time.valueOf(dto.getClose_time()));
+		rs.setDescription(dto.getDescription());
+		rs.setLocation(addressDtoToAddress(dto.getAddress()));
+		List<StoreDetail> lstStoreDetailDto = dto.getStoreDetail();
+		List<StoreDetail> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
+			StoreDetail storeDetail = new StoreDetail();
+			storeDetail.setId(storeDetailDto.getId());
+			storeDetail.setName(storeDetailDto.getName());
+			return storeDetail;
+		}).collect(Collectors.toList());
+		rs.setStoreDetail(lstStoreDetail);
+
+		return rs;
 	}
 
 }

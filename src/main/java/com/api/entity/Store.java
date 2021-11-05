@@ -2,8 +2,10 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,10 +35,10 @@ public class Store extends BaseEntity implements Serializable{
 	private String description;
 
 	@Column(name = "open_time")
-	private Date open_time;
+	private Time open_time;
 	
 	@Column(name = "close_time")
-	private Date close_time;
+	private Time close_time;
 	
 	@Column(name = "status")
 	private String status;
@@ -49,7 +51,7 @@ public class Store extends BaseEntity implements Serializable{
 	@JsonIgnore
     private List<StoreDetail> storeDetail;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id")
 	@JsonIgnore
     private Address location;
@@ -70,19 +72,19 @@ public class Store extends BaseEntity implements Serializable{
 		this.description = description;
 	}
 
-	public Date getOpen_time() {
+	public Time getOpen_time() {
 		return open_time;
 	}
 
-	public void setOpen_time(Date open_time) {
+	public void setOpen_time(Time open_time) {
 		this.open_time = open_time;
 	}
 
-	public Date getClose_time() {
+	public Time getClose_time() {
 		return close_time;
 	}
 
-	public void setClose_time(Date close_time) {
+	public void setClose_time(Time close_time) {
 		this.close_time = close_time;
 	}
 
