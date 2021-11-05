@@ -92,4 +92,19 @@ public interface UserService {
 	String generatePassword(int len);
 	
 	
+	User findByUsername(String username);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	User getOne(Long id);
+	
+	/**
+	 * 
+	 * @param 
+	 * @return char[]
+	 */
+	String generatePassword(int len);
 }
