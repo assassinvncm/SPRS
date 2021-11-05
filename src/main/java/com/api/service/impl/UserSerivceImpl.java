@@ -425,4 +425,10 @@ public class UserSerivceImpl implements UserService {
 		// u.getGroups_user();
 		return u;
 	}
+
+	@Override
+	public User getOne(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
