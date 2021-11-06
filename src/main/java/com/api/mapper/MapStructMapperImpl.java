@@ -134,9 +134,19 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
-	public Organization organizationDtoToOrganization(OrganizationDto organization) {
+	public Organization organizationDtoToOrganization(OrganizationDto orgDto) {
 		// TODO Auto-generated method stub
-		return null;
+		if(orgDto == null) {
+			return null;
+		}
+		Organization org = new Organization();
+		org.setAddress(addressDtoToAddress(orgDto.getAddress()));
+		org.setDescription(orgDto.getDescription());
+		org.setFounded(org.getFounded());
+		org.setId(orgDto.getId());
+		org.setName(orgDto.getName());
+		
+		return org;
 	}
 
 	@Override

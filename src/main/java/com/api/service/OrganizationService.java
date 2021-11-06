@@ -13,4 +13,6 @@ public interface OrganizationService {
 	
 	void updateOrganzization(OrganizationDto organizationDto);
 	
+	OrganizationDto getOrganizationByUser(long uId);
+	
 }
