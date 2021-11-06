@@ -374,18 +374,18 @@ public class UserSerivceImpl implements UserService {
 	public void updateUser(UserDto userDto,UserDto bean) {
 		// TODO Auto-generated method stub
 		
-		if(userDto.getId() != bean.getId()) {
-			throw new AppException(403,"User not valid");
-		}
+		User u = userRepository.getById(userDto.getId());
 		
-		userDto.setFull_name(bean.getFull_name());
-		userDto.setAddress(bean.getAddress());
-		userDto.setDob(bean.getDob());
-		userDto.setOrganization(bean.getOrganization());
+//		if(userDto.getId() != bean.getId()) {
+//			throw new AppException(403,"User not valid");
+//		}
 		
-		
-		User user = mapStructMapper.userDtoToUser(userDto);
-		userRepository.save(user);
+		u.setFull_name(bean.getFull_name());
+		u.setAddress(mapStructMapper.addressDtoToAddress(bean.getAddress()));
+		u.setDob(bean.getDob());
+		u.setOrganization(mapStructMapper.organizationDtoToOrganization(bean.getOrganization()));
+
+		userRepository.save(u);
 		
 	}
 

@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.api.dto.OrganizationDto;
 import com.api.entity.Organization;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.OrganizationRepository;
 import com.api.service.OrganizationService;
+import com.exception.AppException;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService{
@@ -21,6 +23,9 @@ public class OrganizationServiceImpl implements OrganizationService{
 	
 	@Autowired
 	ModelMapper modelMapper;
+	
+	@Autowired
+	MapStructMapper mapStructMapper;
 	
 	@Override
 	public List<Organization> getAllOrganzization() {
@@ -34,7 +39,17 @@ public class OrganizationServiceImpl implements OrganizationService{
 	@Override
 	public void updateOrganzization(OrganizationDto organizationDto) {
 		// TODO Auto-generated method stub
-		
+		Organization organization = mapStructMapper.organizationDtoToOrganization(organizationDto);
+		organizationRepository.save(organization);
+	}
+
+	@Override
+	public OrganizationDto getOrganizationByUser(long uId) {
+		// TODO Auto-generated method stub
+		 Organization organization = organizationRepository.findByUserId(uId).orElseThrow(() -> new AppException(402, "User not valid"));
+		 OrganizationDto orgDto = mapStructMapper.organizationToOrganizationDto(organization);
+		 orgDto.setAddress(mapStructMapper.addressToAddressDto(organization.getAddress()));
+		return orgDto;
 	}
 
 }
