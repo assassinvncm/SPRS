@@ -1,6 +1,7 @@
 package com.api.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,5 +13,8 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>{
 	
 	@Query("select rp from ReliefPoint rp inner join rp.address address inner join address.subDistrict sd inner join sd.district d inner join d.city  where d.city.id = :cId")
 	List<ReliefPoint> findReliefPointByArea(@Param("cId") long id);
+	
+	@Query("select reliefPoints from User u inner join u.reliefPoints where u.id = :uId and u.reliefPoints.id = :rpId")
+	Optional<ReliefPoint> findByIdAndUser(@Param("rpId") Long rpId, @Param("uId") Long uId);
 	
  }

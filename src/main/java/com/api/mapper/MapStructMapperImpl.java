@@ -132,7 +132,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 	@Override
 	public Organization organizationDtoToOrganization(OrganizationDto orgDto) {
 		// TODO Auto-generated method stub
-		if(orgDto == null) {
+		if (orgDto == null) {
 			return null;
 		}
 		Organization org = new Organization();
@@ -141,7 +141,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		org.setFounded(org.getFounded());
 		org.setId(orgDto.getId());
 		org.setName(orgDto.getName());
-		
+
 		return org;
 	}
 
@@ -286,7 +286,12 @@ public class MapStructMapperImpl implements MapStructMapper {
 		reliefPointDto.setClose_time(reliefPoint.getClose_time());
 		reliefPointDto.setDescription(reliefPoint.getDescription());
 		reliefPointDto.setAddress(addressToAddressDto(reliefPoint.getAddress()));
-		reliefPointDto.setReliefInformations(null);
+
+		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
+			return reliefInforToReliefInforDto(rpInfor);
+		}).collect(Collectors.toList());
+		
+		reliefPointDto.setReliefInformations(rpDto);
 		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
 
 		return reliefPointDto;
@@ -342,6 +347,33 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return reliefPointToreliefPointDto(reliefPoint);
 		}).collect(Collectors.toList());
 		return lstRp;
+	}
+
+	@Override
+	public ReliefInformationDto reliefInforToReliefInforDto(ReliefInformation reliefInfor) {
+		// TODO Auto-generated method stub
+		if (reliefInfor == null) {
+			return null;
+		}
+
+		ReliefInformationDto reliefInforDto = new ReliefInformationDto();
+//		ItemDto itemDto = new ItemDto();
+//		itemDto.setId(reliefInfor.getItem().getId());
+//		itemDto.setName(reliefInfor.getItem().getName());
+//		itemDto.setUnit(reliefInfor.getItem().getUnit());
+//		itemDto.setDescription(reliefInfor.getItem().getDescription());
+
+		reliefInforDto.setId(reliefInfor.getId());
+		reliefInforDto.setItem(reliefInfor.getItem());
+		reliefInforDto.setQuantity(reliefInfor.getQuantity());
+
+		return reliefInforDto;
+	}
+
+	@Override
+	public ReliefInformation reliefInforDtoToReliefInfor(ReliefInformationDto reliefInforDto) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

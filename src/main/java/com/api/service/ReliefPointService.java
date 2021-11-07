@@ -26,6 +26,12 @@ public interface ReliefPointService {
 	 * 
 	 * @return
 	 */
+	ReliefPointDto getReliefPointByIdAndUser(Long rpId, Long uId);
+	
+	/**
+	 * 
+	 * @return
+	 */
 	ReliefPoint getReliefPointByUser(User user);
 	
 	/**

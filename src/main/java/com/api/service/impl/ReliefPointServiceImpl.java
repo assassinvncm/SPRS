@@ -24,13 +24,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 
 	@Autowired
 	ReliefPointRepository reliefPointRepository;
-	
+
 	@Autowired
 	MapStructMapper mapStructMapper;
-	
+
 	@Autowired
 	AddressService addressService;
-	
+
 	@Override
 	public ReliefPoint getReliefPointById(Long id) {
 		// TODO Auto-generated method stub
@@ -40,7 +40,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	@Override
 	public ReliefPoint getReliefPointByUser(User user) {
 		// TODO Auto-generated method stub
-		
+
 		return null;
 	}
 
@@ -54,8 +54,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	public List<ReliefPointDto> getReliefPointByArea(AddressDto addressDto) {
 		// TODO Auto-generated method stub
 		List<ReliefPoint> rp = reliefPointRepository.findReliefPointByArea(addressDto.getId());
-		
-		
+
 		return null;
 	}
 
@@ -63,7 +62,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	public ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
-		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf ->{
+		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
 			rf.setReliefPoint(reliefPoint);
 			return rf;
 		}).collect(Collectors.toList());
@@ -78,11 +77,11 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	public ReliefPoint updateReliefPoint(ReliefPoint reliefPoint) {
 		// TODO Auto-generated method stub
 		ReliefPoint rp = reliefPointRepository.getById(reliefPoint.getId());
-		if(null == rp) {
-			throw new AppException(402,"Relief point is not Found!");
+		if (null == rp) {
+			throw new AppException(402, "Relief point is not Found!");
 		}
 		BeanUtils.copyProperties(rp, reliefPoint);
-		
+
 		return reliefPointRepository.save(reliefPoint);
 	}
 
@@ -92,5 +91,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		List<ReliefPoint> lstReliefPoint = reliefPointRepository.findAll();
 		return mapStructMapper.lstReliefPointToreliefPointDto(lstReliefPoint);
 	}
-	
+
+	@Override
+	public ReliefPointDto getReliefPointByIdAndUser(Long rpId, Long uId) {
+		// TODO Auto-generated method stub
+		ReliefPoint rp = reliefPointRepository.findByIdAndUser(rpId, uId).orElseThrow(() -> new AppException(402, "Reliefpoint not exist"));
+		
+		return mapStructMapper.reliefPointToreliefPointDto(rp);
+	}
+
 }
