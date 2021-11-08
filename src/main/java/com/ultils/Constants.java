@@ -13,7 +13,7 @@ public class Constants {
 			"/sprs/api/reliefPoint-manage/get",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user", "/sprs/api/users_v2/organizationalUser",
-			"/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp", "/sprs/api/validateOtp" };// ,
+			"/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp", "/sprs/api/validateOtp", "/sprs/api/store-manage/uploadImg" };// ,
 	public static final String RESET_PASSWORD_MESSAGE = "Mật khẩu mới của bạn là ";																							// "/sprs/api/generateOtp",
 																											// "/sprs/api/validateOtp"
 	// constants config otp
@@ -26,4 +26,5 @@ public class Constants {
 	public static final String REQUEST_STATUS_REJECT = "reject";
 	public static final String REQUEST_STATUS_UNCHECK = "uncheck";
 	// constants for request status
+	public static final String IMAGE_URL = "https://image-bucket-sprs.s3.ap-southeast-1.amazonaws.com/";
 }

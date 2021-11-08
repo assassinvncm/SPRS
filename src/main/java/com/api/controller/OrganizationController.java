@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.OrganizationDto;
@@ -26,7 +27,7 @@ public class OrganizationController {
 
 	@Autowired
 	OrganizationService organizationService;
-	
+
 	@Autowired
 	UserService userService;
 
@@ -40,11 +41,21 @@ public class OrganizationController {
 	public ResponseEntity<?> updateOrganization(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody OrganizationDto organizationDto) {
 		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
-		//check access
-		if( null == useDto.getOrganization() || useDto.getOrganization().getId() != organizationDto.getId()) {
-			throw new AppException(405,"User haven't accesss to update");
+		// check access
+		if (null == useDto.getOrganization() || useDto.getOrganization().getId() != organizationDto.getId()) {
+			throw new AppException(405, "User haven't accesss to update");
 		}
 		organizationService.updateOrganzization(organizationDto);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update information of orgnization successfull", "", null, null));
+		return ResponseEntity.ok(
+				new SPRSResponse(Constants.SUCCESS, "Update information of orgnization successfull", "", null, null));
+	}
+
+	@RequestMapping(value = "/origanization/get-by-user", method = RequestMethod.GET)
+	public ResponseEntity<?> getOrganizationById(@RequestHeader("Authorization") String requestTokenHeader) {
+		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
+		// check access
+		OrganizationDto orgDto = organizationService.getOrganizationByUser(useDto.getId());
+		return ResponseEntity.ok(
+				new SPRSResponse(Constants.SUCCESS, "Get organization by user successfull", "", orgDto, null));
 	}
 }

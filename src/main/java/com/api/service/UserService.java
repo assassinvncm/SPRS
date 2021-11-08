@@ -3,6 +3,7 @@ package com.api.service;
 import java.util.List;
 
 import com.api.dto.AddressDto;
+import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
@@ -77,19 +78,55 @@ public interface UserService {
 	 */
 	void updatePassword(UserDto userDto, UpdatePasswordDto updatePasswordDto);
 	
-	/**
-	 * 
-	 * @param username
-	 * @return
-	 */
+//	/**
+//	 * 
+//	 * @param username
+//	 * @return
+//	 */
+//	User findByUsername1(String username);
+//	
+//	/**
+//	 * 
+//	 * @param 
+//	 * @return char[]
+//	 */
+//	String generatePassword(int len);
+	
+	
 	User findByUsername(String username);
 	
 	/**
 	 * 
+	 * @param id
+	 * @return
+	 */
+	User getOne(Long id);
+	
+	/**
+	 * 
 	 * @param 
-	 * @return char[]
+	 * @return String
 	 */
 	String generatePassword(int len);
 	
+	/**
+	 * 
+	 * @param 
+	 * @return SubcribeDto
+	 */
+	SubcribeDto subcribeStore(SubcribeDto s);
 	
+	/**
+	 * 
+	 * @param 
+	 * @return SubcribeDto
+	 */
+	SubcribeDto unSubcribeStore(SubcribeDto s);
+	
+	/**
+	 * 
+	 * @param 
+	 * @return SubcribeDto
+	 */
+	SubcribeDto getListSubcribe(SubcribeDto s);
 }

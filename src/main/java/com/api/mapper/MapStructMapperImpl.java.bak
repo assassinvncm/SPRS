@@ -136,19 +136,9 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
-	public Organization organizationDtoToOrganization(OrganizationDto orgDto) {
+	public Organization organizationDtoToOrganization(OrganizationDto organization) {
 		// TODO Auto-generated method stub
-		if(orgDto == null) {
-			return null;
-		}
-		Organization org = new Organization();
-		org.setAddress(addressDtoToAddress(orgDto.getAddress()));
-		org.setDescription(orgDto.getDescription());
-		org.setFounded(org.getFounded());
-		org.setId(orgDto.getId());
-		org.setName(orgDto.getName());
-		
-		return org;
+		return null;
 	}
 
 	@Override
@@ -167,6 +157,10 @@ public class MapStructMapperImpl implements MapStructMapper {
 		userDto.setCreate_time(null);
 		userDto.setPassword(user.getPassword());
 		userDto.setIsActive(user.getIsActive());
+//		List<StoreDto> lstStoreDto = user.getUser_store().stream().map(store -> {
+//			return storeToStoreDTO(store);
+//		}).collect(Collectors.toList());
+//		userDto.setUser_store(lstStoreDto);
 		return userDto;
 	}
 

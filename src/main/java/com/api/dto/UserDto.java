@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import com.api.entity.Organization;
+import com.api.entity.Store;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -42,6 +43,9 @@ public class UserDto {
 	@JsonIgnore
 	private List<RequestDto> request;
 	
+	@JsonIgnore
+	private List<StoreDto> user_store;
+	
 
 	public UserDto() {
 		super();
@@ -67,7 +71,13 @@ public class UserDto {
 		this.request = request;
 	}
 
+	public List<StoreDto> getUser_store() {
+		return user_store;
+	}
 
+	public void setUser_store(List<StoreDto> user_store) {
+		this.user_store = user_store;
+	}
 
 	public long getId() {
 		return id;

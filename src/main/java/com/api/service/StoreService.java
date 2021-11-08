@@ -52,6 +52,13 @@ public interface StoreService {
 	
 	/**
 	 * 
+	 * @param Store
+	 * @return
+	 */
+	Store updateStoreImg(Store s, String img_url);
+	
+	/**
+	 * 
 	 * @return
 	 */
 	List<StoreDto> getAllStore();

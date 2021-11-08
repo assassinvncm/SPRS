@@ -103,8 +103,9 @@ public class UserController {
 	public ResponseEntity<?> updatePassword(@RequestHeader ("Authorization") String requestTokenHeader,
 			@Validated @RequestBody UpdatePasswordDto updatePasswordDto){
 		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
+		logger.info("Start update password: "+useDto.getUsername());
 		userService.updatePassword(useDto, updatePasswordDto);
-		
+		logger.info("End update password");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update password success!", "", null, null));
 	}
 	
