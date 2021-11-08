@@ -1,16 +1,17 @@
 package com.api.dto;
 
-import java.sql.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 
-import com.api.entity.StoreDetail;
+import com.api.entity.Image;
+import com.api.entity.StoreCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
 public class StoreDto {
-private long id;
+	private long id;
 	
 	@JsonProperty("name")
 	@NotEmpty
@@ -29,12 +30,23 @@ private long id;
 	
 	private UserDto user_st;
 	
-	@JsonProperty("storeDetail")
-	private List<StoreDetail> storeDetail;
+	@JsonProperty("store_category")
+	private List<StoreCategory> storeDetail;
 	
 	@JsonProperty("address")
 	@NotNull
 	private AddressDto address;
+	
+	@JsonIgnore
+    private List<Image> lstImage;
+
+	public List<Image> getLstImage() {
+		return lstImage;
+	}
+
+	public void setLstImage(List<Image> lstImage) {
+		this.lstImage = lstImage;
+	}
 
 	public UserDto getUser_st() {
 		return user_st;
@@ -92,11 +104,11 @@ private long id;
 		this.status = status;
 	}
 
-	public List<StoreDetail> getStoreDetail() {
+	public List<StoreCategory> getStoreDetail() {
 		return storeDetail;
 	}
 
-	public void setStoreDetail(List<StoreDetail> storeDetail) {
+	public void setStoreDetail(List<StoreCategory> storeDetail) {
 		this.storeDetail = storeDetail;
 	}
 

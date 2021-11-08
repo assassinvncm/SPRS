@@ -15,7 +15,6 @@ import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
-import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.SubDistrictDto;
 import com.api.dto.UserDto;
@@ -23,14 +22,13 @@ import com.api.entity.Address;
 import com.api.entity.City;
 import com.api.entity.District;
 import com.api.entity.Group;
-import com.api.entity.Image;
 import com.api.entity.Item;
 import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
 import com.api.entity.Store;
-import com.api.entity.StoreCategory;
+import com.api.entity.StoreDetail;
 import com.api.entity.SubDistrict;
 import com.api.entity.User;
 
@@ -241,30 +239,6 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
-	public StoreCategoryDto cateToCateDto(StoreCategory cate) {
-		// TODO Auto-generated method stub
-		if (cate == null) {
-			return null;
-		}
-		StoreCategoryDto cateDto = new StoreCategoryDto();
-		cateDto.setId(cate.getId());
-		cateDto.setName(cate.getName());
-		return cateDto;
-	}
-
-	@Override
-	public StoreCategory cateDtoToCate(StoreCategoryDto cateDto) {
-		// TODO Auto-generated method stub
-		if (cateDto == null) {
-			return null;
-		}
-		StoreCategory cate = new StoreCategory();
-		cate.setId(cateDto.getId());
-		cate.setName(cateDto.getName());
-		return cate;
-	}
-
-	@Override
 	public Item itemDtoToItem(ItemDto itemDto) {
 		// TODO Auto-generated method stub
 		if (itemDto == null) {
@@ -289,19 +263,6 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return itemToItemDto(item);
 		}).collect(Collectors.toList());
 		return lstItemDto;
-	}
-
-	@Override
-	public List<StoreCategoryDto> lstStoreCateToStoreCateDto(List<StoreCategory> lstCate) {
-		// TODO Auto-generated method stub
-		if (lstCate == null) {
-			return null;
-		}
-
-		List<StoreCategoryDto> lstCateDto = lstCate.stream().map(cate -> {
-			return cateToCateDto(cate);
-		}).collect(Collectors.toList());
-		return lstCateDto;
 	}
 
 	@Override
@@ -348,7 +309,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		storeDto.setOpen_time(store.getOpen_time().toString());
 		storeDto.setDescription(store.getDescription());
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
-		storeDto.setStoreDetail(store.getStore_category());
+		storeDto.setStoreDetail(null);
 		storeDto.setUser_st(userToUserDto(store.getUsers()));
 
 		return storeDto;
@@ -430,36 +391,16 @@ public class MapStructMapperImpl implements MapStructMapper {
 		rs.setClose_time(Time.valueOf(dto.getClose_time()));
 		rs.setDescription(dto.getDescription());
 		rs.setLocation(addressDtoToAddress(dto.getAddress()));
-		List<StoreCategory> lstStoreDetailDto = dto.getStoreDetail();
-		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
-			StoreCategory storeDetail = new StoreCategory();
+		List<StoreDetail> lstStoreDetailDto = dto.getStoreDetail();
+		List<StoreDetail> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
+			StoreDetail storeDetail = new StoreDetail();
 			storeDetail.setId(storeDetailDto.getId());
 			storeDetail.setName(storeDetailDto.getName());
 			return storeDetail;
 		}).collect(Collectors.toList());
-		rs.setStore_category(lstStoreDetail);
-		rs.setUsers(userDtoToUser(dto.getUser_st()));
-//		List<Image> lstImgDto = dto.getLstImage();
-//		List<Image> lstImg = lstImgDto.stream().map(imgDto -> {
-//			Image img = new Image();
-//			imgDto.setId(imgDto.getId());
-//			return img;
-//		}).collect(Collectors.toList());
-//		rs.setLstImage(lstImg);
+		rs.setStoreDetail(lstStoreDetail);
 
 		return rs;
-	}
-
-	@Override
-	public List<StoreCategory> lstStoreCateDtoToStoreCate(List<StoreCategoryDto> lstCateDto) {
-		if (lstCateDto == null) {
-			return null;
-		}
-
-		List<StoreCategory> lstCate = lstCateDto.stream().map(cate -> {
-			return cateDtoToCate(cate);
-		}).collect(Collectors.toList());
-		return lstCate;
 	}
 
 }

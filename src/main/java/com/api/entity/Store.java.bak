@@ -3,7 +3,6 @@ package com.api.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,8 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -44,54 +41,20 @@ public class Store extends BaseEntity implements Serializable{
 	private Time close_time;
 	
 	@Column(name = "status")
-	private boolean status;
+	private String status;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User users;
 	
+	@OneToMany(mappedBy = "storePoint", fetch = FetchType.LAZY)
+	@JsonIgnore
+    private List<StoreDetail> storeDetail;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id")
 	@JsonIgnore
     private Address location;
-	
-	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
-	@JsonIgnore
-    private List<Image> lstImage;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "SPRS_store_category",
-			joinColumns = @JoinColumn(name = "store_id",insertable = true, updatable = false),
-			inverseJoinColumns = @JoinColumn(name ="category_id"))
-	private List<StoreCategory> store_category;
-
-	@ManyToMany(fetch = FetchType.LAZY,mappedBy = "user_store")
-	@JsonIgnore
-	private List<User> store_user = new ArrayList<User>();
-
-	public List<User> getStore_user() {
-		return store_user;
-	}
-
-	public void setStore_user(List<User> store_user) {
-		this.store_user = store_user;
-	}
-
-	public List<StoreCategory> getStore_category() {
-		return store_category;
-	}
-
-	public void setStore_category(List<StoreCategory> store_category) {
-		this.store_category = store_category;
-	}
-
-	public List<Image> getLstImage() {
-		return lstImage;
-	}
-
-	public void setLstImage(List<Image> lstImage) {
-		this.lstImage = lstImage;
-	}
 
 	public String getName() {
 		return name;
@@ -125,11 +88,11 @@ public class Store extends BaseEntity implements Serializable{
 		this.close_time = close_time;
 	}
 
-	public boolean getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -147,6 +110,14 @@ public class Store extends BaseEntity implements Serializable{
 
 	public void setLocation(Address location) {
 		this.location = location;
+	}
+
+	public List<StoreDetail> getStoreDetail() {
+		return storeDetail;
+	}
+
+	public void setStoreDetail(List<StoreDetail> storeDetail) {
+		this.storeDetail = storeDetail;
 	}
 	
 	

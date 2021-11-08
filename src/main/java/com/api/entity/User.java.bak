@@ -73,37 +73,28 @@ public class User extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
 	private List<ReliefPoint> reliefPoints;
-	
-	@OneToMany(mappedBy="users")
-    private List<Store> lstStore;
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "SPRS_store_subcribe",
-			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
-			inverseJoinColumns = @JoinColumn(name ="store_id"))
-	private List<Store> user_store;
-
-
-	
-	public List<Store> getLstStore() {
-		return lstStore;
-	}
-
-	public void setLstStore(List<Store> lstStore) {
-		this.lstStore = lstStore;
-	}
-
+//
+//	@OneToMany(mappedBy = "users_dv")
+//	private List<Device> devices = new ArrayList<Device>();
+//	
+//	public List<ReliefPoint> getReliefPoints() {
+//		return reliefPoints;
+//	}
+//
+//	public void setReliefPoints(List<ReliefPoint> reliefPoints) {
+//		this.reliefPoints = reliefPoints;
+//	}
+//
+//	public List<Device> getDevices() {
+//		return devices;
+//	}
+//
+//	public void setDevices(List<Device> devices) {
+//		this.devices = devices;
+//	}
 	@JsonIgnore
 	public List<Group> getGroups_user() {
 		return groups_user;
-	}
-
-	public List<Store> getUser_store() {
-		return user_store;
-	}
-
-	public void setUser_store(List<Store> user_store) {
-		this.user_store = user_store;
 	}
 
 	public User(String username, String phone, String password, String full_name, String dob, Address address,
