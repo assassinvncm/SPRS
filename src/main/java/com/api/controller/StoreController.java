@@ -1,5 +1,7 @@
 package com.api.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +11,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.StoreDto;
+import com.api.dto.UserDto;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
 import com.api.entity.User;
+import com.api.mapper.MapStructMapper;
+import com.api.repositories.StoreRepository;
+import com.api.service.AmazonClient;
 import com.api.service.StoreService;
 import com.api.service.UserService;
 import com.exception.AppException;
@@ -34,55 +44,50 @@ public class StoreController {
 	
 	@Autowired
 	UserService userSerivce;
-
+	
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	StoreRepository storeRepository;
+	
+	@Autowired
+	private MapStructMapper structMapper;
+	
+	@Autowired
+	private AmazonClient amazonClient;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody Store s) {
+	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
+		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
+		s.setUser_st(userDto);
 		
-		String username = null;
-		String jwtToken = null;
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
-			try {
-				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
-				throw new AppException(501,"Unable to get JWT Token");
-			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
-				throw new AppException(501,"JWT Token has expired");
-			}
-		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
-			throw new AppException(501,"JWT Token does not begin with Bearer String");
-		}
-		
-		User user = userSerivce.findByUsername(username);
-		s.setUsers(user);
-		
-		Store rp = storeService.createStore(s);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", rp, null));
+		Store store = storeService.createStore(s);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create store successfully", "", store, null));
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public void getStore() {
-
+	public ResponseEntity<?> getReliefPointById() {
+		List<StoreDto> lstStore = storeService.getAllStore();
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All Store success", "", lstStore, null));
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public void getStoreById(@PathVariable(value = "id") Long id) {
-
+	public ResponseEntity<?> getStoreById(@PathVariable(value = "id") Long id) {
+		Store st = storeRepository.getById(id);
+		StoreDto rs = structMapper.storeToStoreDTO(st);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
 
-//	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-//	public void getReliefPointByArea(@PathVariable(value = "id") String id ) {
-//		
-//	}
-
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public void updateStore(@RequestBody Object reliefPoint) {
+	public ResponseEntity<?> updateStore(@RequestBody StoreDto storeDto) {
+		Store s = structMapper.storeDtoToStore(storeDto);
+		storeService.updateStore(s);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+s.getId()+" success", "", s, null));
+	}
 
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImg(@RequestPart(value = "file") MultipartFile file, @RequestBody StoreDto storeDto) {
+		Store s = structMapper.storeDtoToStore(storeDto);
+		String img_url = amazonClient.uploadFile(file);
+		storeService.updateStoreImg(s,img_url);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+s.getId()+" success", "", s, null));
 	}
 }
