@@ -436,6 +436,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 	public ReliefInformation reliefInforDtoToReliefInfor(ReliefInformationDto reliefInforDto) {
 		// TODO Auto-generated method stub
 		return null;
+	}
 
 	public List<StoreDto> lstStoreToStoreDto(List<Store> lststore) {
 		// TODO Auto-generated method stub
