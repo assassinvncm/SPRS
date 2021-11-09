@@ -56,38 +56,48 @@ public class StoreController {
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
+		logger.info("Start create Store");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
 		s.setUser_st(userDto);
 		
 		Store store = storeService.createStore(s);
+		logger.info("End create Store");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create store successfully", "", store, null));
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public ResponseEntity<?> getReliefPointById() {
+		logger.info("Start get all Store");
 		List<StoreDto> lstStore = storeService.getAllStore();
+		logger.info("End get all Store");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All Store success", "", lstStore, null));
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getStoreById(@PathVariable(value = "id") Long id) {
+		logger.info("Start get Store by id: "+id);
 		Store st = storeRepository.getById(id);
 		StoreDto rs = structMapper.storeToStoreDTO(st);
+		logger.info("Start get Store by id");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateStore(@RequestBody StoreDto storeDto) {
+		logger.info("Start update Store");
 		Store s = structMapper.storeDtoToStore(storeDto);
 		storeService.updateStore(s);
+		logger.info("End update Store");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+s.getId()+" success", "", s, null));
 	}
 
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadImg(@RequestPart(value = "file") MultipartFile file, @RequestBody StoreDto storeDto) {
+		logger.info("Start uploadImg Store");
 		Store s = structMapper.storeDtoToStore(storeDto);
 		String img_url = amazonClient.uploadFile(file);
 		storeService.updateStoreImg(s,img_url);
+		logger.info("End uploadImg Store");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+s.getId()+" success", "", s, null));
 	}
 }

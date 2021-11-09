@@ -148,6 +148,13 @@ public class Store extends BaseEntity implements Serializable{
 	public void setLocation(Address location) {
 		this.location = location;
 	}
+
+	@Override
+	public String toString() {
+		return "Store [name=" + name + ", description=" + description + ", open_time=" + open_time + ", close_time="
+				+ close_time + ", status=" + status + ", users=" + users + ", location=" + location + ", lstImage="
+				+ lstImage + ", store_category=" + store_category + ", store_user=" + store_user + "]";
+	}
 	
 	
 }

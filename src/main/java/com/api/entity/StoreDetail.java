@@ -1,17 +1,22 @@
 package com.api.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "SPRS_Store_Category")
+@Table(name = "SPRS_Category")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StoreDetail extends BaseEntity implements Serializable{
 
@@ -20,9 +25,9 @@ public class StoreDetail extends BaseEntity implements Serializable{
 	 */
 	private static final long serialVersionUID = -1593227020069587312L;
 	
-	@ManyToOne
-	@JoinColumn(name = "store_id", referencedColumnName="id")
-	private Store storePoint;
+	@ManyToMany(fetch = FetchType.LAZY,mappedBy = "store_category")
+	@JsonIgnore
+	private List<Store> storePoint = new ArrayList<Store>();
 	
 	@Column(name = "name")
 	private String name;
@@ -30,11 +35,11 @@ public class StoreDetail extends BaseEntity implements Serializable{
 	@Column(name = "quantity")
 	private String quantity;
 
-	public Store getStorePoint() {
+	public List<Store> getStorePoint() {
 		return storePoint;
 	}
 
-	public void setStorePoint(Store storePoint) {
+	public void setStorePoint(List<Store> storePoint) {
 		this.storePoint = storePoint;
 	}
 
