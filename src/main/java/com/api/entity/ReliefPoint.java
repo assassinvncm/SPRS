@@ -40,7 +40,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	private Date close_time;
 	
 	@Column(name = "status")
-	private String status;
+	private Boolean status;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id",referencedColumnName="id", insertable = true, updatable = false)
@@ -89,11 +89,11 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 		this.close_time = close_time;
 	}
 
-	public String getStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 	

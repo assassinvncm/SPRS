@@ -207,6 +207,14 @@ public class User extends BaseEntity implements Serializable{
 	public void setRequest(List<Request> request) {
 		this.request = request;
 	}
+
+	public List<ReliefPoint> getReliefPoints() {
+		return reliefPoints;
+	}
+
+	public void setReliefPoints(List<ReliefPoint> reliefPoints) {
+		this.reliefPoints = reliefPoints;
+	}
 	
 	
 	

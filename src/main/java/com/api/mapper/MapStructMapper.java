@@ -80,4 +80,6 @@ public interface MapStructMapper {
 	StoreCategoryDto cateToCateDto(StoreCategory cate);
 	
 	StoreCategory cateDtoToCate(StoreCategoryDto cateDto);
+	
+	
 }

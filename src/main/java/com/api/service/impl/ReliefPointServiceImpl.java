@@ -5,10 +5,16 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.api.dto.AddressDto;
 import com.api.dto.ReliefPointDto;
+import com.api.dto.ReliefPointFilterDto;
 import com.api.entity.Address;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
@@ -17,6 +23,7 @@ import com.api.mapper.MapStructMapper;
 import com.api.repositories.ReliefPointRepository;
 import com.api.service.AddressService;
 import com.api.service.ReliefPointService;
+import com.common.utils.DateUtils;
 import com.exception.AppException;
 
 @Service
@@ -69,19 +76,39 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setReliefInformations(lstRIfor);
 		Address address = addressService.mapAddress(reliefPointDto.getAddress());
 		reliefPoint.setAddress(address);
+		reliefPoint.setStatus(true);
+		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
 		return rp;
 	}
 
 	@Override
-	public ReliefPoint updateReliefPoint(ReliefPoint reliefPoint) {
+	public ReliefPoint updateReliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
-		ReliefPoint rp = reliefPointRepository.getById(reliefPoint.getId());
+		ReliefPoint rp = reliefPointRepository.getById(reliefPointDto.getId());
 		if (null == rp) {
 			throw new AppException(402, "Relief point is not Found!");
 		}
-		BeanUtils.copyProperties(rp, reliefPoint);
+		if (reliefPointDto.getAddress().getId() == 0) {
+			throw new AppException(402, "Id of Address is not Found!");
+		}
+		reliefPointDto.getReliefInformations().forEach((rpIf) -> {
+			if(rpIf.getItem().getId() == 0) {
+				throw new AppException(402, "Id of Item is not Found!");
+			}
+		});
 
+		// BeanUtils.copyProperties(rp, reliefPoint);
+		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
+		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
+			rf.setReliefPoint(reliefPoint);
+			return rf;
+		}).collect(Collectors.toList());
+		reliefPoint.setReliefInformations(lstRIfor);
+		Address address = addressService.mapAddress(reliefPointDto.getAddress());
+		reliefPoint.setAddress(address);
+		reliefPoint.setStatus(rp.getStatus());
+		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
 		return reliefPointRepository.save(reliefPoint);
 	}
 
@@ -95,9 +122,35 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	@Override
 	public ReliefPointDto getReliefPointByIdAndUser(Long rpId, Long uId) {
 		// TODO Auto-generated method stub
-		ReliefPoint rp = reliefPointRepository.findByIdAndUser(rpId, uId).orElseThrow(() -> new AppException(402, "Reliefpoint not exist"));
-		
+		ReliefPoint rp = reliefPointRepository.findByIdAndUser(rpId, uId)
+				.orElseThrow(() -> new AppException(402, "Reliefpoint not exist"));
+
 		return mapStructMapper.reliefPointToreliefPointDto(rp);
+	}
+
+	@Override
+	public List<ReliefPointDto> getReliefPoints(Long uId, ReliefPointFilterDto reliefPointFilterDto) {
+		// TODO Auto-generated method stub
+		List<ReliefPoint> reliefPoints = reliefPointRepository.findByTypeOrStatus(uId, reliefPointFilterDto);
+
+		return mapStructMapper.lstReliefPointToreliefPointDto(reliefPoints);
+	}
+
+	@Override
+	@Transactional
+	public ReliefPoint updateStatusReliefPoint(Long rId, Boolean status) {
+		// TODO Auto-generated method stub
+		ReliefPoint rp = reliefPointRepository.findById(rId)
+				.orElseThrow(() -> new AppException(402, "ReliefPoint not exist"));
+		rp.setStatus(status);
+		return reliefPointRepository.save(rp);
+	}
+
+	@Override
+	@Transactional
+	public void deleteReliefPointById(Long rId) {
+		// TODO Auto-generated method stub
+		reliefPointRepository.deleteById(rId);
 	}
 
 }

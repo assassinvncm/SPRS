@@ -1,6 +1,7 @@
 package com.api.mapper;
 
 import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.SubDistrict;
 import com.api.entity.User;
+import com.common.utils.DateUtils;
 
 @Component
 public class MapStructMapperImpl implements MapStructMapper {
@@ -326,16 +328,21 @@ public class MapStructMapperImpl implements MapStructMapper {
 		ReliefPointDto reliefPointDto = new ReliefPointDto();
 		reliefPointDto.setId(reliefPoint.getId());
 		reliefPointDto.setName(reliefPoint.getName());
-		reliefPointDto.setClose_time(reliefPoint.getClose_time());
+		//reliefPointDto.setClose_time(reliefPoint.getClose_time());
 		reliefPointDto.setDescription(reliefPoint.getDescription());
 		reliefPointDto.setAddress(addressToAddressDto(reliefPoint.getAddress()));
-
+		reliefPointDto.setStatus(reliefPoint.getStatus());
+		Date create_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getCreate_time());
+		Date modified_date = DateUtils.convertSqlDateToJavaDate(reliefPoint.getModified_date());
+		reliefPointDto.setCreate_time(DateUtils.getDateInyyyy_MM_ddHHmmss(create_time));
+		reliefPointDto.setModified_date(DateUtils.getDateInyyyy_MM_ddHHmmss(modified_date));
+		
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);
 		}).collect(Collectors.toList());
 		
 		reliefPointDto.setReliefInformations(rpDto);
-		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
+//		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
 
 		return reliefPointDto;
 	}
@@ -369,14 +376,14 @@ public class MapStructMapperImpl implements MapStructMapper {
 		ReliefPoint reliefPoint = new ReliefPoint();
 		reliefPoint.setId(reliefPointDto.getId());
 		reliefPoint.setName(reliefPointDto.getName());
-		reliefPoint.setClose_time(reliefPointDto.getClose_time());
+		//reliefPoint.setClose_time(reliefPointDto.getClose_time());
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setAddress(addressDtoToAddress(reliefPointDto.getAddress()));
 		List<ReliefInformationDto> lstReliefInforDto = reliefPointDto.getReliefInformations();
 		List<ReliefInformation> lstReliefInfor = lstReliefInforDto.stream().map(reliefInforDto -> {
 			ReliefInformation reliefInfor = new ReliefInformation();
 			reliefInfor.setId(reliefInforDto.getId());
-			reliefInfor.setItem(reliefInforDto.getItem());
+			reliefInfor.setItem(itemDtoToItem(reliefInforDto.getItem()));
 			reliefInfor.setQuantity(reliefInforDto.getQuantity());
 			return reliefInfor;
 		}).collect(Collectors.toList());
@@ -419,14 +426,14 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}
 
 		ReliefInformationDto reliefInforDto = new ReliefInformationDto();
-//		ItemDto itemDto = new ItemDto();
-//		itemDto.setId(reliefInfor.getItem().getId());
-//		itemDto.setName(reliefInfor.getItem().getName());
-//		itemDto.setUnit(reliefInfor.getItem().getUnit());
-//		itemDto.setDescription(reliefInfor.getItem().getDescription());
+		ItemDto itemDto = new ItemDto();
+		itemDto.setId(reliefInfor.getItem().getId());
+		itemDto.setName(reliefInfor.getItem().getName());
+		itemDto.setUnit(reliefInfor.getItem().getUnit());
+		itemDto.setDescription(reliefInfor.getItem().getDescription());
 
 		reliefInforDto.setId(reliefInfor.getId());
-		reliefInforDto.setItem(reliefInfor.getItem());
+		reliefInforDto.setItem(itemDto);
 		reliefInforDto.setQuantity(reliefInfor.getQuantity());
 
 		return reliefInforDto;

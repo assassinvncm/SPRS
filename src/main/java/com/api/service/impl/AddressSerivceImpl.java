@@ -20,6 +20,7 @@ import com.api.repositories.CityRepository;
 import com.api.repositories.DistrictRepository;
 import com.api.repositories.SubDistrictRepository;
 import com.api.service.AddressService;
+import com.common.utils.DateUtils;
 import com.exception.AppException;
 
 @Service
@@ -86,6 +87,8 @@ public class AddressSerivceImpl implements AddressService {
 		}
 		// mapper
 		Address address = new Address();
+		address.setId(addressDto.getId());
+		address.setModified_date(DateUtils.getCurrentSqlDate());
 		address.setAddressLine(addressDto.getAddressLine1());
 		address.setGPS_Lati(addressDto.getGPS_lati());
 		address.setGPS_Long(addressDto.getGPS_long());
