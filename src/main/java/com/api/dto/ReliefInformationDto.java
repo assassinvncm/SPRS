@@ -18,7 +18,7 @@ public class ReliefInformationDto {
 	private ReliefPointDto reliefPoint;
 	
 	@JsonProperty("item")
-	private Item item;
+	private ItemDto item;
 	
 	
 
@@ -26,7 +26,7 @@ public class ReliefInformationDto {
 		super();
 	}
 
-	public ReliefInformationDto(long id, int quantity, ReliefPointDto reliefPoint, Item item) {
+	public ReliefInformationDto(long id, int quantity, ReliefPointDto reliefPoint, ItemDto item) {
 		super();
 		this.id = id;
 		this.quantity = quantity;
@@ -58,11 +58,11 @@ public class ReliefInformationDto {
 		this.reliefPoint = reliefPoint;
 	}
 
-	public Item getItem() {
+	public ItemDto getItem() {
 		return item;
 	}
 
-	public void setItem(Item item) {
+	public void setItem(ItemDto item) {
 		this.item = item;
 	}
 	
