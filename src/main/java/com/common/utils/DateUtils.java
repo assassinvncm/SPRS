@@ -81,5 +81,22 @@ public class DateUtils {
 		return javaDate;
 
 	}
+	
+	public static java.util.Date getDateFromStringInYYYYMMDDHH(String dateStr) {
+		java.util.Date javaDate = null;
+		if(javaDate == null) {
+			return null;
+		}
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			javaDate = formatter.parse(dateStr);
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw new AppException(405, "Format date happen error");
+		}
+
+		return javaDate;
+
+	}
 
 }

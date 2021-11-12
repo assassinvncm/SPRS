@@ -76,6 +76,8 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setReliefInformations(lstRIfor);
 		Address address = addressService.mapAddress(reliefPointDto.getAddress());
 		reliefPoint.setAddress(address);
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setStatus(true);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
