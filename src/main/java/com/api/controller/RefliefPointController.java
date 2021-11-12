@@ -64,18 +64,10 @@ public class RefliefPointController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}
 
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	@RequestMapping(value = "/get", method = RequestMethod.POST)
 	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
-			@RequestParam(value = "types", required = false) Long[] types,
-			@RequestParam(value = "status", required = false) Boolean status,
-			@RequestParam(value = "sort", required = false) Boolean sort, @RequestParam("pageSize") int pageSize,
-			@RequestParam("pageIndex") int pageIndex) {
-		List<Long> typeList = null;
-		if (types != null) {
-			typeList = Arrays.asList(types);
-		}
+			@RequestBody ReliefPointFilterDto rpf) {
 
-		ReliefPointFilterDto rpf = new ReliefPointFilterDto(typeList, status, sort, pageSize, pageIndex);
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		List<ReliefPointDto> lstReliefPoint = reliefPointService.getReliefPoints(userDto.getId(), rpf);
 		return ResponseEntity
