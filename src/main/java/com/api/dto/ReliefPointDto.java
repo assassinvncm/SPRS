@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 import com.api.entity.ReliefInformation;
 import com.api.entity.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
@@ -23,9 +24,11 @@ public class ReliefPointDto {
 	private String description;
 
 	@NotEmpty
+	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
 	private Date open_time;
 
 	@NotEmpty
+	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
 	private Date close_time;
 	
 	private Boolean status;

@@ -1,6 +1,8 @@
 package com.api.controller;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,9 +66,16 @@ public class RefliefPointController {
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
-			@RequestBody ReliefPointFilterDto reliefPointFilterDto) {
+			@RequestParam(value = "types" , required = false) Long [] types, @RequestParam("status") Boolean status,
+			@RequestParam("sort") Boolean sort, @RequestParam("pageSize") int pageSize,@RequestParam("pageIndex") int pageIndex ) {
+		List<Long> typeList = null;
+		if(types!= null) {
+			typeList = Arrays.asList(types);
+		}
+		
+		ReliefPointFilterDto rpf= new ReliefPointFilterDto(typeList,status,sort,pageSize,pageIndex);
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
-		List<ReliefPointDto> lstReliefPoint = reliefPointService.getReliefPoints(userDto.getId(), reliefPointFilterDto);
+		List<ReliefPointDto> lstReliefPoint = reliefPointService.getReliefPoints(userDto.getId(), rpf);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", lstReliefPoint, null));
 	}
