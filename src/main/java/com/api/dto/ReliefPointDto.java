@@ -1,12 +1,14 @@
 package com.api.dto;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 
 import com.api.entity.ReliefInformation;
 import com.api.entity.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
@@ -22,12 +24,14 @@ public class ReliefPointDto {
 	private String description;
 
 	@NotEmpty
+	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
 	private Date open_time;
 
 	@NotEmpty
+	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
 	private Date close_time;
 	
-	private String status;
+	private Boolean status;
 	
 	private UserDto user_rp;
 	
@@ -38,13 +42,25 @@ public class ReliefPointDto {
 	@NotNull
 	private AddressDto address;
 	
+	@JsonProperty("create_by")
+	public String create_by;
+	
+	@JsonProperty("create_time")
+	public String create_time;
+	
+	@JsonProperty("modified_by")
+	public String modified_by;
+	
+	@JsonProperty("modified_date")
+	public String modified_date;
+	
 	
 
 	public ReliefPointDto() {
 		super();
 	}
 
-	public ReliefPointDto(long id, String name, String description, Date open_time, Date close_time, String status,
+	public ReliefPointDto(long id, String name, String description, Date open_time, Date close_time, Boolean status,
 			UserDto user_rp, List<ReliefInformationDto> reliefInformations, AddressDto address) {
 		super();
 		this.id = id;
@@ -98,11 +114,11 @@ public class ReliefPointDto {
 		this.close_time = close_time;
 	}
 
-	public String getStatus() {
+	public Boolean getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Boolean status) {
 		this.status = status;
 	}
 
@@ -128,6 +144,38 @@ public class ReliefPointDto {
 
 	public void setAddress(AddressDto address) {
 		this.address = address;
+	}
+
+	public String getCreate_by() {
+		return create_by;
+	}
+
+	public void setCreate_by(String create_by) {
+		this.create_by = create_by;
+	}
+
+	public String getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(String create_time) {
+		this.create_time = create_time;
+	}
+
+	public String getModified_by() {
+		return modified_by;
+	}
+
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
+	}
+
+	public String getModified_date() {
+		return modified_date;
+	}
+
+	public void setModified_date(String modified_date) {
+		this.modified_date = modified_date;
 	}
 	
 	

@@ -6,6 +6,7 @@ import com.api.dto.AddressDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
 import com.api.dto.OrganizationDto;
+import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
 import com.api.dto.StoreCategoryDto;
@@ -15,6 +16,7 @@ import com.api.entity.Address;
 import com.api.entity.Group;
 import com.api.entity.Item;
 import com.api.entity.Organization;
+import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
 import com.api.entity.Store;
@@ -43,6 +45,8 @@ public interface MapStructMapper {
 	
 	ReliefPointDto reliefPointToreliefPointDto(ReliefPoint reliefPoint);
 	
+	ReliefInformationDto reliefInforToReliefInforDto(ReliefInformation reliefInfor);
+	
 	List<ReliefPointDto> lstReliefPointToreliefPointDto(List<ReliefPoint> reliefPoint);
 	
 	List<StoreDto> lstStoreToStoreDto(List<Store> store);
@@ -63,6 +67,8 @@ public interface MapStructMapper {
 	
 	ReliefPoint reliefPointDtoToreliefPoint(ReliefPointDto reliefPointDto);
 	
+	ReliefInformation reliefInforDtoToReliefInfor(ReliefInformationDto reliefInforDto);
+
 	StoreDto storeToStoreDTO(Store store);
 	
 	Store storeDtoToStore(StoreDto dto);
@@ -74,4 +80,6 @@ public interface MapStructMapper {
 	StoreCategoryDto cateToCateDto(StoreCategory cate);
 	
 	StoreCategory cateDtoToCate(StoreCategoryDto cateDto);
+	
+	
 }

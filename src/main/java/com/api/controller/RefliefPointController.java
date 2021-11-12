@@ -1,10 +1,13 @@
 package com.api.controller;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.ReliefPointDto;
+import com.api.dto.ReliefPointFilterDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.UserDto;
 import com.api.entity.ReliefPoint;
+import com.api.entity.Store;
 import com.api.entity.User;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.UserRepository;
 import com.api.service.ReliefPointService;
 import com.api.service.UserService;
@@ -39,6 +45,9 @@ public class RefliefPointController {
 	ReliefPointService reliefPointService;
 
 	@Autowired
+	MapStructMapper mapStruct;
+
+	@Autowired
 	UserService userService;
 
 	@Autowired
@@ -50,26 +59,68 @@ public class RefliefPointController {
 
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		reliefPointDto.setUser_rp(userDto);
-		
+
 		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}
 
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public ResponseEntity<?> getReliefPointById() {
-		List<ReliefPointDto> lstReliefPoint = reliefPointService.getAllReliefPoint();
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", lstReliefPoint, null));
+	@RequestMapping(value = "/get", method = RequestMethod.POST)
+	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody ReliefPointFilterDto rpf) {
+
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		List<ReliefPointDto> lstReliefPoint = reliefPointService.getReliefPoints(userDto.getId(), rpf);
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", lstReliefPoint, null));
 	}
 
-	@RequestMapping(value = "/get/area", method = RequestMethod.GET)
-	public ResponseEntity<?> getReliefPointByCity(@RequestParam(name = "") long id) {
-		List<ReliefPointDto> rpDto = reliefPointService.getReliefPointByArea(null);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
+	/**
+	 * get relief point by Id
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/reliefPoint", method = RequestMethod.GET)
+	public ResponseEntity<?> getReliefPointById(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestParam(name = "id") long rpId) {
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		ReliefPointDto rpDto = reliefPointService.getReliefPointByIdAndUser(rpId, userDto.getId());
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public void updateReliefPoint(@RequestBody Object reliefPoint) {
+//	@RequestMapping(value = "/get", method = RequestMethod.GET)
+//	public ResponseEntity<?> getReliefPointByCity(@RequestParam(name = "") long id) {
+//		List<ReliefPointDto> rpDto = reliefPointService.getReliefPointByArea(null);
+//		return ResponseEntity
+//				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
+//	}
 
+	/**
+	 * chưa xong service
+	 * 
+	 * @param reliefPoint
+	 * @return
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateReliefPoint(@RequestBody ReliefPointDto reliefPointDto) {
+		ReliefPoint rp = reliefPointService.updateReliefPoint(reliefPointDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
+				"Update reliefpoint By ID " + rp.getId() + " success", "", rp, null));
+	}
+
+	@RequestMapping(value = "/update-status", method = RequestMethod.PUT)
+	public ResponseEntity<?> hideReliefPoint(@RequestParam("id") Long id, @RequestParam("status") Boolean status) {
+		ReliefPoint ReliefPoint = reliefPointService.updateStatusReliefPoint(id, status);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
+				"Update status relief point By ID " + ReliefPoint.getId() + " success", "", ReliefPoint, null));
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteReliefPoint(@RequestParam("id") Long id) {
+
+		reliefPointService.deleteReliefPointById(id);
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "delete relief point By ID " + " success", "", null, null));
 	}
 
 }
