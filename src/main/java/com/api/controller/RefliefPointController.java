@@ -66,14 +66,16 @@ public class RefliefPointController {
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
-			@RequestParam(value = "types" , required = false) Long [] types, @RequestParam("status") Boolean status,
-			@RequestParam("sort") Boolean sort, @RequestParam("pageSize") int pageSize,@RequestParam("pageIndex") int pageIndex ) {
+			@RequestParam(value = "types", required = false) Long[] types,
+			@RequestParam(value = "status", required = false) Boolean status,
+			@RequestParam(value = "sort", required = false) Boolean sort, @RequestParam("pageSize") int pageSize,
+			@RequestParam("pageIndex") int pageIndex) {
 		List<Long> typeList = null;
-		if(types!= null) {
+		if (types != null) {
 			typeList = Arrays.asList(types);
 		}
-		
-		ReliefPointFilterDto rpf= new ReliefPointFilterDto(typeList,status,sort,pageSize,pageIndex);
+
+		ReliefPointFilterDto rpf = new ReliefPointFilterDto(typeList, status, sort, pageSize, pageIndex);
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		List<ReliefPointDto> lstReliefPoint = reliefPointService.getReliefPoints(userDto.getId(), rpf);
 		return ResponseEntity
