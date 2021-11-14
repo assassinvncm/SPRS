@@ -13,48 +13,46 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
 public class ReliefPointDto {
-	
+
 	private long id;
-	
+
 	@JsonProperty("name")
 	@NotEmpty
 	private String name;
-	
+
 	@JsonProperty("description")
 	private String description;
 
 	@NotEmpty
-	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
 	private Date open_time;
 
 	@NotEmpty
-	@JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
 	private Date close_time;
-	
+
 	private Boolean status;
-	
+
 	private UserDto user_rp;
-	
+
 	@JsonProperty("reliefInformations")
 	private List<ReliefInformationDto> reliefInformations;
-	
+
 	@JsonProperty("address")
 	@NotNull
 	private AddressDto address;
-	
+
 	@JsonProperty("create_by")
 	public String create_by;
-	
+
 	@JsonProperty("create_time")
 	public String create_time;
-	
+
 	@JsonProperty("modified_by")
 	public String modified_by;
-	
+
 	@JsonProperty("modified_date")
 	public String modified_date;
-	
-	
 
 	public ReliefPointDto() {
 		super();
@@ -177,11 +175,5 @@ public class ReliefPointDto {
 	public void setModified_date(String modified_date) {
 		this.modified_date = modified_date;
 	}
-	
-	
-	
-	
 
-	
-	
 }

@@ -16,6 +16,7 @@ import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
+import com.api.dto.SOSDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.SubDistrictDto;
@@ -30,6 +31,7 @@ import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
+import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.SubDistrict;
@@ -201,7 +203,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		requestDto.setId(request.getId());
 		requestDto.setStatus(request.getStatus());
 		requestDto.setMessage(request.getMessage());
-		requestDto.setTimestamp(request.getTimestamp());
+		requestDto.setTimestamp(DateUtils.convertSqlDateToJavaDate(request.getTimestamp()));
 		requestDto.setType(request.getType());
 		UserDto userDto = userToUserDto(request.getUser());
 		userDto.setGroups_user(lstGroupToGroupDto(request.getUser().getGroups_user()));
@@ -334,8 +336,12 @@ public class MapStructMapperImpl implements MapStructMapper {
 		reliefPointDto.setStatus(reliefPoint.getStatus());
 		Date create_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getCreate_time());
 		Date modified_date = DateUtils.convertSqlDateToJavaDate(reliefPoint.getModified_date());
+		Date open_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getOpen_time());
+		Date close_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getClose_time());
 		reliefPointDto.setCreate_time(DateUtils.getDateInyyyy_MM_ddHHmmss(create_time));
 		reliefPointDto.setModified_date(DateUtils.getDateInyyyy_MM_ddHHmmss(modified_date));
+		reliefPointDto.setOpen_time(open_time);
+		reliefPointDto.setClose_time(close_time);
 		
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);
@@ -498,6 +504,30 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return cateDtoToCate(cate);
 		}).collect(Collectors.toList());
 		return lstCate;
+	}
+
+	@Override
+	public SOSDto SOSToSOSDto(SOS sos) {
+		SOSDto rs = new SOSDto();
+		rs.setId(sos.getId());
+		rs.setDescription(sos.getDescription());
+		rs.setGPS_Lati(sos.getGPS_Lati());
+		rs.setGPS_Long(sos.getGPS_Long());
+		rs.setLevel(sos.getLevel());
+		rs.setStatus(sos.isStatus());
+		return rs;
+	}
+
+	@Override
+	public SOS SOSDtoToSOS(SOSDto sosDto) {
+		SOS rs = new SOS();
+		rs.setId(sosDto.getId());
+		rs.setDescription(sosDto.getDescription());
+		rs.setGPS_Lati(sosDto.getGPS_Lati());
+		rs.setGPS_Long(sosDto.getGPS_Long());
+		rs.setLevel(sosDto.getLevel());
+		rs.setStatus(sosDto.isStatus());
+		return rs;
 	}
 
 }

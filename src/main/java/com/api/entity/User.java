@@ -2,6 +2,7 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,9 +48,6 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "dob")
 	private String dob;
 	
-	@Column(name = "create_time")
-	private Date create_time;
-	
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
@@ -82,11 +80,22 @@ public class User extends BaseEntity implements Serializable{
 			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="store_id"))
 	private List<Store> user_store;
-
-
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "sos_id")
+	@JsonIgnore
+    private SOS user_sos;
 	
 	public List<Store> getLstStore() {
 		return lstStore;
+	}
+
+	public SOS getUser_sos() {
+		return user_sos;
+	}
+
+	public void setUser_sos(SOS user_sos) {
+		this.user_sos = user_sos;
 	}
 
 	public void setLstStore(List<Store> lstStore) {
@@ -115,7 +124,6 @@ public class User extends BaseEntity implements Serializable{
 	this.full_name = full_name;
 	this.dob = dob;
 	this.address = address;
-	this.create_time = create_time;
 	this.isActive = isActive;
 	this.groups_user = groups_user;
 }
@@ -174,14 +182,6 @@ public class User extends BaseEntity implements Serializable{
 
 	public void setAddress(Address address) {
 		this.address = address;
-	}
-
-	public Date getCreate_time() {
-		return create_time;
-	}
-
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
 	}
 
 	public Boolean getIsActive() {

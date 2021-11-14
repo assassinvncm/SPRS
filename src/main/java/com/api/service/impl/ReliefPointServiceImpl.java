@@ -100,7 +100,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 			}
 		});
 
-		// BeanUtils.copyProperties(rp, reliefPoint);
+		//BeanUtils.copyProperties(rp, reliefPoint);
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
 		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
 			rf.setReliefPoint(reliefPoint);
@@ -111,7 +111,8 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setAddress(address);
 		reliefPoint.setStatus(rp.getStatus());
 		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
-		return reliefPointRepository.save(reliefPoint);
+		
+		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
 
 	@Override

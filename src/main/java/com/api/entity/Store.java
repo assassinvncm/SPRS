@@ -59,13 +59,13 @@ public class Store extends BaseEntity implements Serializable{
 	@JsonIgnore
     private List<Image> lstImage;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany//(cascade = CascadeType.ALL)
 	@JoinTable(name = "SPRS_store_category",
 			joinColumns = @JoinColumn(name = "store_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="category_id"))
 	private List<StoreCategory> store_category;
 
-	@ManyToMany(fetch = FetchType.LAZY,mappedBy = "user_store")
+	@ManyToMany(mappedBy = "user_store", cascade = CascadeType.MERGE)
 	@JsonIgnore
 	private List<User> store_user = new ArrayList<User>();
 

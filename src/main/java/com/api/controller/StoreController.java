@@ -55,7 +55,7 @@ public class StoreController {
 	private AmazonClient amazonClient;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
+	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
 		logger.info("Start create Store");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
 		s.setUser_st(userDto);
@@ -66,7 +66,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public ResponseEntity<?> getReliefPointById() {
+	public ResponseEntity<?> getAllStore() {
 		logger.info("Start get all Store");
 		List<StoreDto> lstStore = storeService.getAllStore();
 		logger.info("End get all Store");
