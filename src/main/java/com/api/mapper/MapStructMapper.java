@@ -3,6 +3,7 @@ package com.api.mapper;
 import java.util.List;
 
 import com.api.dto.AddressDto;
+import com.api.dto.DeviceDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
 import com.api.dto.OrganizationDto;
@@ -13,6 +14,7 @@ import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
+import com.api.entity.Device;
 import com.api.entity.Group;
 import com.api.entity.Item;
 import com.api.entity.Organization;
@@ -80,6 +82,10 @@ public interface MapStructMapper {
 	StoreCategoryDto cateToCateDto(StoreCategory cate);
 	
 	StoreCategory cateDtoToCate(StoreCategoryDto cateDto);
+	
+	DeviceDto deviceToDeviceDto(Device device);
+	
+	Device deviceDtoToDevice(DeviceDto deviceDto);
 	
 	
 }

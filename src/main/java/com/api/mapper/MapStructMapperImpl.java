@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.api.dto.AddressDto;
 import com.api.dto.CityDto;
+import com.api.dto.DeviceDto;
 import com.api.dto.DistrictDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
@@ -22,6 +23,7 @@ import com.api.dto.SubDistrictDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.City;
+import com.api.entity.Device;
 import com.api.entity.District;
 import com.api.entity.Group;
 import com.api.entity.Image;
@@ -502,6 +504,36 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return cateDtoToCate(cate);
 		}).collect(Collectors.toList());
 		return lstCate;
+	}
+
+	@Override
+	public DeviceDto deviceToDeviceDto(Device device) {
+		// TODO Auto-generated method stub
+		if (device == null) {
+			return null;
+		}
+		
+		DeviceDto deviceDto = new DeviceDto();
+		deviceDto.setId(device.getId());
+		deviceDto.setToken(device.getToken());
+		deviceDto.setAddress(addressToAddressDto(device.getAddress()));
+		deviceDto.setUser(null);
+		
+		return deviceDto;
+	}
+
+	@Override
+	public Device deviceDtoToDevice(DeviceDto deviceDto) {
+		// TODO Auto-generated method stub
+		if (deviceDto == null) {
+			return null;
+		}
+		
+		Device device = new Device();
+		device.setId(deviceDto.getId());
+		device.setToken(deviceDto.getToken());
+		device.setUser(userDtoToUser(deviceDto.getUser()));
+		return device;
 	}
 
 }
