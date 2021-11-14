@@ -1,6 +1,7 @@
 package com.common.utils;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import com.exception.AppException;
@@ -14,8 +15,8 @@ public class DateUtils {
 	 * 
 	 * @return current date
 	 */
-	public static Date getCurrentSqlDate() {
-		Date date = new java.sql.Date(new java.util.Date().getTime());
+	public static Timestamp getCurrentSqlDate() {
+		Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
 		return date;
 	}
 
@@ -24,10 +25,10 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	public static Date convertJavaDateToSqlDate(java.util.Date date) {
+	public static java.sql.Timestamp convertJavaDateToSqlDate(java.util.Date date) {
 		if (date == null)
 			return null;
-		return new java.sql.Date(date.getTime());
+		return new java.sql.Timestamp(date.getTime());
 	}
 
 	/**
@@ -35,7 +36,7 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	public static java.util.Date convertSqlDateToJavaDate(java.util.Date date) {
+	public static java.util.Date convertSqlDateToJavaDate(java.sql.Timestamp date) {
 		if (date == null)
 			return null;
 		return new java.util.Date(date.getTime());
@@ -58,7 +59,7 @@ public class DateUtils {
 	 * @return
 	 */
 	public static String getDateInyyyy_MM_ddHHmmss(java.util.Date date) {
-		if(date == null) {
+		if (date == null) {
 			return null;
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -67,7 +68,7 @@ public class DateUtils {
 
 	public static java.util.Date getDateFromStringInYYYYMMDD(String dateStr) {
 		java.util.Date javaDate = null;
-		if(javaDate == null) {
+		if (dateStr == null) {
 			return null;
 		}
 		try {
@@ -81,10 +82,10 @@ public class DateUtils {
 		return javaDate;
 
 	}
-	
+
 	public static java.util.Date getDateFromStringInYYYYMMDDHH(String dateStr) {
 		java.util.Date javaDate = null;
-		if(javaDate == null) {
+		if (dateStr == null) {
 			return null;
 		}
 		try {
@@ -96,6 +97,30 @@ public class DateUtils {
 		}
 
 		return javaDate;
+
+	}
+
+	public static String getDateYYYYMMDD(java.sql.Date sqlDate) {
+
+		String rs = null;
+
+		return rs;
+
+	}
+
+	public static String getDatehhmm(java.sql.Date sqlDate) {
+
+		String rs = null;
+
+		return rs;
+
+	}
+	
+	public static java.sql.Date concatToSqlDate(String date , String time) {
+
+		String rs = date.concat(" ").concat(time);
+
+		return null;
 
 	}
 

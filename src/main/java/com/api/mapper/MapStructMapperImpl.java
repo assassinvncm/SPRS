@@ -201,7 +201,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		requestDto.setId(request.getId());
 		requestDto.setStatus(request.getStatus());
 		requestDto.setMessage(request.getMessage());
-		requestDto.setTimestamp(request.getTimestamp());
+		requestDto.setTimestamp(DateUtils.convertSqlDateToJavaDate(request.getTimestamp()));
 		requestDto.setType(request.getType());
 		UserDto userDto = userToUserDto(request.getUser());
 		userDto.setGroups_user(lstGroupToGroupDto(request.getUser().getGroups_user()));
@@ -334,8 +334,12 @@ public class MapStructMapperImpl implements MapStructMapper {
 		reliefPointDto.setStatus(reliefPoint.getStatus());
 		Date create_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getCreate_time());
 		Date modified_date = DateUtils.convertSqlDateToJavaDate(reliefPoint.getModified_date());
+		Date open_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getOpen_time());
+		Date close_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getClose_time());
 		reliefPointDto.setCreate_time(DateUtils.getDateInyyyy_MM_ddHHmmss(create_time));
 		reliefPointDto.setModified_date(DateUtils.getDateInyyyy_MM_ddHHmmss(modified_date));
+		reliefPointDto.setOpen_time(open_time);
+		reliefPointDto.setClose_time(close_time);
 		
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.MapPointsDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.UserDto;
@@ -38,6 +39,15 @@ public class MapController {
 		List<ReliefPointDto> lstRpDto = mapStructMapper.lstReliefPointToreliefPointDto(lstRp);
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstRpDto, null));
+	}
+	
+	@RequestMapping(value = "/getPoints", method = RequestMethod.GET)
+	public ResponseEntity<?> getPoints(@RequestParam("long") double lo, @RequestParam("lat") double lat,
+			@RequestParam("radius") double radius) {
+
+		List<MapPointsDto> lstPoints =  mapService.findAllPoints(lat, lo, radius);
+	
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstPoints, null));
 	}
 	
 	@RequestMapping(value = "/search", method = RequestMethod.GET)

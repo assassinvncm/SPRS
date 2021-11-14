@@ -2,6 +2,7 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Request extends BaseEntity implements Serializable{
 	private String message;
 	
 	@Column
-	private Date timestamp;
+	private Timestamp timestamp;
 	
 	@ManyToOne
 	@JsonIgnore
@@ -54,7 +55,7 @@ public class Request extends BaseEntity implements Serializable{
 	@JoinColumn(name = "organization_id",referencedColumnName="id")
 	private Organization organization;
 
-	public Request(String type, String status, String message, Date timestamp, User user, Group group,
+	public Request(String type, String status, String message, Timestamp timestamp, User user, Group group,
 			Organization organization) {
 		super();
 		this.type = type;
@@ -94,11 +95,11 @@ public class Request extends BaseEntity implements Serializable{
 		this.message = message;
 	}
 
-	public Date getTimestamp() {
+	public Timestamp getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(Timestamp timestamp) {
 		this.timestamp = timestamp;
 	}
 

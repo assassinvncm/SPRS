@@ -70,11 +70,6 @@ public class ReliefInformation extends BaseEntity implements Serializable{
 
 
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-
 
 	public ReliefInformation() {
 		super();
