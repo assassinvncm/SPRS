@@ -25,6 +25,7 @@ import com.api.entity.Address;
 import com.api.entity.Group;
 import com.api.entity.Organization;
 import com.api.entity.Request;
+import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
@@ -34,6 +35,7 @@ import com.api.repositories.RequestRepository;
 import com.api.repositories.StoreRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;
@@ -74,6 +76,9 @@ public class UserSerivceImpl implements UserService {
 	
 	@Autowired
 	MapStructMapper mapStructMapper;
+	
+	@Autowired
+	SOSService sosServ;
 
 	@Override
 	public List<User> getAllUser() {
@@ -173,7 +178,9 @@ public class UserSerivceImpl implements UserService {
 		user.setIsActive(true);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setUser_sos(new SOS(false));
 		userRepository.save(user);
+//		sosServ.createSOS(user);
 		logger.info("End save User");
 		// return user;
 	}

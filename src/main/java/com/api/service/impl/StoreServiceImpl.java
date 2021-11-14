@@ -61,14 +61,14 @@ public class StoreServiceImpl implements StoreService{
 	public Store createStore(StoreDto s) {
 		// TODO Auto-generated method stub
 		Store store = mapStructMapper.storeDtoToStore(s);
-		List<StoreCategory> lstSTCate = store.getStore_category().stream().map(st ->{
-			st.setId(store.getId());
-			return st;
-		}).collect(Collectors.toList());
-		store.setStore_category(lstSTCate);
+//		List<StoreCategory> lstSTCate = store.getStore_category().stream().map(st ->{
+//			st.setId(store.getId());
+//			return st;
+//		}).collect(Collectors.toList());
+//		store.setStore_category(lstSTCate);
 		Address address = addressService.mapAddress(s.getAddress());
 		store.setLocation(address);
-		store.setStatus(true);
+		store.setStatus(true); 
 		Store str = storeRepository.save(store);
 		return str;
 	}

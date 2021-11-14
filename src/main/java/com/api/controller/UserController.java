@@ -22,6 +22,7 @@ import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.User;
 import com.api.repositories.GroupRepository;
+import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;

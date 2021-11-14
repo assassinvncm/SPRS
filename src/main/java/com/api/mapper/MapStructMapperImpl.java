@@ -16,6 +16,7 @@ import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
+import com.api.dto.SOSDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.SubDistrictDto;
@@ -30,6 +31,7 @@ import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
+import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.SubDistrict;
@@ -502,6 +504,30 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return cateDtoToCate(cate);
 		}).collect(Collectors.toList());
 		return lstCate;
+	}
+
+	@Override
+	public SOSDto SOSToSOSDto(SOS sos) {
+		SOSDto rs = new SOSDto();
+		rs.setId(sos.getId());
+		rs.setDescription(sos.getDescription());
+		rs.setGPS_Lati(sos.getGPS_Lati());
+		rs.setGPS_Long(sos.getGPS_Long());
+		rs.setLevel(sos.getLevel());
+		rs.setStatus(sos.isStatus());
+		return rs;
+	}
+
+	@Override
+	public SOS SOSDtoToSOS(SOSDto sosDto) {
+		SOS rs = new SOS();
+		rs.setId(sosDto.getId());
+		rs.setDescription(sosDto.getDescription());
+		rs.setGPS_Lati(sosDto.getGPS_Lati());
+		rs.setGPS_Long(sosDto.getGPS_Long());
+		rs.setLevel(sosDto.getLevel());
+		rs.setStatus(sosDto.isStatus());
+		return rs;
 	}
 
 }
