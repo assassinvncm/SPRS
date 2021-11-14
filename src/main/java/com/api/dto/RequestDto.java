@@ -1,15 +1,6 @@
 package com.api.dto;
 
-import java.sql.Date;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import com.api.entity.Group;
-import com.api.entity.Organization;
-import com.api.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.*;
 
 public class RequestDto {
 	

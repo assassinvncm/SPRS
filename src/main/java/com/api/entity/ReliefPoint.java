@@ -2,6 +2,7 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -33,11 +34,11 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@Column(name = "description")
 	private String description;
 
-	@Column(name = "open_time")
-	private Date open_time;
+	@Column(name = "open_time", columnDefinition = "TIMESTAMP")
+	private Timestamp open_time;
 	
-	@Column(name = "close_time")
-	private Date close_time;
+	@Column(name = "close_time", columnDefinition = "TIMESTAMP")
+	private Timestamp close_time;
 	
 	@Column(name = "status")
 	private Boolean status;
@@ -46,7 +47,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@JoinColumn(name = "user_id",referencedColumnName="id", insertable = true, updatable = false)
 	private User user;
 	
-	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
     private List<ReliefInformation> reliefInformations;
 	
@@ -73,19 +74,19 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 		this.description = description;
 	}
 
-	public Date getOpen_time() {
+	public Timestamp getOpen_time() {
 		return open_time;
 	}
 
-	public void setOpen_time(Date open_time) {
+	public void setOpen_time(Timestamp open_time) {
 		this.open_time = open_time;
 	}
 
-	public Date getClose_time() {
+	public Timestamp getClose_time() {
 		return close_time;
 	}
 
-	public void setClose_time(Date close_time) {
+	public void setClose_time(Timestamp close_time) {
 		this.close_time = close_time;
 	}
 

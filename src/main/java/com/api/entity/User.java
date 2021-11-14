@@ -2,6 +2,7 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,9 +47,6 @@ public class User extends BaseEntity implements Serializable{
 	
 	@Column(name = "dob")
 	private String dob;
-	
-	@Column(name = "create_time")
-	private Date create_time;
 	
 	@Column(name = "isActive")
 	private Boolean isActive;
@@ -115,7 +113,6 @@ public class User extends BaseEntity implements Serializable{
 	this.full_name = full_name;
 	this.dob = dob;
 	this.address = address;
-	this.create_time = create_time;
 	this.isActive = isActive;
 	this.groups_user = groups_user;
 }
@@ -174,14 +171,6 @@ public class User extends BaseEntity implements Serializable{
 
 	public void setAddress(Address address) {
 		this.address = address;
-	}
-
-	public Date getCreate_time() {
-		return create_time;
-	}
-
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
 	}
 
 	public Boolean getIsActive() {

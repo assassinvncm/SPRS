@@ -1,5 +1,6 @@
 package com.ultils;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,8 +43,8 @@ public class Ultilities {
 		return check;
 	}
 	
-	public static java.sql.Date toSqlDate(Date d) {
-        java.sql.Date sql = new java.sql.Date(d.getTime());
+	public static Timestamp toSqlDate(Date d) {
+        java.sql.Timestamp sql = new java.sql.Timestamp(d.getTime());
         return sql;
 	}
 }
