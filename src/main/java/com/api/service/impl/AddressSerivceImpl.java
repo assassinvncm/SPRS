@@ -51,13 +51,15 @@ public class AddressSerivceImpl implements AddressService {
 	public void saveAddress(AddressDto addressDto) {
 		// TODO Auto-generated method stub
 		SubDistrict sb = null;
+		List<SubDistrict> lstSb = null;
 		if (0 != addressDto.getSubDistrict().getId()) {
 			sb = subDistrictRepository.getById(addressDto.getSubDistrict().getId());
 		} else {
-			sb = subDistrictRepository
+			lstSb = subDistrictRepository
 					.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),
 							addressDto.getCity().getName())
 					.orElseThrow(() -> new AppException(403, "Address Not Exits In DB"));
+			sb = lstSb.get(0);
 		}
 
 		// mapper
@@ -75,15 +77,17 @@ public class AddressSerivceImpl implements AddressService {
 	public Address mapAddress(AddressDto addressDto) {
 		// TODO Auto-generated method stub
 		SubDistrict sb = null;
+		List<SubDistrict> lstSb = null;
 		if (0 != addressDto.getSubDistrict().getId()) {
 			sb = subDistrictRepository.findById(addressDto.getSubDistrict().getId())
 					.orElseThrow(() -> new AppException(403, "Id address not valid"));
-			;
+
 		} else {
-			sb = subDistrictRepository
+			lstSb = subDistrictRepository
 					.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),
 							addressDto.getCity().getName())
 					.orElseThrow(() -> new AppException(403, "Address Not Exits In DB"));
+			sb = lstSb.get(0);
 		}
 		// mapper
 		Address address = new Address();

@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.controller.StoreController;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.StoreDto;
 import com.api.entity.Address;
@@ -25,6 +28,9 @@ import com.exception.AppException;
 
 @Service
 public class StoreServiceImpl implements StoreService{
+	
+	public static Logger logger = LoggerFactory.getLogger(StoreServiceImpl.class);
+	
 	@Autowired
 	StoreRepository storeRepository;
 	
@@ -78,7 +84,7 @@ public class StoreServiceImpl implements StoreService{
 			System.out.println("show log store: "+store.toString());
 			str = storeRepository.save(store);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return str;
 	}

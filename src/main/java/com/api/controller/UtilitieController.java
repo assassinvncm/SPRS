@@ -51,7 +51,7 @@ public class UtilitieController {
 	public ResponseEntity<?> loadData() throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		String path = "E:\\Data FPT University\\Project_FPT_20210528\\SPRS\\Source\\Source_api\\address - Copy.json";
+		String path = "E:\\Data FPT University\\Project_FPT_20210528\\SPRS\\Source\\Source_api\\File Provinces.json";
 		List<City> someClassObject = mapper.readValue(new File(path), new TypeReference<List<City>>() {
 		});
 //		List<City> cv = setAss(someClassObject);
