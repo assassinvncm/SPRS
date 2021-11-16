@@ -91,6 +91,14 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}
 
+	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
+	public ResponseEntity<?> deleteStore(@RequestBody StoreDto storeDto) {
+		logger.info("Start delete Store");
+		storeService.deleteStore(storeDto);
+		logger.info("End delete Store");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete Store By ID "+storeDto.getId()+" success", "", storeDto, null));
+	}
+
 	@RequestMapping(value = "/uploadImg/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> uploadImg(@RequestPart(value = "file") MultipartFile file, @PathVariable(value = "id") Long id) {
 		logger.info("Start uploadImg Store");

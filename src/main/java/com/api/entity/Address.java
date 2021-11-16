@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
 @Table(name = "SPRS_Address")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Address extends BaseEntity implements Serializable {
+public class Address extends BaseEntityWDT implements Serializable {
 
 	/**
 	 * 

@@ -58,14 +58,14 @@ public class Store extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
 	@JsonIgnore
     private List<Image> lstImage;
-	
-	@ManyToMany//(cascade = CascadeType.ALL)
+//	cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_store_category",
 			joinColumns = @JoinColumn(name = "store_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="category_id"))
 	private List<StoreCategory> store_category;
 
-	@ManyToMany(mappedBy = "user_store", cascade = CascadeType.MERGE)
+	@ManyToMany(mappedBy = "user_store")
 	@JsonIgnore
 	private List<User> store_user = new ArrayList<User>();
 

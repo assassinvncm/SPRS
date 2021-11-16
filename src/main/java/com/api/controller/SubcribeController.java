@@ -49,10 +49,9 @@ public class SubcribeController {
 	}
 	
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public ResponseEntity<?> getListSubcribe(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody SubcribeDto s) {
+	public ResponseEntity<?> getListSubcribe(@RequestHeader ("Authorization") String requestTokenHeader) {
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		s.setUser_id(userDto.getId());
-		SubcribeDto sdto = userSerivce.getListSubcribe(s);
+		SubcribeDto sdto = userSerivce.getListSubcribe(userDto.getId());
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get list subcribe store successfully", "", sdto, null));
 	}
 
