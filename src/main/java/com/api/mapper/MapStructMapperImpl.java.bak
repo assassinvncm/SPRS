@@ -1,6 +1,7 @@
 package com.api.mapper;
 
 import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
+import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.SubDistrictDto;
 import com.api.dto.UserDto;
@@ -22,15 +24,17 @@ import com.api.entity.Address;
 import com.api.entity.City;
 import com.api.entity.District;
 import com.api.entity.Group;
+import com.api.entity.Image;
 import com.api.entity.Item;
 import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
 import com.api.entity.Store;
-import com.api.entity.StoreDetail;
+import com.api.entity.StoreCategory;
 import com.api.entity.SubDistrict;
 import com.api.entity.User;
+import com.common.utils.DateUtils;
 
 @Component
 public class MapStructMapperImpl implements MapStructMapper {
@@ -136,7 +140,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 	@Override
 	public Organization organizationDtoToOrganization(OrganizationDto orgDto) {
 		// TODO Auto-generated method stub
-		if(orgDto == null) {
+		if (orgDto == null) {
 			return null;
 		}
 		Organization org = new Organization();
@@ -145,7 +149,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		org.setFounded(org.getFounded());
 		org.setId(orgDto.getId());
 		org.setName(orgDto.getName());
-		
+
 		return org;
 	}
 
@@ -197,7 +201,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		requestDto.setId(request.getId());
 		requestDto.setStatus(request.getStatus());
 		requestDto.setMessage(request.getMessage());
-		requestDto.setTimestamp(request.getTimestamp());
+		requestDto.setTimestamp(DateUtils.convertSqlDateToJavaDate(request.getTimestamp()));
 		requestDto.setType(request.getType());
 		UserDto userDto = userToUserDto(request.getUser());
 		userDto.setGroups_user(lstGroupToGroupDto(request.getUser().getGroups_user()));
@@ -239,6 +243,30 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
+	public StoreCategoryDto cateToCateDto(StoreCategory cate) {
+		// TODO Auto-generated method stub
+		if (cate == null) {
+			return null;
+		}
+		StoreCategoryDto cateDto = new StoreCategoryDto();
+		cateDto.setId(cate.getId());
+		cateDto.setName(cate.getName());
+		return cateDto;
+	}
+
+	@Override
+	public StoreCategory cateDtoToCate(StoreCategoryDto cateDto) {
+		// TODO Auto-generated method stub
+		if (cateDto == null) {
+			return null;
+		}
+		StoreCategory cate = new StoreCategory();
+		cate.setId(cateDto.getId());
+		cate.setName(cateDto.getName());
+		return cate;
+	}
+
+	@Override
 	public Item itemDtoToItem(ItemDto itemDto) {
 		// TODO Auto-generated method stub
 		if (itemDto == null) {
@@ -266,6 +294,19 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
+	public List<StoreCategoryDto> lstStoreCateToStoreCateDto(List<StoreCategory> lstCate) {
+		// TODO Auto-generated method stub
+		if (lstCate == null) {
+			return null;
+		}
+
+		List<StoreCategoryDto> lstCateDto = lstCate.stream().map(cate -> {
+			return cateToCateDto(cate);
+		}).collect(Collectors.toList());
+		return lstCateDto;
+	}
+
+	@Override
 	public List<Item> lstItemDtoToItem(List<ItemDto> lstItemDto) {
 		// TODO Auto-generated method stub
 		if (lstItemDto == null) {
@@ -287,11 +328,25 @@ public class MapStructMapperImpl implements MapStructMapper {
 		ReliefPointDto reliefPointDto = new ReliefPointDto();
 		reliefPointDto.setId(reliefPoint.getId());
 		reliefPointDto.setName(reliefPoint.getName());
-		reliefPointDto.setClose_time(reliefPoint.getClose_time());
+		//reliefPointDto.setClose_time(reliefPoint.getClose_time());
 		reliefPointDto.setDescription(reliefPoint.getDescription());
 		reliefPointDto.setAddress(addressToAddressDto(reliefPoint.getAddress()));
-		reliefPointDto.setReliefInformations(null);
-		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
+		reliefPointDto.setStatus(reliefPoint.getStatus());
+		Date create_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getCreate_time());
+		Date modified_date = DateUtils.convertSqlDateToJavaDate(reliefPoint.getModified_date());
+		Date open_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getOpen_time());
+		Date close_time = DateUtils.convertSqlDateToJavaDate(reliefPoint.getClose_time());
+		reliefPointDto.setCreate_time(DateUtils.getDateInyyyy_MM_ddHHmmss(create_time));
+		reliefPointDto.setModified_date(DateUtils.getDateInyyyy_MM_ddHHmmss(modified_date));
+		reliefPointDto.setOpen_time(open_time);
+		reliefPointDto.setClose_time(close_time);
+		
+		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
+			return reliefInforToReliefInforDto(rpInfor);
+		}).collect(Collectors.toList());
+		
+		reliefPointDto.setReliefInformations(rpDto);
+//		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
 
 		return reliefPointDto;
 	}
@@ -309,7 +364,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		storeDto.setOpen_time(store.getOpen_time().toString());
 		storeDto.setDescription(store.getDescription());
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
-		storeDto.setStoreDetail(null);
+		storeDto.setStoreDetail(store.getStore_category());
 		storeDto.setUser_st(userToUserDto(store.getUsers()));
 
 		return storeDto;
@@ -325,14 +380,14 @@ public class MapStructMapperImpl implements MapStructMapper {
 		ReliefPoint reliefPoint = new ReliefPoint();
 		reliefPoint.setId(reliefPointDto.getId());
 		reliefPoint.setName(reliefPointDto.getName());
-		reliefPoint.setClose_time(reliefPointDto.getClose_time());
+		//reliefPoint.setClose_time(reliefPointDto.getClose_time());
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setAddress(addressDtoToAddress(reliefPointDto.getAddress()));
 		List<ReliefInformationDto> lstReliefInforDto = reliefPointDto.getReliefInformations();
 		List<ReliefInformation> lstReliefInfor = lstReliefInforDto.stream().map(reliefInforDto -> {
 			ReliefInformation reliefInfor = new ReliefInformation();
 			reliefInfor.setId(reliefInforDto.getId());
-			reliefInfor.setItem(reliefInforDto.getItem());
+			reliefInfor.setItem(itemDtoToItem(reliefInforDto.getItem()));
 			reliefInfor.setQuantity(reliefInforDto.getQuantity());
 			return reliefInfor;
 		}).collect(Collectors.toList());
@@ -368,6 +423,32 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
+	public ReliefInformationDto reliefInforToReliefInforDto(ReliefInformation reliefInfor) {
+		// TODO Auto-generated method stub
+		if (reliefInfor == null) {
+			return null;
+		}
+
+		ReliefInformationDto reliefInforDto = new ReliefInformationDto();
+		ItemDto itemDto = new ItemDto();
+		itemDto.setId(reliefInfor.getItem().getId());
+		itemDto.setName(reliefInfor.getItem().getName());
+		itemDto.setUnit(reliefInfor.getItem().getUnit());
+		itemDto.setDescription(reliefInfor.getItem().getDescription());
+
+		reliefInforDto.setId(reliefInfor.getId());
+		reliefInforDto.setItem(itemDto);
+		reliefInforDto.setQuantity(reliefInfor.getQuantity());
+
+		return reliefInforDto;
+	}
+
+	@Override
+	public ReliefInformation reliefInforDtoToReliefInfor(ReliefInformationDto reliefInforDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public List<StoreDto> lstStoreToStoreDto(List<Store> lststore) {
 		// TODO Auto-generated method stub
 		if (lststore == null) {
@@ -391,16 +472,36 @@ public class MapStructMapperImpl implements MapStructMapper {
 		rs.setClose_time(Time.valueOf(dto.getClose_time()));
 		rs.setDescription(dto.getDescription());
 		rs.setLocation(addressDtoToAddress(dto.getAddress()));
-		List<StoreDetail> lstStoreDetailDto = dto.getStoreDetail();
-		List<StoreDetail> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
-			StoreDetail storeDetail = new StoreDetail();
+		List<StoreCategory> lstStoreDetailDto = dto.getStoreDetail();
+		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
+			StoreCategory storeDetail = new StoreCategory();
 			storeDetail.setId(storeDetailDto.getId());
 			storeDetail.setName(storeDetailDto.getName());
 			return storeDetail;
 		}).collect(Collectors.toList());
-		rs.setStoreDetail(lstStoreDetail);
+		rs.setStore_category(lstStoreDetail);
+		rs.setUsers(userDtoToUser(dto.getUser_st()));
+//		List<Image> lstImgDto = dto.getLstImage();
+//		List<Image> lstImg = lstImgDto.stream().map(imgDto -> {
+//			Image img = new Image();
+//			imgDto.setId(imgDto.getId());
+//			return img;
+//		}).collect(Collectors.toList());
+//		rs.setLstImage(lstImg);
 
 		return rs;
+	}
+
+	@Override
+	public List<StoreCategory> lstStoreCateDtoToStoreCate(List<StoreCategoryDto> lstCateDto) {
+		if (lstCateDto == null) {
+			return null;
+		}
+
+		List<StoreCategory> lstCate = lstCateDto.stream().map(cate -> {
+			return cateDtoToCate(cate);
+		}).collect(Collectors.toList());
+		return lstCate;
 	}
 
 }

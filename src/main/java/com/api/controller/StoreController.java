@@ -55,7 +55,7 @@ public class StoreController {
 	private AmazonClient amazonClient;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ResponseEntity<?> createReliefPoint(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
+	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
 		logger.info("Start create Store");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
 		s.setUser_st(userDto);
@@ -66,7 +66,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public ResponseEntity<?> getReliefPointById() {
+	public ResponseEntity<?> getAllStore() {
 		logger.info("Start get all Store");
 		List<StoreDto> lstStore = storeService.getAllStore();
 		logger.info("End get all Store");
@@ -88,16 +88,27 @@ public class StoreController {
 		Store s = structMapper.storeDtoToStore(storeDto);
 		storeService.updateStore(s);
 		logger.info("End update Store");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+s.getId()+" success", "", s, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}
 
-	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadImg(@RequestPart(value = "file") MultipartFile file, @RequestBody StoreDto storeDto) {
+	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
+	public ResponseEntity<?> deleteStore(@RequestBody StoreDto storeDto) {
+		logger.info("Start delete Store");
+		storeService.deleteStore(storeDto);
+		logger.info("End delete Store");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete Store By ID "+storeDto.getId()+" success", "", storeDto, null));
+	}
+
+	@RequestMapping(value = "/uploadImg/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> uploadImg(@RequestPart(value = "file") MultipartFile file, @PathVariable(value = "id") Long id) {
 		logger.info("Start uploadImg Store");
-		Store s = structMapper.storeDtoToStore(storeDto);
+		Store st = storeRepository.getById(id);
+		if(null == st) {
+			throw new AppException(402,"Store is not Found!");
+		}
 		String img_url = amazonClient.uploadFile(file);
-		storeService.updateStoreImg(s,img_url);
+		storeService.updateStoreImg(st,img_url);
 		logger.info("End uploadImg Store");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+s.getId()+" success", "", s, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+st.getId()+" success", "", st, null));
 	}
 }

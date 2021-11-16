@@ -18,19 +18,24 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.controller.UserController;
 import com.api.dto.GroupDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
 import com.api.entity.Organization;
 import com.api.entity.Request;
+import com.api.entity.SOS;
+import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.OrganizationRepository;
 import com.api.repositories.RequestRepository;
+import com.api.repositories.StoreRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;
@@ -44,6 +49,9 @@ public class UserSerivceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	StoreRepository storeRepo;
 
 	@Autowired
 	GroupRepository groupRepository;
@@ -68,6 +76,9 @@ public class UserSerivceImpl implements UserService {
 	
 	@Autowired
 	MapStructMapper mapStructMapper;
+	
+	@Autowired
+	SOSService sosServ;
 
 	@Override
 	public List<User> getAllUser() {
@@ -167,7 +178,9 @@ public class UserSerivceImpl implements UserService {
 		user.setIsActive(true);
 		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setUser_sos(new SOS(false));
 		userRepository.save(user);
+		sosServ.createSOS(user);
 		logger.info("End save User");
 		// return user;
 	}
@@ -430,5 +443,40 @@ public class UserSerivceImpl implements UserService {
 	public User getOne(Long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public SubcribeDto subcribeStore(SubcribeDto s) {
+		User u = userRepository.getById(s.getUser_id());
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		Store store = storeRepo.getById(s.getStore_id());
+		u.getUser_store().add(store);
+		userRepository.save(u);
+		return s;
+	}
+
+	@Override
+	public SubcribeDto unSubcribeStore(SubcribeDto s) {
+		User u = userRepository.getById(s.getUser_id());
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		Store store = storeRepo.getById(s.getStore_id());
+		u.getUser_store().remove(store);
+		userRepository.save(u);
+		return s;
+	}
+
+	@Override
+	public SubcribeDto getListSubcribe(SubcribeDto s) {
+		User u = userRepository.getById(s.getUser_id());
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStoreSubcribe(mapStructMapper.lstStoreToStoreDto(u.getUser_store()));
+		return sdto;
 	}
 }

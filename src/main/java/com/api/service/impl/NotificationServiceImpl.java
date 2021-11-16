@@ -1,5 +1,145 @@
 package com.api.service.impl;
 
-public class NotificationServiceImpl {
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+
+import com.api.dto.PushNotificationRequest;
+import com.api.dto.SubscriptionRequest;
+import com.api.service.DeviceService;
+import com.api.service.NotificationService;
+import com.exception.AppException;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.BatchResponse;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.MulticastMessage;
+
+
+public class NotificationServiceImpl implements NotificationService{
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	
+	@Value("${app.firebase-config}")
+	private String firebaseConfig;
+
+	private FirebaseApp firebaseApp;
+
+	//@Autowired
+	//NotificationRepository notificationRepository;
+
+	@Autowired
+	DeviceService deviceService;
+
+	@PostConstruct
+	private void initialize() {
+		try {
+			FirebaseOptions options = new FirebaseOptions.Builder()
+					.setCredentials(
+							GoogleCredentials.fromStream(new ClassPathResource(firebaseConfig).getInputStream()))
+					.build();
+
+			if (FirebaseApp.getApps().isEmpty()) {
+				this.firebaseApp = FirebaseApp.initializeApp(options);
+			} else {
+				this.firebaseApp = FirebaseApp.getInstance();
+			}
+		} catch (IOException e) {
+			log.error("Create FirebaseApp Error", e);
+		}
+	}
+
+	@Override
+	public void subscribeToTopic(SubscriptionRequest subscriptionRequest) {
+
+		try {
+			FirebaseMessaging.getInstance(firebaseApp).subscribeToTopic(subscriptionRequest.getTokens(),
+					subscriptionRequest.getTopicName());
+		} catch (FirebaseMessagingException e) {
+			log.error("Firebase subscribe to topic fail", e);
+		}
+	}
+
+	@Override
+	public void unsubscribeFromTopic(SubscriptionRequest subscriptionRequest) {
+		try {
+			FirebaseMessaging.getInstance(firebaseApp).unsubscribeFromTopic(subscriptionRequest.getTokens(),
+					subscriptionRequest.getTopicName());
+		} catch (FirebaseMessagingException e) {
+			log.error("Firebase unsubscribe from topic fail", e);
+		}
+	}
+
+	@Override
+	public String sendPnsToDevice(PushNotificationRequest pushNotificationRequest) {
+		Message message = Message.builder().setToken(pushNotificationRequest.getTarget())
+				.setNotification(com.google.firebase.messaging.Notification.builder()
+						.setTitle(pushNotificationRequest.getTitle())
+						.setBody(pushNotificationRequest.getBody()).build())
+				.putData("content", pushNotificationRequest.getTitle())
+				.putData("body", pushNotificationRequest.getBody()).build();
+
+		String response = null;
+		try {
+			response = FirebaseMessaging.getInstance().send(message);
+		} catch (FirebaseMessagingException e) {
+			log.error("Fail to send firebase notification", e);
+		}
+
+		return response;
+	}
+
+	@Override
+	public BatchResponse sendPnsToDevices(PushNotificationRequest pushNotificationRequest) {
+		// List<TokenDevice> tokenDevices =
+		// tokenDeviceRepository.findByIdIn(pushNotificationRequestModel.getUids());
+		List<String> tokenDevices = deviceService.getDeviceTokenByCity(null);
+		MulticastMessage multicastMessage = MulticastMessage.builder().addAllTokens(tokenDevices)
+				.setNotification(com.google.firebase.messaging.Notification.builder()
+						.setTitle(pushNotificationRequest.getTitle()).setBody(firebaseConfig).build())
+				.putData("content", pushNotificationRequest.getTitle())
+				.putData("body", pushNotificationRequest.getBody()).build();
+
+		BatchResponse response = null;
+		try {
+			response = FirebaseMessaging.getInstance().sendMulticast(multicastMessage);
+		} catch (FirebaseMessagingException e) {
+			log.error("Fail to send firebase notification", e);
+			throw new AppException(501, "Send Message is fail!");
+		}
+
+		return response;
+
+	}
+
+	@Override
+	public String sendPnsToTopic(PushNotificationRequest pushNotificationRequestModel) {
+		Message message = Message.builder().setTopic(pushNotificationRequestModel.getTarget())
+				.setNotification(com.google.firebase.messaging.Notification.builder()
+						.setTitle(pushNotificationRequestModel.getTitle())
+						.setBody(pushNotificationRequestModel.getBody()).build())
+				.putData("content", pushNotificationRequestModel.getTitle())
+				.putData("body", pushNotificationRequestModel.getBody()).build();
+
+		String response = null;
+		try {
+			FirebaseMessaging.getInstance().send(message);
+		} catch (FirebaseMessagingException e) {
+			log.error("Fail to send firebase notification", e);
+		}
+
+		return response;
+	}
 
 }

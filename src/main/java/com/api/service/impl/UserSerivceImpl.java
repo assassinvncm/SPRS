@@ -25,6 +25,7 @@ import com.api.entity.Address;
 import com.api.entity.Group;
 import com.api.entity.Organization;
 import com.api.entity.Request;
+import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
@@ -34,6 +35,7 @@ import com.api.repositories.RequestRepository;
 import com.api.repositories.StoreRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;
@@ -74,6 +76,9 @@ public class UserSerivceImpl implements UserService {
 	
 	@Autowired
 	MapStructMapper mapStructMapper;
+	
+	@Autowired
+	SOSService sosServ;
 
 	@Override
 	public List<User> getAllUser() {
@@ -136,7 +141,7 @@ public class UserSerivceImpl implements UserService {
 		}
 
 		user.setIsActive(checkGr);
-		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+//		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 		if (checkRqUser(user)) {
@@ -171,9 +176,11 @@ public class UserSerivceImpl implements UserService {
 		Address address = addressService.mapAddress(userDto.getAddress());
 		user.setAddress(address);
 		user.setIsActive(true);
-		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+//		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setUser_sos(new SOS(false, address));
 		userRepository.save(user);
+//		sosServ.createSOS(user);
 		logger.info("End save User");
 		// return user;
 	}
@@ -204,7 +211,7 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(address);
 		user.getOrganization().setAddress(addressOrg);
 		user.setIsActive(false);
-		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+//		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to register", null, user);
@@ -249,7 +256,7 @@ public class UserSerivceImpl implements UserService {
 		user.setOrganization(organization);
 
 		user.setIsActive(false);
-		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+//		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 		logger.info("End save Organization");
@@ -285,7 +292,7 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(address);
 
 		user.setIsActive(false);
-		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+//		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to create store", "Create Store", user);
@@ -463,8 +470,8 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
-	public SubcribeDto getListSubcribe(SubcribeDto s) {
-		User u = userRepository.getById(s.getUser_id());
+	public SubcribeDto getListSubcribe(Long id) {
+		User u = userRepository.getById(id);
 		if(u==null) {
 			throw new AppException(403, "User is not existed!");
 		}

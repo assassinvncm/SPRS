@@ -1,6 +1,7 @@
 package com.api.mapper;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
+import com.api.dto.SOSDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.SubDistrictDto;
@@ -32,6 +34,7 @@ import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
+import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.SubDistrict;
@@ -366,7 +369,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		storeDto.setOpen_time(store.getOpen_time().toString());
 		storeDto.setDescription(store.getDescription());
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
-		storeDto.setStoreDetail(store.getStore_category());
+		storeDto.setStoreDetail(lstStoreCateToStoreCateDto(store.getStore_category()));
 		storeDto.setUser_st(userToUserDto(store.getUsers()));
 
 		return storeDto;
@@ -470,11 +473,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		} 
 		rs.setId(dto.getId());
 		rs.setName(dto.getName());
-		rs.setOpen_time(Time.valueOf(dto.getOpen_time()));
-		rs.setClose_time(Time.valueOf(dto.getClose_time()));
+		rs.setOpen_time(DateUtils.stringToTimeHHMM(dto.getOpen_time()));
+		rs.setClose_time(DateUtils.stringToTimeHHMM(dto.getClose_time()));
 		rs.setDescription(dto.getDescription());
 		rs.setLocation(addressDtoToAddress(dto.getAddress()));
-		List<StoreCategory> lstStoreDetailDto = dto.getStoreDetail();
+		List<StoreCategoryDto> lstStoreDetailDto = dto.getStoreDetail();
 		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
 			StoreCategory storeDetail = new StoreCategory();
 			storeDetail.setId(storeDetailDto.getId());
@@ -534,6 +537,25 @@ public class MapStructMapperImpl implements MapStructMapper {
 		device.setToken(deviceDto.getToken());
 		device.setUser(userDtoToUser(deviceDto.getUser()));
 		return device;
+	public SOSDto SOSToSOSDto(SOS sos) {
+		SOSDto rs = new SOSDto();
+		rs.setId(sos.getId());
+		rs.setDescription(sos.getDescription());
+		rs.setAddress(addressToAddressDto(sos.getAddress()));
+		rs.setLevel(sos.getLevel());
+		rs.setStatus(sos.isStatus());
+		return rs;
+	}
+
+	@Override
+	public SOS SOSDtoToSOS(SOSDto sosDto) {
+		SOS rs = new SOS();
+		rs.setId(sosDto.getId());
+		rs.setDescription(sosDto.getDescription());
+		rs.setAddress(addressDtoToAddress(sosDto.getAddress()));
+		rs.setLevel(sosDto.getLevel());
+		rs.setStatus(sosDto.isStatus());
+		return rs;
 	}
 
 }

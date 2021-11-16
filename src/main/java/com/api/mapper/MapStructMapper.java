@@ -10,6 +10,7 @@ import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
+import com.api.dto.SOSDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.UserDto;
@@ -21,6 +22,7 @@ import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
+import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.User;
@@ -86,6 +88,10 @@ public interface MapStructMapper {
 	DeviceDto deviceToDeviceDto(Device device);
 	
 	Device deviceDtoToDevice(DeviceDto deviceDto);
+	
+	SOSDto SOSToSOSDto(SOS sos);
+	
+	SOS SOSDtoToSOS(SOSDto sosDto);
 	
 	
 }

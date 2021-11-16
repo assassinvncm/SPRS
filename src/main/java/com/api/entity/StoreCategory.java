@@ -26,12 +26,12 @@ public class StoreCategory extends BaseEntity implements Serializable{
 	 */
 	private static final long serialVersionUID = -1593227020069587312L;
 	
-	@ManyToMany(mappedBy = "store_category", cascade = CascadeType.ALL)
-	@JsonIgnore
-	private List<Store> category_store = new ArrayList<Store>();
-	
 	@Column(name = "name")
 	private String name;
+//	cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER
+	@ManyToMany(mappedBy = "store_category")
+	@JsonIgnore
+	private List<Store> category_store = new ArrayList<Store>();
 	
 	public List<Store> getCategory_store() {
 		return category_store;

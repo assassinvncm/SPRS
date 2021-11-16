@@ -128,5 +128,5 @@ public interface UserService {
 	 * @param 
 	 * @return SubcribeDto
 	 */
-	SubcribeDto getListSubcribe(SubcribeDto s);
+	SubcribeDto getListSubcribe(Long id);
 }

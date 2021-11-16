@@ -2,6 +2,7 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,9 +48,6 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "dob")
 	private String dob;
 	
-	@Column(name = "create_time")
-	private Date create_time;
-	
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
@@ -73,28 +71,37 @@ public class User extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
 	private List<ReliefPoint> reliefPoints;
-//
-//	@OneToMany(mappedBy = "users_dv")
-//	private List<Device> devices = new ArrayList<Device>();
-//	
-//	public List<ReliefPoint> getReliefPoints() {
-//		return reliefPoints;
-//	}
-//
-//	public void setReliefPoints(List<ReliefPoint> reliefPoints) {
-//		this.reliefPoints = reliefPoints;
-//	}
-//
-//	public List<Device> getDevices() {
-//		return devices;
-//	}
-//
-//	public void setDevices(List<Device> devices) {
-//		this.devices = devices;
-//	}
+	
+	@OneToMany(mappedBy="users")
+    private List<Store> lstStore;
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "SPRS_store_subcribe",
+			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
+			inverseJoinColumns = @JoinColumn(name ="store_id"))
+	private List<Store> user_store;
+
+
+	
+	public List<Store> getLstStore() {
+		return lstStore;
+	}
+
+	public void setLstStore(List<Store> lstStore) {
+		this.lstStore = lstStore;
+	}
+
 	@JsonIgnore
 	public List<Group> getGroups_user() {
 		return groups_user;
+	}
+
+	public List<Store> getUser_store() {
+		return user_store;
+	}
+
+	public void setUser_store(List<Store> user_store) {
+		this.user_store = user_store;
 	}
 
 	public User(String username, String phone, String password, String full_name, String dob, Address address,
@@ -106,7 +113,6 @@ public class User extends BaseEntity implements Serializable{
 	this.full_name = full_name;
 	this.dob = dob;
 	this.address = address;
-	this.create_time = create_time;
 	this.isActive = isActive;
 	this.groups_user = groups_user;
 }
@@ -167,14 +173,6 @@ public class User extends BaseEntity implements Serializable{
 		this.address = address;
 	}
 
-	public Date getCreate_time() {
-		return create_time;
-	}
-
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
-	}
-
 	public Boolean getIsActive() {
 		return isActive;
 	}
@@ -197,6 +195,14 @@ public class User extends BaseEntity implements Serializable{
 
 	public void setRequest(List<Request> request) {
 		this.request = request;
+	}
+
+	public List<ReliefPoint> getReliefPoints() {
+		return reliefPoints;
+	}
+
+	public void setReliefPoints(List<ReliefPoint> reliefPoints) {
+		this.reliefPoints = reliefPoints;
 	}
 	
 	
