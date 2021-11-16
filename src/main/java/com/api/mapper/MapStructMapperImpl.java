@@ -1,6 +1,7 @@
 package com.api.mapper;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -366,7 +367,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		storeDto.setOpen_time(store.getOpen_time().toString());
 		storeDto.setDescription(store.getDescription());
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
-		storeDto.setStoreDetail(store.getStore_category());
+		storeDto.setStoreDetail(lstStoreCateToStoreCateDto(store.getStore_category()));
 		storeDto.setUser_st(userToUserDto(store.getUsers()));
 
 		return storeDto;
@@ -470,11 +471,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		} 
 		rs.setId(dto.getId());
 		rs.setName(dto.getName());
-		rs.setOpen_time(Time.valueOf(dto.getOpen_time()));
-		rs.setClose_time(Time.valueOf(dto.getClose_time()));
+		rs.setOpen_time(DateUtils.stringToTimeHHMM(dto.getOpen_time()));
+		rs.setClose_time(DateUtils.stringToTimeHHMM(dto.getClose_time()));
 		rs.setDescription(dto.getDescription());
 		rs.setLocation(addressDtoToAddress(dto.getAddress()));
-		List<StoreCategory> lstStoreDetailDto = dto.getStoreDetail();
+		List<StoreCategoryDto> lstStoreDetailDto = dto.getStoreDetail();
 		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
 			StoreCategory storeDetail = new StoreCategory();
 			storeDetail.setId(storeDetailDto.getId());
@@ -511,8 +512,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		SOSDto rs = new SOSDto();
 		rs.setId(sos.getId());
 		rs.setDescription(sos.getDescription());
-		rs.setGPS_Lati(sos.getGPS_Lati());
-		rs.setGPS_Long(sos.getGPS_Long());
+		rs.setAddress(addressToAddressDto(sos.getAddress()));
 		rs.setLevel(sos.getLevel());
 		rs.setStatus(sos.isStatus());
 		return rs;
@@ -523,8 +523,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		SOS rs = new SOS();
 		rs.setId(sosDto.getId());
 		rs.setDescription(sosDto.getDescription());
-		rs.setGPS_Lati(sosDto.getGPS_Lati());
-		rs.setGPS_Long(sosDto.getGPS_Long());
+		rs.setAddress(addressDtoToAddress(sosDto.getAddress()));
 		rs.setLevel(sosDto.getLevel());
 		rs.setStatus(sosDto.isStatus());
 		return rs;

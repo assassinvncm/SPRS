@@ -6,6 +6,7 @@ import javax.persistence.Column;
 
 import com.api.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
 
 public class SOSDto implements Serializable{
 
@@ -24,22 +25,17 @@ public class SOSDto implements Serializable{
 
 	@JsonProperty("status")
 	private boolean status;
+	
+	@JsonProperty("address")
+	@NotNull
+	private AddressDto address;
 
-	@JsonProperty("GPS_Long")
-	private String GPS_Long;
-
-	@JsonProperty("GPS_Lati")
-	private String GPS_Lati;
-
-	@JsonProperty("user")
-	private UserDto u;
-
-	public UserDto getU() {
-		return u;
+	public AddressDto getAddress() {
+		return address;
 	}
 
-	public void setU(UserDto u) {
-		this.u = u;
+	public void setAddress(AddressDto address) {
+		this.address = address;
 	}
 
 	public long getId() {
@@ -72,22 +68,6 @@ public class SOSDto implements Serializable{
 
 	public void setStatus(boolean status) {
 		this.status = status;
-	}
-
-	public String getGPS_Long() {
-		return GPS_Long;
-	}
-
-	public void setGPS_Long(String gPS_Long) {
-		GPS_Long = gPS_Long;
-	}
-
-	public String getGPS_Lati() {
-		return GPS_Lati;
-	}
-
-	public void setGPS_Lati(String gPS_Lati) {
-		GPS_Lati = gPS_Lati;
 	}
 	
 }

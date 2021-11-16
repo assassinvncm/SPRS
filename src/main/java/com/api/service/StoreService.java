@@ -46,6 +46,14 @@ public interface StoreService {
 	/**
 	 * 
 	 * @param Store
+	 * @return 
+	 */
+
+	Store deleteStore(StoreDto s);
+	
+	/**
+	 * 
+	 * @param Store
 	 * @return
 	 */
 	Store updateStore(Store s);

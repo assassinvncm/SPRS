@@ -34,23 +34,12 @@ public class SOSServiceImpl implements SOSService{
 		}
 		SOS s = u.getUser_sos();
 		s.setDescription(sosDto.getDescription());
-		s.setGPS_Lati(sosDto.getGPS_Lati());
-		s.setGPS_Long(sosDto.getGPS_Long());
+		s.setAddress(mapStructMapper.addressDtoToAddress(sosDto.getAddress()));
 		s.setLevel(sosDto.getLevel());
 		s.setStatus(sosDto.isStatus());
 		u.setUser_sos(s);
 		userRepo.save(u);
 		return sosDto;
 	}
-
-//	@Override
-//	public void createSOS(User u) {
-//		User st = userRepo.getById(u.getId());
-//		if(null == st) {
-//			throw new AppException(402,"User is not Found!");
-//		}
-//		SOS s = new SOS();
-//		sosRepo.save(s);
-//	}
 
 }

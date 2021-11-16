@@ -52,7 +52,6 @@ public class SOSController {
 	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody SOSDto s) {
 		logger.info("Start update SOS");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		s.setU(userDto);
 		
 		SOSDto sdto = sosServ.updateStatusSOS(s, userDto);
 		logger.info("End update SOS");

@@ -1,8 +1,11 @@
 package com.common.utils;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 
 import com.exception.AppException;
 
@@ -47,10 +50,21 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
+	public static Time stringToTimeHHMM(String time) {
+		if (time == null)
+			return null;
+	    
+	    return Time.valueOf(LocalTime.parse(time));
+	}
+
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static String getDateAsStringInYYYYMMDD(java.util.Date date) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		return formatter.format(date);
-
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.api.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
 	AddressService addressService;
+	
+	@Autowired
+	ModelMapper modelMapper;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -66,10 +70,16 @@ public class StoreServiceImpl implements StoreService{
 //			return st;
 //		}).collect(Collectors.toList());
 //		store.setStore_category(lstSTCate);
-		Address address = addressService.mapAddress(s.getAddress());
-		store.setLocation(address);
-		store.setStatus(true); 
-		Store str = storeRepository.save(store);
+		Store str = new Store();
+		try {
+			Address address = addressService.mapAddress(s.getAddress());
+			store.setLocation(address);
+			store.setStatus(true); 
+			System.out.println("show log store: "+store.toString());
+			str = storeRepository.save(store);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return str;
 	}
 
@@ -102,5 +112,15 @@ public class StoreServiceImpl implements StoreService{
 		// TODO Auto-generated method stub
 		List<Store> lstStore = storeRepository.findAll();
 		return mapStructMapper.lstStoreToStoreDto(lstStore);
+	}
+
+	@Override
+	public Store deleteStore(StoreDto s) {
+		Store st = storeRepository.getById(s.getId());
+		if(null == st) {
+			throw new AppException(402,"Store is not Found!");
+		}
+		storeRepository.delete(st);
+		return st;
 	}
 }

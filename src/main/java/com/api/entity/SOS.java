@@ -49,14 +49,11 @@ public class SOS extends BaseEntity implements Serializable{
 	@Column(name = "status")
 	private boolean status;
 	
-	@Column(name = "GPS_Long")
-	@JsonProperty("GPS_Long")
-	private String GPS_Long;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id")
+	@JsonIgnore
+    private Address address;
 	
-	@Column(name = "GPS_Lati")
-	@JsonProperty("GPS_Lati")
-	private String GPS_Lati;
-
 	public SOS() {
 		super();
 	}
@@ -66,13 +63,20 @@ public class SOS extends BaseEntity implements Serializable{
 		this.description = description;
 		this.level = level;
 		this.status = status;
-		GPS_Long = gPS_Long;
-		GPS_Lati = gPS_Lati;
 	}
 
-	public SOS(boolean status) {
+	public SOS(boolean status, Address address) {
 		super();
 		this.status = status;
+		this.address = address;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	public String getDescription() {
@@ -97,22 +101,6 @@ public class SOS extends BaseEntity implements Serializable{
 
 	public void setStatus(boolean status) {
 		this.status = status;
-	}
-
-	public String getGPS_Long() {
-		return GPS_Long;
-	}
-
-	public void setGPS_Long(String gPS_Long) {
-		GPS_Long = gPS_Long;
-	}
-
-	public String getGPS_Lati() {
-		return GPS_Lati;
-	}
-
-	public void setGPS_Lati(String gPS_Lati) {
-		GPS_Lati = gPS_Lati;
 	}
 	
 }

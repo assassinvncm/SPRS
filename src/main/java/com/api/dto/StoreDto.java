@@ -31,7 +31,7 @@ public class StoreDto {
 	private UserDto user_st;
 	
 	@JsonProperty("store_category")
-	private List<StoreCategory> storeDetail;
+	private List<StoreCategoryDto> storeDetail;
 	
 	@JsonProperty("address")
 	@NotNull
@@ -104,11 +104,11 @@ public class StoreDto {
 		this.status = status;
 	}
 
-	public List<StoreCategory> getStoreDetail() {
+	public List<StoreCategoryDto> getStoreDetail() {
 		return storeDetail;
 	}
 
-	public void setStoreDetail(List<StoreCategory> storeDetail) {
+	public void setStoreDetail(List<StoreCategoryDto> storeDetail) {
 		this.storeDetail = storeDetail;
 	}
 
