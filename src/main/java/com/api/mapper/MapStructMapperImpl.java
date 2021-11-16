@@ -333,7 +333,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		ReliefPointDto reliefPointDto = new ReliefPointDto();
 		reliefPointDto.setId(reliefPoint.getId());
 		reliefPointDto.setName(reliefPoint.getName());
-		//reliefPointDto.setClose_time(reliefPoint.getClose_time());
+		// reliefPointDto.setClose_time(reliefPoint.getClose_time());
 		reliefPointDto.setDescription(reliefPoint.getDescription());
 		reliefPointDto.setAddress(addressToAddressDto(reliefPoint.getAddress()));
 		reliefPointDto.setStatus(reliefPoint.getStatus());
@@ -345,11 +345,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		reliefPointDto.setModified_date(DateUtils.getDateInyyyy_MM_ddHHmmss(modified_date));
 		reliefPointDto.setOpen_time(open_time);
 		reliefPointDto.setClose_time(close_time);
-		
+
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);
 		}).collect(Collectors.toList());
-		
+
 		reliefPointDto.setReliefInformations(rpDto);
 //		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
 
@@ -385,7 +385,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		ReliefPoint reliefPoint = new ReliefPoint();
 		reliefPoint.setId(reliefPointDto.getId());
 		reliefPoint.setName(reliefPointDto.getName());
-		//reliefPoint.setClose_time(reliefPointDto.getClose_time());
+		// reliefPoint.setClose_time(reliefPointDto.getClose_time());
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setAddress(addressDtoToAddress(reliefPointDto.getAddress()));
 		List<ReliefInformationDto> lstReliefInforDto = reliefPointDto.getReliefInformations();
@@ -470,7 +470,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		Store rs = new Store();
 		if (dto == null) {
 			return null;
-		} 
+		}
 		rs.setId(dto.getId());
 		rs.setName(dto.getName());
 		rs.setOpen_time(DateUtils.stringToTimeHHMM(dto.getOpen_time()));
@@ -515,13 +515,13 @@ public class MapStructMapperImpl implements MapStructMapper {
 		if (device == null) {
 			return null;
 		}
-		
+
 		DeviceDto deviceDto = new DeviceDto();
 		deviceDto.setId(device.getId());
 		deviceDto.setToken(device.getToken());
 		deviceDto.setAddress(addressToAddressDto(device.getAddress()));
 		deviceDto.setUser(null);
-		
+
 		return deviceDto;
 	}
 
@@ -531,12 +531,14 @@ public class MapStructMapperImpl implements MapStructMapper {
 		if (deviceDto == null) {
 			return null;
 		}
-		
+
 		Device device = new Device();
 		device.setId(deviceDto.getId());
 		device.setToken(deviceDto.getToken());
 		device.setUser(userDtoToUser(deviceDto.getUser()));
 		return device;
+	}
+
 	public SOSDto SOSToSOSDto(SOS sos) {
 		SOSDto rs = new SOSDto();
 		rs.setId(sos.getId());

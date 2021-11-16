@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "SPRS_Relief_Point")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class ReliefPoint  extends BaseEntityWDT implements Serializable{
+public class ReliefPoint  extends BaseEntity implements Serializable{
 
 	/**
 	 * 
@@ -42,6 +42,18 @@ public class ReliefPoint  extends BaseEntityWDT implements Serializable{
 	
 	@Column(name = "status")
 	private Boolean status;
+	
+	@Column(updatable = false)
+	public String create_by;
+	
+	@Column(updatable = false,columnDefinition = "TIMESTAMP")
+	public Timestamp create_time;
+	
+	@Column
+	public String modified_by;
+	
+	@Column(columnDefinition = "TIMESTAMP")
+	public Timestamp modified_date;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id",referencedColumnName="id", insertable = true, updatable = false)
@@ -128,6 +140,38 @@ public class ReliefPoint  extends BaseEntityWDT implements Serializable{
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+
+	public String getCreate_by() {
+		return create_by;
+	}
+
+	public void setCreate_by(String create_by) {
+		this.create_by = create_by;
+	}
+
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
+	}
+
+	public String getModified_by() {
+		return modified_by;
+	}
+
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
+	}
+
+	public Timestamp getModified_date() {
+		return modified_date;
+	}
+
+	public void setModified_date(Timestamp modified_date) {
+		this.modified_date = modified_date;
 	}
 	
 	

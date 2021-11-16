@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
 import com.api.dto.PushNotificationRequest;
 import com.api.dto.SubscriptionRequest;
@@ -26,7 +27,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.MulticastMessage;
 
-
+@Service
 public class NotificationServiceImpl implements NotificationService{
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
