@@ -7,6 +7,8 @@ public class DeviceDto {
 	
 	private String token;
 	
+	private String serial;
+	
     private UserDto user;
 	
     private AddressDto address;
@@ -42,6 +44,16 @@ public class DeviceDto {
 	public void setAddress(AddressDto address) {
 		this.address = address;
 	}
+
+	public String getSerial() {
+		return serial;
+	}
+
+	public void setSerial(String serial) {
+		this.serial = serial;
+	}
+	
+	
     
     
 }

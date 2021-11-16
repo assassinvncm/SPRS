@@ -23,6 +23,9 @@ public class Device extends BaseEntity implements Serializable {
 
 	@Column
 	private String token;
+	
+	@Column
+	private String serial;
 
 	@OneToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -55,5 +58,15 @@ public class Device extends BaseEntity implements Serializable {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+
+	public String getSerial() {
+		return serial;
+	}
+
+	public void setSerial(String serial) {
+		this.serial = serial;
+	}
+	
+	
 
 }

@@ -84,19 +84,19 @@ public class NotificationServiceImpl implements NotificationService{
 
 	@Override
 	public String sendPnsToDevice(PushNotificationRequest pushNotificationRequest) {
-		Message message = Message.builder().setToken(pushNotificationRequest.getTarget())
-				.setNotification(com.google.firebase.messaging.Notification.builder()
-						.setTitle(pushNotificationRequest.getTitle())
-						.setBody(pushNotificationRequest.getBody()).build())
-				.putData("content", pushNotificationRequest.getTitle())
-				.putData("body", pushNotificationRequest.getBody()).build();
+//		Message message = Message.builder().setToken(pushNotificationRequest.getTarget())
+//				.setNotification(com.google.firebase.messaging.Notification.builder()
+//						.setTitle(pushNotificationRequest.getTitle())
+//						.setBody(pushNotificationRequest.getBody()).build())
+//				.putData("content", pushNotificationRequest.getTitle())
+//				.putData("body", pushNotificationRequest.getBody()).build();
 
 		String response = null;
-		try {
-			response = FirebaseMessaging.getInstance().send(message);
-		} catch (FirebaseMessagingException e) {
-			log.error("Fail to send firebase notification", e);
-		}
+//		try {
+//			response = FirebaseMessaging.getInstance().send(message);
+//		} catch (FirebaseMessagingException e) {
+//			log.error("Fail to send firebase notification", e);
+//		}
 
 		return response;
 	}
@@ -117,7 +117,7 @@ public class NotificationServiceImpl implements NotificationService{
 			response = FirebaseMessaging.getInstance().sendMulticast(multicastMessage);
 		} catch (FirebaseMessagingException e) {
 			log.error("Fail to send firebase notification", e);
-			throw new AppException(501, "Send Message is fail!");
+			//throw new AppException(501, "Send Message is fail!");
 		}
 
 		return response;
@@ -126,21 +126,43 @@ public class NotificationServiceImpl implements NotificationService{
 
 	@Override
 	public String sendPnsToTopic(PushNotificationRequest pushNotificationRequestModel) {
-		Message message = Message.builder().setTopic(pushNotificationRequestModel.getTarget())
-				.setNotification(com.google.firebase.messaging.Notification.builder()
-						.setTitle(pushNotificationRequestModel.getTitle())
-						.setBody(pushNotificationRequestModel.getBody()).build())
-				.putData("content", pushNotificationRequestModel.getTitle())
-				.putData("body", pushNotificationRequestModel.getBody()).build();
+//		Message message = Message.builder().setTopic(pushNotificationRequestModel.getTarget())
+//				.setNotification(com.google.firebase.messaging.Notification.builder()
+//						.setTitle(pushNotificationRequestModel.getTitle())
+//						.setBody(pushNotificationRequestModel.getBody()).build())
+//				.putData("content", pushNotificationRequestModel.getTitle())
+//				.putData("body", pushNotificationRequestModel.getBody()).build();
 
 		String response = null;
-		try {
-			FirebaseMessaging.getInstance().send(message);
-		} catch (FirebaseMessagingException e) {
-			log.error("Fail to send firebase notification", e);
-		}
+//		try {
+//			FirebaseMessaging.getInstance().send(message);
+//		} catch (FirebaseMessagingException e) {
+//			log.error("Fail to send firebase notification", e);
+//		}
 
 		return response;
+	}
+
+	@Override
+	public void sendPnsToDeviceInCity(Long city_id) {
+		// TODO Auto-generated method stub
+		List<String> lstToken = deviceService.getDeviceTokenByCity(city_id);
+		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+		pushNotificationRequest.setTarget(lstToken);
+		pushNotificationRequest.setTitle("");
+		pushNotificationRequest.setBody("Có một địa điểm cứu trợ mới được tạo gần đây");
+		sendPnsToDevices(pushNotificationRequest);
+	}
+	
+	//@Override
+	public void sendPnsToDeviceSubcribeStore(Long store_id, String message) {
+		// TODO Auto-generated method stub
+		List<String> lstToken = deviceService.getDeviceTokenByStoreId(store_id);
+		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+		pushNotificationRequest.setTarget(lstToken);
+		pushNotificationRequest.setTitle("");
+		pushNotificationRequest.setBody(message);
+		sendPnsToDevices(pushNotificationRequest);
 	}
 
 }

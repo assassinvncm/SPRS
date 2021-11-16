@@ -1,16 +1,18 @@
 package com.api.dto;
 
+import java.util.List;
+
 public class PushNotificationRequest {
 	
-	private String target;
+	private List<String> lstToken;
 	private String title;
 	private String body;
 	
-	public String getTarget() {
-		return target;
+	public List<String> getTarget() {
+		return lstToken;
 	}
-	public void setTarget(String target) {
-		this.target = target;
+	public void setTarget(List<String> lstToken) {
+		this.lstToken = lstToken;
 	}
 	public String getTitle() {
 		return title;

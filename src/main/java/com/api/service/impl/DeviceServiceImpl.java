@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
@@ -37,6 +38,21 @@ public class DeviceServiceImpl implements DeviceService {
 		return mapStructMapper.deviceToDeviceDto(responseDevice);
 	}
 
+	@Transactional
+	@Override
+	public DeviceDto updateDevice(DeviceDto deviceDto) {
+		// TODO Auto-generated method stub
+
+		deviceRepository.findById(deviceDto.getId())
+				.orElseThrow(() -> new AppException(403, "Device not exist"));
+		
+		Device device = mapStructMapper.deviceDtoToDevice(deviceDto);
+		Address address = addressService.mapAddress(deviceDto.getAddress());
+		device.setAddress(address);
+		Device responseDevice = deviceRepository.save(device);
+		return mapStructMapper.deviceToDeviceDto(responseDevice);
+	}
+
 	@Override
 	public void updateDeviceAddress(AddressDto addressDto) {
 		// TODO Auto-generated method stub
@@ -50,7 +66,8 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public DeviceDto updateDeviceToken(Long device_Id, String token) {
 		// TODO Auto-generated method stub
-		Device device = deviceRepository.findById(device_Id).orElseThrow(() -> new AppException());
+		Device device = deviceRepository.findById(device_Id)
+				.orElseThrow(() -> new AppException(403, "Device not exist"));
 		device.setToken(token);
 		Device responseDevice = deviceRepository.save(device);
 		return mapStructMapper.deviceToDeviceDto(responseDevice);
@@ -59,15 +76,21 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String getDeviceTokenByUserId(Long uId) {
 		// TODO Auto-generated method stub
-//		Device device = deviceRepository.findDeviceByUserId(uId)
-//				.orElseThrow(() -> new AppException(403, "User Id not exist"));
+		Device device = deviceRepository.findById(uId)
+				.orElseThrow(() -> new AppException(403, "User Id not exist"));
 		return null;
+	}
+	
+	@Override
+	public List<String> getDeviceTokenByStoreId(Long sId) {
+		// TODO Auto-generated method stub
+		return deviceRepository.findTokenUserByStore(sId);
 	}
 
 	@Override
 	public List<String> getDeviceTokenByCity(Long city_id) {
 		// TODO Auto-generated method stub
-		return null;
+		return deviceRepository.findTokenUserByCityId(city_id);
 	}
 
 	@Override
@@ -89,5 +112,7 @@ public class DeviceServiceImpl implements DeviceService {
 		device.setToken(null);
 		Device responseDevice = deviceRepository.save(device);
 	}
+
+
 
 }

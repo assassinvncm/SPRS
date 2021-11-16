@@ -519,6 +519,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		DeviceDto deviceDto = new DeviceDto();
 		deviceDto.setId(device.getId());
 		deviceDto.setToken(device.getToken());
+		deviceDto.setSerial(device.getSerial());
 		deviceDto.setAddress(addressToAddressDto(device.getAddress()));
 		deviceDto.setUser(null);
 
@@ -535,6 +536,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		Device device = new Device();
 		device.setId(deviceDto.getId());
 		device.setToken(deviceDto.getToken());
+		device.setSerial(deviceDto.getSerial());
 		device.setUser(userDtoToUser(deviceDto.getUser()));
 		return device;
 	}

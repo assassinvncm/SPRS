@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.PushNotificationRequest;
@@ -20,6 +21,13 @@ public class NotificationController {
 	@Autowired
     private NotificationService notificationService;
 
+	@PostMapping("/test")
+    public void test(@RequestParam("id") Long id) {
+        //notificationService.subscribeToTopic(subscriptionRequestModel);
+		notificationService.sendPnsToDeviceInCity(id);
+		
+    }
+	
     @PostMapping("/subscribe")
     public void subscribeToTopic(@RequestBody SubscriptionRequest subscriptionRequestModel) {
         notificationService.subscribeToTopic(subscriptionRequestModel);
@@ -30,7 +38,6 @@ public class NotificationController {
         notificationService.unsubscribeFromTopic(subscriptionRequestModel);
     }
     
-    @ExceptionHandler()
     @PostMapping("/token")
     public String sendPnsToDevice(@RequestBody PushNotificationRequest pushNotificationRequestModel) {
         return notificationService.sendPnsToDevice(pushNotificationRequestModel);
