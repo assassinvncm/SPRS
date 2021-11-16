@@ -78,7 +78,7 @@ public class AddressSerivceImpl implements AddressService {
 		if (0 != addressDto.getSubDistrict().getId()) {
 			sb = subDistrictRepository.findById(addressDto.getSubDistrict().getId())
 					.orElseThrow(() -> new AppException(403, "Id address not valid"));
-			;
+			
 		} else {
 			sb = subDistrictRepository
 					.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),

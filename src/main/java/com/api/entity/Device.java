@@ -4,26 +4,33 @@ import java.io.Serializable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-public class Device extends BaseEntity implements Serializable{
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Entity
+@Table(name = "SPRS_Device")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Device extends BaseEntity implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8547873357635626670L;
-	
+
 	@Column
 	private String token;
-	
+
 	@OneToOne
-	@JoinColumn(name = "user_id")
-    private User user;
-	
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User user;
+
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id")
-    private Address address;
+	@JoinColumn(name = "address_id", referencedColumnName = "id")
+	private Address address;
 
 	public String getToken() {
 		return token;
@@ -48,7 +55,5 @@ public class Device extends BaseEntity implements Serializable{
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-	
-	
-	
+
 }

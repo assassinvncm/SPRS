@@ -59,9 +59,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String getDeviceTokenByUserId(Long uId) {
 		// TODO Auto-generated method stub
-		Device device = deviceRepository.findDeviceByUserId(uId)
-				.orElseThrow(() -> new AppException(403, "User Id not exist"));
-		return device.getToken();
+//		Device device = deviceRepository.findDeviceByUserId(uId)
+//				.orElseThrow(() -> new AppException(403, "User Id not exist"));
+		return null;
 	}
 
 	@Override
