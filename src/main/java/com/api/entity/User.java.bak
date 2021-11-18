@@ -80,11 +80,22 @@ public class User extends BaseEntity implements Serializable{
 			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="store_id"))
 	private List<Store> user_store;
-
-
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "sos_id")
+	@JsonIgnore
+    private SOS user_sos;
 	
 	public List<Store> getLstStore() {
 		return lstStore;
+	}
+
+	public SOS getUser_sos() {
+		return user_sos;
+	}
+
+	public void setUser_sos(SOS user_sos) {
+		this.user_sos = user_sos;
 	}
 
 	public void setLstStore(List<Store> lstStore) {

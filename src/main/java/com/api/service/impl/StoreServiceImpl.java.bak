@@ -3,10 +3,14 @@ package com.api.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.api.controller.StoreController;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.StoreDto;
 import com.api.entity.Address;
@@ -24,6 +28,9 @@ import com.exception.AppException;
 
 @Service
 public class StoreServiceImpl implements StoreService{
+	
+	public static Logger logger = LoggerFactory.getLogger(StoreServiceImpl.class);
+	
 	@Autowired
 	StoreRepository storeRepository;
 	
@@ -32,6 +39,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
 	AddressService addressService;
+	
+	@Autowired
+	ModelMapper modelMapper;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -61,15 +71,21 @@ public class StoreServiceImpl implements StoreService{
 	public Store createStore(StoreDto s) {
 		// TODO Auto-generated method stub
 		Store store = mapStructMapper.storeDtoToStore(s);
-		List<StoreCategory> lstSTCate = store.getStore_category().stream().map(st ->{
-			st.setId(store.getId());
-			return st;
-		}).collect(Collectors.toList());
-		store.setStore_category(lstSTCate);
-		Address address = addressService.mapAddress(s.getAddress());
-		store.setLocation(address);
-		store.setStatus(true);
-		Store str = storeRepository.save(store);
+//		List<StoreCategory> lstSTCate = store.getStore_category().stream().map(st ->{
+//			st.setId(store.getId());
+//			return st;
+//		}).collect(Collectors.toList());
+//		store.setStore_category(lstSTCate);
+		Store str = new Store();
+		try {
+			Address address = addressService.mapAddress(s.getAddress());
+			store.setLocation(address);
+			store.setStatus(true); 
+			System.out.println("show log store: "+store.toString());
+			str = storeRepository.save(store);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 		return str;
 	}
 
@@ -102,5 +118,15 @@ public class StoreServiceImpl implements StoreService{
 		// TODO Auto-generated method stub
 		List<Store> lstStore = storeRepository.findAll();
 		return mapStructMapper.lstStoreToStoreDto(lstStore);
+	}
+
+	@Override
+	public Store deleteStore(StoreDto s) {
+		Store st = storeRepository.getById(s.getId());
+		if(null == st) {
+			throw new AppException(402,"Store is not Found!");
+		}
+		storeRepository.delete(st);
+		return st;
 	}
 }

@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -59,7 +61,7 @@ public class User extends BaseEntity implements Serializable{
 	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true, updatable = false)
 	private Organization organization;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "SPRS_user_group",
 			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
@@ -102,7 +104,7 @@ public class User extends BaseEntity implements Serializable{
 		this.lstStore = lstStore;
 	}
 
-	@JsonIgnore
+//	@JsonIgnore
 	public List<Group> getGroups_user() {
 		return groups_user;
 	}
@@ -215,7 +217,20 @@ public class User extends BaseEntity implements Serializable{
 	public void setReliefPoints(List<ReliefPoint> reliefPoints) {
 		this.reliefPoints = reliefPoints;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		String rs = "Access Code is: ";
+//		groups_user.forEach(r -> {
+//			rs+=r.getCode();
+//			r.getPermissions().forEach(p -> rs+=p.getCode());
+//		});
+		for (Group group : groups_user) {
+			rs+=group.getCode()+" ,";
+			for (Permission grouPermission : group.getPermissions()) {
+				rs+=grouPermission.getCode()+" ,";
+			}
+		}
+		return rs;
+	}
 }
