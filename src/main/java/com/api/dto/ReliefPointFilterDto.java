@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SearchFilterDto {
+public class ReliefPointFilterDto {
 	
 	@JsonProperty("types")
 	private List<Long> types;
@@ -28,11 +28,11 @@ public class SearchFilterDto {
 
 	
 	
-	public SearchFilterDto() {
+	public ReliefPointFilterDto() {
 		super();
 	}
 
-	public SearchFilterDto(List<Long> types, Boolean status, Boolean sort, @NotNull int pageSize,
+	public ReliefPointFilterDto(List<Long> types, Boolean status, Boolean sort, @NotNull int pageSize,
 			@NotNull int pageIndex) {
 		super();
 		this.types = types;

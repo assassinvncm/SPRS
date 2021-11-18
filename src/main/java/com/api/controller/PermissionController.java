@@ -57,18 +57,18 @@ public class PermissionController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", per.get(), null));
 	}
 	
-	@RequestMapping(value = "/permission", method = RequestMethod.POST)
-	public ResponseEntity<?> savePermission(@Validated @RequestBody Permission per){
-		logger.info("Start save permission id: "+per.getId());
-		Optional<Permission> perm = perRepo.findById(per.getId());
-		if(perm.isEmpty()) {
-			perRepo.save(per);
-		}else {
-			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!", null, null));
-		}
-		logger.info("End save permission id: "+per.getId());
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
-	}
+//	@RequestMapping(value = "/permission", method = RequestMethod.POST)
+//	public ResponseEntity<?> savePermission(@Validated @RequestBody Permission per){
+//		logger.info("Start save permission id: "+per.getId());
+//		Optional<Permission> perm = perRepo.findById(per.getId());
+//		if(perm.isEmpty()) {
+//			perRepo.save(per);
+//		}else {
+//			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!", null, null));
+//		}
+//		logger.info("End save permission id: "+per.getId());
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
+//	}
 	
 	@RequestMapping(value = "/permission/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updatePermission(@PathVariable(value = "id") Long id ,@Validated @RequestBody Permission per){

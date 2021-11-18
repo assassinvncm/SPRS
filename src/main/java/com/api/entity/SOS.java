@@ -43,8 +43,8 @@ public class SOS extends BaseEntity implements Serializable{
 	@Column(name = "description")
 	private String description;
 	
-	@Column(name = "close_time")
-	private int level;
+	@Column(name = "level")
+	private Integer level = 0;
 	
 	@Column(name = "status")
 	private boolean status;
@@ -87,20 +87,20 @@ public class SOS extends BaseEntity implements Serializable{
 		this.description = description;
 	}
 
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
 	public boolean isStatus() {
 		return status;
 	}
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 	
 }

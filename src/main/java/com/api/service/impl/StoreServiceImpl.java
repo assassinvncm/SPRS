@@ -18,6 +18,7 @@ import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
+import com.api.mapper.proc_mapper.StoreFilterMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
 import com.api.service.StoreService;
@@ -39,8 +40,8 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Override
 	public Store getStoreById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Store st = storeRepository.getById(id);
+		return st;
 	}
 
 	@Override
@@ -75,7 +76,6 @@ public class StoreServiceImpl implements StoreService{
 			Address address = addressService.mapAddress(s.getAddress());
 			store.setLocation(address);
 			store.setStatus(true); 
-			System.out.println("show log store: "+store.toString());
 			str = storeRepository.save(store);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,5 +122,17 @@ public class StoreServiceImpl implements StoreService{
 		}
 		storeRepository.delete(st);
 		return st;
+	}
+
+	@Override
+	public List<StoreDto> getStoreOwner() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> getStoreFilterByType() {
+		List<User> stm = storeRepository.filterStoreByStatusType(true, "yess");
+		return stm;
 	}
 }

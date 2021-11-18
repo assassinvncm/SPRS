@@ -98,14 +98,9 @@
 			<version>4.8.44</version>
 		</dependency>
 		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk</artifactId>
-			<version>1.11.133</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.firebase</groupId>
-			<artifactId>firebase-admin</artifactId>
-			<version>8.0.0</version>
+	       <groupId>com.amazonaws</groupId>
+	       <artifactId>aws-java-sdk</artifactId>
+	       <version>1.11.133</version>
 		</dependency>
 	</dependencies>
 

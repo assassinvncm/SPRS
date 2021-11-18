@@ -8,8 +8,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -27,11 +33,9 @@ public class Permission extends BaseEntity implements Serializable{
 	
 	@Column(name = "name")
 	private String name;
-	
-	@Column(name = "description")
-	private String description;
 
 	@ManyToMany(mappedBy = "group_permission")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Group> groups_link = new ArrayList<Group>();
 	
 	public Collection<Group> getGroups() {
@@ -60,14 +64,6 @@ public class Permission extends BaseEntity implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	
 }

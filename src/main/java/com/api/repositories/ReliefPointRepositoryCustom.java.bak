@@ -1,0 +1,11 @@
+package com.api.repositories;
+
+import java.util.List;
+
+import com.api.dto.SearchFilterDto;
+import com.api.entity.ReliefPoint;
+
+public interface ReliefPointRepositoryCustom {
+
+	List<ReliefPoint> findByTypeOrStatus(Long uId, SearchFilterDto reliefPointFilterDto);
+}
