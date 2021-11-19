@@ -86,6 +86,9 @@ public class User extends BaseEntity implements Serializable{
 	@JsonIgnore
     private SOS user_sos;
 	
+	@OneToMany(mappedBy = "sender",fetch = FetchType.LAZY)
+	private List<Notification> notifications;
+	
 	public List<Store> getLstStore() {
 		return lstStore;
 	}

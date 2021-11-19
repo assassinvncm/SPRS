@@ -14,6 +14,7 @@ import com.api.dto.DeviceDto;
 import com.api.dto.DistrictDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
+import com.api.dto.NotificationDto;
 import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
@@ -30,6 +31,7 @@ import com.api.entity.District;
 import com.api.entity.Group;
 import com.api.entity.Image;
 import com.api.entity.Item;
+import com.api.entity.Notification;
 import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
@@ -560,6 +562,13 @@ public class MapStructMapperImpl implements MapStructMapper {
 		rs.setLevel(sosDto.getLevel());
 		rs.setStatus(sosDto.isStatus());
 		return rs;
+	}
+
+	@Override
+	public NotificationDto notificationToNotificationDto(Notification notification) {
+		// TODO Auto-generated method stub
+		
+		return null;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
+import com.api.entity.Device;
 
 public interface DeviceService {
 
@@ -55,7 +56,7 @@ public interface DeviceService {
 	 * @return
 	 */
 
-	String getDeviceTokenByUserId(Long uId);
+	Device getDeviceTokenByUserId(Long uId);
 
 	/**
 	 * get list token in a city
@@ -70,4 +71,6 @@ public interface DeviceService {
 	List<String> getDeviceTokenBySubDistrict(Long subDistrict_id);
 
 	void deleteDeviceToken(Long device_id);
+	
+	void deleteDeviceByUserId(Long uId);
 }

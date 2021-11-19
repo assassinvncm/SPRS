@@ -13,8 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import com.api.dto.NotificationDto;
 import com.api.dto.PushNotificationRequest;
 import com.api.dto.SubscriptionRequest;
+import com.api.entity.Notification;
+import com.api.repositories.NotificationRepository;
 import com.api.service.DeviceService;
 import com.api.service.NotificationService;
 import com.exception.AppException;
@@ -37,11 +40,11 @@ public class NotificationServiceImpl implements NotificationService{
 
 	private FirebaseApp firebaseApp;
 
-	//@Autowired
-	//NotificationRepository notificationRepository;
-
 	@Autowired
 	DeviceService deviceService;
+	
+	@Autowired
+	NotificationRepository notificationRepository;
 
 	@PostConstruct
 	private void initialize() {
@@ -163,6 +166,19 @@ public class NotificationServiceImpl implements NotificationService{
 		pushNotificationRequest.setTitle("");
 		pushNotificationRequest.setBody(message);
 		sendPnsToDevices(pushNotificationRequest);
+	}
+	
+	@Override
+	public void saveNotification(List<Notification> notificaitons) {
+		notificationRepository.saveAll(notificaitons);
+	}
+
+	@Override
+	public List<NotificationDto> getNotificationByUser(Long uId) {
+		// TODO Auto-generated method stub
+		List<Notification> lstNotification = notificationRepository.getNotifications(uId);
+		
+		return null;
 	}
 
 }

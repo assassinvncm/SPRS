@@ -1,7 +1,11 @@
 package com.api.service;
 
+import java.util.List;
+
+import com.api.dto.NotificationDto;
 import com.api.dto.PushNotificationRequest;
 import com.api.dto.SubscriptionRequest;
+import com.api.entity.Notification;
 import com.google.firebase.messaging.BatchResponse;
 
 public interface NotificationService {
@@ -21,4 +25,15 @@ public interface NotificationService {
 	BatchResponse sendPnsToDevices(PushNotificationRequest pushNotificationRequest);
 
 	String sendPnsToTopic(PushNotificationRequest pushNotificationRequestModel);
+	
+	/**
+	 * get list notification by user id
+	 * @return list<Notification>
+	 */
+	List<NotificationDto> getNotificationByUser(Long uId);
+	
+	/**
+	 * save list notification
+	 */
+	void saveNotification(List<Notification> notifications);
 }
