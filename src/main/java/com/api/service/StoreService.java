@@ -7,6 +7,7 @@ import com.api.dto.StoreDto;
 import com.api.entity.Address;
 import com.api.entity.Store;
 import com.api.entity.User;
+import com.api.mapper.proc_mapper.StoreFilterMapper;
 
 public interface StoreService {
 	/**
@@ -70,4 +71,16 @@ public interface StoreService {
 	 * @return
 	 */
 	List<StoreDto> getAllStore();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	List<StoreDto> getStoreOwner();
+	
+	/**
+	 * List<StoreFilterMapper>
+	 * @return
+	 */
+	List<User> getStoreFilterByType();
 }
