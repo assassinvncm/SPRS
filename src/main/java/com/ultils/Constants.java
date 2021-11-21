@@ -28,4 +28,9 @@ public class Constants {
 	public static final String REQUEST_STATUS_UNCHECK = "uncheck";
 	// constants for request status
 	public static final String IMAGE_URL = "https://image-bucket-sprs.s3.ap-southeast-1.amazonaws.com/";
+	
+	//constants notification type
+	public static final String NOTIFICATION_TYPE_STORE = "st";
+	public static final String NOTIFICATION_TYPE_RELIEFPOINT = "rp";
+	public static final String NOTIFICATION_TYPE_ADMIN = "ad";
 }

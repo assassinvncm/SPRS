@@ -2,8 +2,12 @@ package com.api.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.j2objc.annotations.Property;
+
 public class PushNotificationRequest {
 	
+	@JsonProperty("lstToken")
 	private List<String> lstToken;
 	private String title;
 	private String body;

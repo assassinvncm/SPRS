@@ -97,5 +97,7 @@ public interface MapStructMapper {
 	
 	NotificationDto notificationToNotificationDto(Notification notification);
 	
+	List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton);
+	
 	
 }

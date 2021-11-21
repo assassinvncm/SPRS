@@ -1,6 +1,7 @@
 package com.api.entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,9 +34,9 @@ public class Notification extends BaseEntity{
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_user_receiver_notification",
-			joinColumns = @JoinColumn(name = "reveiver_id",insertable = true),
-			inverseJoinColumns = @JoinColumn(name ="notification_id"))
-	private User receiver;
+			joinColumns = @JoinColumn(name = "notification_id",insertable = true),
+			inverseJoinColumns = @JoinColumn(name ="reveiver_id"))
+	private List<User> receivers;
 	
 	@Column
 	private String type;
@@ -74,12 +75,12 @@ public class Notification extends BaseEntity{
 		this.reliefPoint = reliefPoint;
 	}
 
-	public User getReceiver() {
-		return receiver;
+	public List<User> getReceiver() {
+		return receivers;
 	}
 
-	public void setReceiver(User receiver) {
-		this.receiver = receiver;
+	public void setReceiver(List<User> receivers) {
+		this.receivers = receivers;
 	}
 
 	public String getType() {

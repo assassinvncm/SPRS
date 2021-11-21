@@ -2,6 +2,7 @@ package com.api.mapper;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +43,7 @@ import com.api.entity.StoreCategory;
 import com.api.entity.SubDistrict;
 import com.api.entity.User;
 import com.common.utils.DateUtils;
+import com.ultils.Constants;
 
 @Component
 public class MapStructMapperImpl implements MapStructMapper {
@@ -567,8 +569,37 @@ public class MapStructMapperImpl implements MapStructMapper {
 	@Override
 	public NotificationDto notificationToNotificationDto(Notification notification) {
 		// TODO Auto-generated method stub
+		if(notification == null) {
+			return null;
+		}
+		NotificationDto notiDto = new NotificationDto();
+		notiDto.setMessage(notification.getMessage());
+		notiDto.setStatus(notification.getStatus());
+		notiDto.setType(notification.getType());
 		
-		return null;
+		if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_STORE)) {
+			notiDto.setSender(storeToStoreDTO(notification.getStore()));
+		}else if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_RELIEFPOINT)) {
+			notiDto.setSender(reliefPointToreliefPointDto(notification.getReliefPoint()));
+		}else {
+			notiDto.setSender(userToUserDto(notification.getSender()));
+		}
+
+		return notiDto;
+	}
+
+	@Override
+	public List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton) {
+		// TODO Auto-generated method stub
+		if(lstNotificaiton == null) {
+			return null;
+		}
+		List<NotificationDto> lstNotiDto = new ArrayList<NotificationDto>();
+		lstNotiDto = lstNotificaiton.stream().map(noti ->{
+			return notificationToNotificationDto(noti);
+		}).collect(Collectors.toList());
+		
+		return lstNotiDto;
 	}
 
 }

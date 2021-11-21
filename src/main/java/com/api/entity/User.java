@@ -53,7 +53,7 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id",insertable = true, updatable = false)
 	private Address address;
 	
@@ -89,7 +89,10 @@ public class User extends BaseEntity implements Serializable{
     private SOS user_sos;
 	
 	@OneToMany(mappedBy = "sender",fetch = FetchType.LAZY)
-	private List<Notification> notifications;
+	private List<Notification> notifications_sender;
+	
+	@ManyToMany(mappedBy = "receivers")
+	private List<Notification> notification_receiver;
 	
 	public List<Store> getLstStore() {
 		return lstStore;

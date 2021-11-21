@@ -4,30 +4,36 @@ import java.sql.Timestamp;
 
 public class NotificationDto {
 
-	private Long source;
+	private Object sender;
 
-	private String typeSource;
+	private String type;
 
 	private String message;
-	
+
 	private String status;
-	
+
 	public Timestamp create_time;
 
-	public Long getSource() {
-		return source;
+	
+
+	public Object getSender() {
+		return sender;
 	}
 
-	public void setSource(Long source) {
-		this.source = source;
+	public void setSender(Object sender) {
+		this.sender = sender;
 	}
 
-	public String getTypeSource() {
-		return typeSource;
+	public void setSender(Long sender) {
+		this.sender = sender;
 	}
 
-	public void setTypeSource(String typeSource) {
-		this.typeSource = typeSource;
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getMessage() {
@@ -53,6 +59,5 @@ public class NotificationDto {
 	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
 	}
-	
-	
+
 }

@@ -22,6 +22,7 @@ import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.ReliefPointRepository;
 import com.api.service.AddressService;
+import com.api.service.NotificationService;
 import com.api.service.ReliefPointService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
@@ -37,6 +38,9 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 
 	@Autowired
 	AddressService addressService;
+	
+	@Autowired
+	NotificationService notificationService;
 
 	@Override
 	public ReliefPoint getReliefPointById(Long id) {
@@ -81,6 +85,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setStatus(true);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
+		notificationService.sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
 		return rp;
 	}
 
