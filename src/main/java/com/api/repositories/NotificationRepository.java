@@ -13,7 +13,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
 	@Query(value = "SELECT nr from Notification nr INNER JOIN nr.receivers u where u.id = :uId")
 	List<Notification> getNotifications(@RequestParam("uId") Long uId, Pageable pageable);
-
-	@Query(value = "SELECT count(nr) from Notification nr INNER JOIN nr.receivers u where u.id = :uId and nr.status = :status")
-	int getQuantityNotificationsByStatus(@RequestParam("uId") Long uId,@RequestParam("status") String status);
 }

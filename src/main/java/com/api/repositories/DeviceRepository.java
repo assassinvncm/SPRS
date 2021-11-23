@@ -33,10 +33,6 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 	@Query(value = "SELECT sd.* FROM sprs_device sd INNER JOIN sprs_users u ON sd.user_id = u.id WHERE u.id = :uid", nativeQuery = true)
 	Device findDeviceByUserId(@Param("uid") Long user_id);
 	
-	@Modifying
-	@Query("delete from Device d where d.serial = :serial")
-	void deleteBySerial(@Param("serial") String serial);
-	
 	@Transactional
 	@Modifying
 	@Query(value = "DELETE FROM sprs_device WHERE sprs_device.user_id = :uid",nativeQuery = true)

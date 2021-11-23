@@ -44,9 +44,7 @@ public class DeviceServiceImpl implements DeviceService {
 		// delete device in db by userId
 
 		// }
-		
-		deleteDeviceByUserId(user.getId());
-		deviceRepository.deleteBySerial(deviceDto.getSerial());
+		this.deleteDeviceByUserId(user.getId());
 		// insert db
 		Device device = mapStructMapper.deviceDtoToDevice(deviceDto);
 		Address address = addressService.mapAddress(deviceDto.getAddress());

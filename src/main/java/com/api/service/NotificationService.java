@@ -27,13 +27,6 @@ public interface NotificationService {
 	BatchResponse sendPnsToDevices(PushNotificationRequest pushNotificationRequest);
 
 	String sendPnsToTopic(PushNotificationRequest pushNotificationRequestModel);
-	
-	/**
-	 * get quantity of notification that un check
-	 * @param user_id
-	 * @return
-	 */
-	int getQuantityUncheckNotification(Long user_id);
 
 	/**
 	 * get list notification by user id

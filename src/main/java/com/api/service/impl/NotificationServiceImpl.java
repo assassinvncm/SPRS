@@ -29,7 +29,6 @@ import com.api.mapper.MapStructMapper;
 import com.api.repositories.NotificationRepository;
 import com.api.service.DeviceService;
 import com.api.service.NotificationService;
-import com.common.utils.DateUtils;
 import com.exception.AppException;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -185,8 +184,7 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setMessage(message);
 		notification.setStore(store);
 		notification.setType(Constants.NOTIFICATION_TYPE_STORE);
-		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
-		notification.setCreate_time(DateUtils.getCurrentSqlDate());
+		notification.setStatus("uncheck");
 		List<User> user = new ArrayList<User>();
 		for (Device d : lstDevice) {
 			user.add(d.getUser());
@@ -210,6 +208,7 @@ public class NotificationServiceImpl implements NotificationService {
 	public void sendPnsToDeviceWhenCreateReliefPoint(ReliefPoint rp, String message) {
 		List<Device> lstDevice = deviceService.getDeviceTokenByCity(rp.getUsers().getId(),
 				rp.getAddress().getSubDistrict().getDistrict().getCity().getId());
+		List<Notification> notifications = new ArrayList<Notification>();
 		List<String> lstToken = new ArrayList<String>();
 
 		// set notification
@@ -217,15 +216,11 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setMessage(message);
 		notification.setReliefPoint(rp);
 		notification.setType(Constants.NOTIFICATION_TYPE_RELIEFPOINT);
-		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
-		notification.setCreate_time(DateUtils.getCurrentSqlDate());
+		notification.setStatus("uncheck");
 		List<User> user = new ArrayList<User>();
 		for (Device d : lstDevice) {
 			user.add(d.getUser());
 			lstToken.add(d.getToken());
-		}
-		if (lstToken.isEmpty()) {
-			return;
 		}
 		notification.setReceiver(user);
 
@@ -239,14 +234,14 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public void saveNotification(Notification notificaitons) {
-		notificationRepository.saveAndFlush(notificaitons);
+		notificationRepository.save(notificaitons);
 	}
 
 	@Override
 	public List<NotificationDto> getNotificationByUser(Long uId, int pageIndex, int pageSize) {
 		// TODO Auto-generated method stub
 		Sort sort = Sort.by("create_time").descending();
-		Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+		Pageable pageable = PageRequest.of(pageIndex, pageSize,sort);
 		List<Notification> lstNotification = notificationRepository.getNotifications(uId, pageable);
 
 		return mapStructMapper.lstNotificationToNotificationDto(lstNotification);
@@ -265,13 +260,6 @@ public class NotificationServiceImpl implements NotificationService {
 	public void PushNotificationJob(Object object, PushNotificationRequest pushNotificationRequest) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public int getQuantityUncheckNotification(Long user_id) {
-		// TODO Auto-generated method stub
-		int quantity = notificationRepository.getQuantityNotificationsByStatus(user_id, Constants.NOTIFICATION_STATUS_UNCHECK);
-		return quantity;
 	}
 
 }
