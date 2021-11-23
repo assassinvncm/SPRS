@@ -19,10 +19,9 @@ import com.api.entity.Group;
 import com.api.entity.User;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
-import com.api.repositories.custom.UserRepositoryCustom;
 
 @Component
-public class UserRepositoryImpl implements UserRepositoryCustom{
+public class UserRepositoryImpl{
 	public static final String SQL_Grant_Group = "CALL prc_grant_group";
 	@PersistenceContext
 	private EntityManager entityManager;
