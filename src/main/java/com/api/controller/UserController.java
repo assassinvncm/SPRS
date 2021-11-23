@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.GrantAccessDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
@@ -52,9 +53,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){
-
 		logger.info("Start get User");
-
 		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
 		logger.info("End get User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", useDto, null));
@@ -88,6 +87,38 @@ public class UserController {
 	public ResponseEntity<?> registerOownStore_v2(@Validated @RequestBody UserDto userDto) {
 		userService.registerStoreUser_v2(userDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/users/grantGroup", method = RequestMethod.POST)
+	public ResponseEntity<?> grantGroup(@Validated @RequestBody GrantAccessDto gtdo) {
+		logger.info("Start grant group");
+		userService.grantGroup(gtdo);
+		logger.info("End grant group");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Grant group suscess!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/users/unGrantGroup", method = RequestMethod.POST)
+	public ResponseEntity<?> unGrantGroup(@Validated @RequestBody GrantAccessDto gtdo) {
+		logger.info("Start ungrant group");
+		userService.unGrantGroup(gtdo);
+		logger.info("End ungrant group");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Ungrant group suscess!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/users/grantPermission", method = RequestMethod.POST)
+	public ResponseEntity<?> grantPermission(@Validated @RequestBody GrantAccessDto gtdo) {
+		logger.info("Start grant permission");
+		userService.grantPermission(gtdo);
+		logger.info("End grant permission");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Grant permission suscess!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/users/unGrantPermission", method = RequestMethod.POST)
+	public ResponseEntity<?> unGrantPermission(@Validated @RequestBody GrantAccessDto gtdo) {
+		logger.info("Start ungrant permission");
+		userService.unGrantPermission(gtdo);
+		logger.info("End ungrant permission");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Ungrant permission suscess!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/user/update/infor", method = RequestMethod.PUT)

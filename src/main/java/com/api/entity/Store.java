@@ -44,7 +44,7 @@ public class Store extends BaseEntity implements Serializable{
 	private Time close_time;
 	
 	@Column(name = "status")
-	private boolean status;
+	private int status;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -125,14 +125,6 @@ public class Store extends BaseEntity implements Serializable{
 		this.close_time = close_time;
 	}
 
-	public boolean getStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
 	public User getUsers() {
 		return users;
 	}
@@ -147,6 +139,14 @@ public class Store extends BaseEntity implements Serializable{
 
 	public void setLocation(Address location) {
 		this.location = location;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	@Override
