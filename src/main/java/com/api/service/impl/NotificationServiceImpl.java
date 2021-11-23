@@ -248,7 +248,7 @@ public class NotificationServiceImpl implements NotificationService {
 		Sort sort = Sort.by("create_time").descending();
 		Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
 		List<Notification> lstNotification = notificationRepository.getNotifications(uId, pageable);
-
+		
 		return mapStructMapper.lstNotificationToNotificationDto(lstNotification);
 	}
 
@@ -272,6 +272,12 @@ public class NotificationServiceImpl implements NotificationService {
 		// TODO Auto-generated method stub
 		int quantity = notificationRepository.getQuantityNotificationsByStatus(user_id, Constants.NOTIFICATION_STATUS_UNCHECK);
 		return quantity;
+	}
+	
+	public void updateStatusCheckAll(Long user_id) {
+		// TODO Auto-generated method stub
+		
+		
 	}
 
 }

@@ -75,7 +75,7 @@ public class StoreServiceImpl implements StoreService{
 		try {
 			Address address = addressService.mapAddress(s.getAddress());
 			store.setLocation(address);
-			store.setStatus(true); 
+			store.setStatus(1); 
 			str = storeRepository.save(store);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,9 +90,26 @@ public class StoreServiceImpl implements StoreService{
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		BeanUtils.copyProperties(st, s);
+		st.setClose_time(s.getClose_time());
+		st.setDescription(s.getDescription());
+		st.setOpen_time(s.getOpen_time());
+		st.setStatus(s.getStatus());
+		st.setLocation(s.getLocation());
+		st.setStore_category(st.getStore_category());
 		
-		return storeRepository.save(s);
+		return storeRepository.save(st);
+	}
+
+	@Override
+	public Store openCloseStore(StoreDto s) {
+		// TODO Auto-generated method stub
+		Store st = storeRepository.getById(s.getId());
+		if(null == st) {
+			throw new AppException(402,"Store is not Found!");
+		}
+		st.setStatus(s.getStatus());
+		
+		return storeRepository.save(st);
 	}
 
 	@Override
@@ -131,8 +148,8 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public List<User> getStoreFilterByType() {
-		List<User> stm = storeRepository.filterStoreByStatusType(true, "yess");
+	public Object[] getStoreFilterByType() {
+		Object[] stm = storeRepository.filterStoreByStatusType(true, "yess");
 		return stm;
 	}
 }
