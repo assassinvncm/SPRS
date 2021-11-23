@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SearchResponse {
+public class SearchGoongMap {
 	
 	@JsonProperty("predictions")
 	private List<Prediction> predictions;
