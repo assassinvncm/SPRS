@@ -573,6 +573,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return null;
 		}
 		NotificationDto notiDto = new NotificationDto();
+		notiDto.setId(notification.getId());
 		notiDto.setMessage(notification.getMessage());
 		notiDto.setStatus(notification.getStatus());
 		notiDto.setType(notification.getType());

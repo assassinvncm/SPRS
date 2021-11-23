@@ -13,5 +13,5 @@ public interface MapService {
 	
 	public List<MapPointsDto> findAllPoints(double la, double lo, double radius);
 	
-	public void search(String searchStr);
+	void search(String text, double lati, double longti);
 }
