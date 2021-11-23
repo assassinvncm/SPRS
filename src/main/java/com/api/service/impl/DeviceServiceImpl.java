@@ -4,15 +4,18 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
 import com.api.entity.Address;
 import com.api.entity.Device;
+import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.DeviceRepository;
 import com.api.service.AddressService;
 import com.api.service.DeviceService;
+import com.api.service.NotificationService;
 import com.exception.AppException;
 
 @Service
@@ -27,9 +30,39 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	AddressService addressService;
 
+	@Autowired
+	NotificationService notificationService;
+
+	@Transactional
 	@Override
-	public DeviceDto insertDevice(DeviceDto deviceDto) {
+	public DeviceDto insertDevice(User user, DeviceDto deviceDto) {
 		// TODO Auto-generated method stub
+		// if(checkUserLoginAnotherDevice(deviceDto.getUser().getId(),deviceDto.getSerial()))
+		// {
+		// send notification
+		// notificationService.sendPnsToDevice(null);
+		// delete device in db by userId
+
+		// }
+		
+		deleteDeviceByUserId(user.getId());
+		deviceRepository.deleteBySerial(deviceDto.getSerial());
+		// insert db
+		Device device = mapStructMapper.deviceDtoToDevice(deviceDto);
+		Address address = addressService.mapAddress(deviceDto.getAddress());
+		device.setAddress(address);
+		device.setUser(user);
+		Device responseDevice = deviceRepository.save(device);
+		return mapStructMapper.deviceToDeviceDto(responseDevice);
+	}
+
+	@Transactional
+	@Override
+	public DeviceDto updateDevice(DeviceDto deviceDto) {
+		// TODO Auto-generated method stub
+
+		deviceRepository.findById(deviceDto.getId()).orElseThrow(() -> new AppException(403, "Device not exist"));
+
 		Device device = mapStructMapper.deviceDtoToDevice(deviceDto);
 		Address address = addressService.mapAddress(deviceDto.getAddress());
 		device.setAddress(address);
@@ -50,24 +83,30 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public DeviceDto updateDeviceToken(Long device_Id, String token) {
 		// TODO Auto-generated method stub
-		Device device = deviceRepository.findById(device_Id).orElseThrow(() -> new AppException());
+		Device device = deviceRepository.findById(device_Id)
+				.orElseThrow(() -> new AppException(403, "Device not exist"));
 		device.setToken(token);
 		Device responseDevice = deviceRepository.save(device);
 		return mapStructMapper.deviceToDeviceDto(responseDevice);
 	}
 
 	@Override
-	public String getDeviceTokenByUserId(Long uId) {
+	public Device getDeviceTokenByUserId(Long uId) {
 		// TODO Auto-generated method stub
-//		Device device = deviceRepository.findDeviceByUserId(uId)
-//				.orElseThrow(() -> new AppException(403, "User Id not exist"));
-		return null;
+		Device device = deviceRepository.findById(uId).orElseThrow(() -> new AppException(403, "User Id not exist"));
+		return device;
 	}
 
 	@Override
-	public List<String> getDeviceTokenByCity(Long city_id) {
+	public List<Device> getDeviceTokenByStoreId(Long sId) {
 		// TODO Auto-generated method stub
-		return null;
+		return deviceRepository.findTokenUserByStore(sId);
+	}
+
+	@Override
+	public List<Device> getDeviceTokenByCity(Long u_id, Long city_id) {
+		// TODO Auto-generated method stub
+		return deviceRepository.findTokenUserByCityId(u_id, city_id);
 	}
 
 	@Override
@@ -83,11 +122,31 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	@Override
+	public void deleteDeviceByUserId(Long uId) {
+		// TODO Auto-generated method stub
+		Device d = deviceRepository.findDeviceByUserId(uId);
+		if (d != null)
+			deviceRepository.delete(d);
+	}
+
+	@Override
 	public void deleteDeviceToken(Long device_id) {
 		// TODO Auto-generated method stub
 		Device device = deviceRepository.findById(device_id).orElseThrow(() -> new AppException());
 		device.setToken(null);
 		Device responseDevice = deviceRepository.save(device);
+	}
+
+	public boolean checkUserLoginAnotherDevice(Long uId, String serialNum) {
+		// TODO Auto-generated method stub
+		Device device = deviceRepository.findDeviceByUserId(uId);
+		if (device == null) {
+			return false;
+		}
+		if (device.getSerial().equalsIgnoreCase(serialNum)) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -68,9 +68,6 @@ public class Store extends BaseEntity implements Serializable{
 	@ManyToMany(mappedBy = "user_store")
 	@JsonIgnore
 	private List<User> store_user = new ArrayList<User>();
-	
-	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
-    private List<Notification> notifications;
 
 	public List<User> getStore_user() {
 		return store_user;

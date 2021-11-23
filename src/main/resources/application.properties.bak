@@ -28,3 +28,6 @@ amazonProperties.bucketName = image-bucket-sprs
 #config upload data
 spring.servlet.multipart.max-file-size = 10MB
 spring.servlet.multipart.max-request-size = 10MB
+
+#fire-base-admin
+app.firebase-config = fptu-cp-demo-firebase-adminsdk-tnmx4-31c71e7e14.json

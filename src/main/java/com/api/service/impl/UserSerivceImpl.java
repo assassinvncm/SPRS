@@ -117,6 +117,21 @@ public class UserSerivceImpl implements UserService {
 		//userDto.setRequest();
 		return userDto;
 	}
+	
+	@Override
+	public User getUserbyTokenAuth(String requestTokenHeader) {
+		// TODO Auto-generated method stub
+		logger.info("Start get User");
+
+		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
+		
+		User user = Optional.ofNullable(userRepository.findByUsername(username))
+				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
+		logger.info("End get User");
+		
+		return user;
+	}
+
 
 	@Transactional
 	@Override

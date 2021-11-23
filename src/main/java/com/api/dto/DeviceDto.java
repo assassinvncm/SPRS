@@ -1,21 +1,27 @@
 package com.api.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class DeviceDto {
 	
+	private long id;
 	
-	private Long id;
-	
+	@NotBlank
 	private String token;
+	
+	@NotBlank
+	private String serial;
 	
     private UserDto user;
 	
+    @NotBlank
     private AddressDto address;
 
-	public Long getId() {
-		return id;
+	public long getId() {
+		return this.id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -42,6 +48,16 @@ public class DeviceDto {
 	public void setAddress(AddressDto address) {
 		this.address = address;
 	}
+
+	public String getSerial() {
+		return serial;
+	}
+
+	public void setSerial(String serial) {
+		this.serial = serial;
+	}
+	
+	
     
     
 }

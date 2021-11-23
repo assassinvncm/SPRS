@@ -2,6 +2,7 @@ package com.api.mapper;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import com.api.dto.DeviceDto;
 import com.api.dto.DistrictDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
+import com.api.dto.NotificationDto;
 import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
@@ -30,6 +32,7 @@ import com.api.entity.District;
 import com.api.entity.Group;
 import com.api.entity.Image;
 import com.api.entity.Item;
+import com.api.entity.Notification;
 import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
@@ -40,6 +43,7 @@ import com.api.entity.StoreCategory;
 import com.api.entity.SubDistrict;
 import com.api.entity.User;
 import com.common.utils.DateUtils;
+import com.ultils.Constants;
 
 @Component
 public class MapStructMapperImpl implements MapStructMapper {
@@ -519,6 +523,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		DeviceDto deviceDto = new DeviceDto();
 		deviceDto.setId(device.getId());
 		deviceDto.setToken(device.getToken());
+		deviceDto.setSerial(device.getSerial());
 		deviceDto.setAddress(addressToAddressDto(device.getAddress()));
 		deviceDto.setUser(null);
 
@@ -535,6 +540,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		Device device = new Device();
 		device.setId(deviceDto.getId());
 		device.setToken(deviceDto.getToken());
+		device.setSerial(deviceDto.getSerial());
 		device.setUser(userDtoToUser(deviceDto.getUser()));
 		return device;
 	}
@@ -558,6 +564,43 @@ public class MapStructMapperImpl implements MapStructMapper {
 		rs.setLevel(sosDto.getLevel());
 		rs.setStatus(sosDto.getStatus());
 		return rs;
+	}
+
+	@Override
+	public NotificationDto notificationToNotificationDto(Notification notification) {
+		// TODO Auto-generated method stub
+		if(notification == null) {
+			return null;
+		}
+		NotificationDto notiDto = new NotificationDto();
+		notiDto.setId(notification.getId());
+		notiDto.setMessage(notification.getMessage());
+		notiDto.setStatus(notification.getStatus());
+		notiDto.setType(notification.getType());
+		
+		if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_STORE)) {
+			notiDto.setSender(storeToStoreDTO(notification.getStore()));
+		}else if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_RELIEFPOINT)) {
+			notiDto.setSender(reliefPointToreliefPointDto(notification.getReliefPoint()));
+		}else {
+			notiDto.setSender(userToUserDto(notification.getSender()));
+		}
+
+		return notiDto;
+	}
+
+	@Override
+	public List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton) {
+		// TODO Auto-generated method stub
+		if(lstNotificaiton == null) {
+			return null;
+		}
+		List<NotificationDto> lstNotiDto = new ArrayList<NotificationDto>();
+		lstNotiDto = lstNotificaiton.stream().map(noti ->{
+			return notificationToNotificationDto(noti);
+		}).collect(Collectors.toList());
+		
+		return lstNotiDto;
 	}
 
 }
