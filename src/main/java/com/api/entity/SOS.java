@@ -44,10 +44,10 @@ public class SOS extends BaseEntity implements Serializable{
 	private String description;
 	
 	@Column(name = "level")
-	private Integer level = 0;
+	private Integer level;
 	
 	@Column(name = "status")
-	private boolean status;
+	private Integer status;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id")
@@ -58,14 +58,14 @@ public class SOS extends BaseEntity implements Serializable{
 		super();
 	}
 
-	public SOS(String description, int level, boolean status, String gPS_Long, String gPS_Lati) {
+	public SOS(String description, int level, Integer status, String gPS_Long, String gPS_Lati) {
 		super();
 		this.description = description;
 		this.level = level;
 		this.status = status;
 	}
 
-	public SOS(boolean status, Address address) {
+	public SOS(Integer status, Address address) {
 		super();
 		this.status = status;
 		this.address = address;
@@ -87,20 +87,20 @@ public class SOS extends BaseEntity implements Serializable{
 		this.description = description;
 	}
 
-	public boolean isStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
 	public Integer getLevel() {
 		return level;
 	}
 
 	public void setLevel(Integer level) {
 		this.level = level;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 }

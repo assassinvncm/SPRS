@@ -26,7 +26,7 @@ public class StoreDto {
 	@NotEmpty
 	private String close_time;
 	
-	private String status;
+	private int status;
 	
 	private UserDto user_st;
 	
@@ -96,11 +96,11 @@ public class StoreDto {
 		this.close_time = close_time;
 	}
 
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

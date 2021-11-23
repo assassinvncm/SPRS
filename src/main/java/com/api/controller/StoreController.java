@@ -74,7 +74,7 @@ public class StoreController {
 			@RequestBody SearchFilterDto sft) {
 		logger.info("Start get Store filter");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		List<User> lstStore = storeService.getStoreFilterByType();
+		Object[] lstStore = storeService.getStoreFilterByType();
 		logger.info("End get Store filter");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store owner success", "", lstStore, null));
 	}
@@ -115,6 +115,15 @@ public class StoreController {
 		storeService.updateStore(s);
 		logger.info("End update Store");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+storeDto.getId()+" success", "", storeDto, null));
+	}
+
+	@RequestMapping(value = "/openCloseStore", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	public ResponseEntity<?> openCloseStore(@RequestBody StoreDto storeDto) {
+		logger.info("Start update Store");
+		storeService.openCloseStore(storeDto);
+		logger.info("End update Store");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Open Close Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
