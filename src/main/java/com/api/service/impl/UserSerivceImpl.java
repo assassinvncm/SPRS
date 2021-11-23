@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.api.controller.UserController;
+import com.api.dto.GrantAccessDto;
 import com.api.dto.GroupDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SubcribeDto;
@@ -38,6 +39,7 @@ import com.api.service.AddressService;
 import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.exception.AppException;
+import com.exception.ProcException;
 import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
 import com.ultils.Ultilities;
@@ -178,7 +180,7 @@ public class UserSerivceImpl implements UserService {
 		user.setIsActive(true);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setUser_sos(new SOS(false, address));
+		user.setUser_sos(new SOS(1, address));
 		userRepository.save(user);
 //		sosServ.createSOS(user);
 		logger.info("End save User");
@@ -478,5 +480,61 @@ public class UserSerivceImpl implements UserService {
 		SubcribeDto sdto = new SubcribeDto();
 		sdto.setStoreSubcribe(mapStructMapper.lstStoreToStoreDto(u.getUser_store()));
 		return sdto;
+	}
+
+	@Override
+	public GrantAccessDto grantGroup(GrantAccessDto gdto) {
+		String native_rs = userRepository.grantGroup(gdto.getSource_id(), gdto.getTarget_id());
+		ProcException pErr = new ProcException(native_rs);
+		String status = pErr.getStatus();
+		switch (status) {
+		case "FAIL":
+			throw new AppException(402,pErr.getErr_message());
+		default:
+			break;
+		}
+		return gdto;
+	}
+
+	@Override
+	public GrantAccessDto unGrantGroup(GrantAccessDto gdto) {
+		String native_rs = userRepository.ungrantGroup(gdto.getSource_id(), gdto.getTarget_id());
+		ProcException pErr = new ProcException(native_rs);
+		String status = pErr.getStatus();
+		switch (status) {
+		case "FAIL":
+			throw new AppException(402,pErr.getErr_message());
+		default:
+			break;
+		}
+		return gdto;
+	}
+
+	@Override
+	public GrantAccessDto grantPermission(GrantAccessDto gdto) {
+		String native_rs = userRepository.grantPermission(gdto.getSource_id(), gdto.getTarget_id());
+		ProcException pErr = new ProcException(native_rs);
+		String status = pErr.getStatus();
+		switch (status) {
+		case "FAIL":
+			throw new AppException(402,pErr.getErr_message());
+		default:
+			break;
+		}
+		return gdto;
+	}
+
+	@Override
+	public GrantAccessDto unGrantPermission(GrantAccessDto gdto) {
+		String native_rs = userRepository.ungrantPermission(gdto.getSource_id(), gdto.getTarget_id());
+		ProcException pErr = new ProcException(native_rs);
+		String status = pErr.getStatus();
+		switch (status) {
+		case "FAIL":
+			throw new AppException(402,pErr.getErr_message());
+		default:
+			break;
+		}
+		return gdto;
 	}
 }

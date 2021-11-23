@@ -64,6 +64,13 @@ public interface StoreService {
 	 * @param Store
 	 * @return
 	 */
+	Store openCloseStore(StoreDto s);
+	
+	/**
+	 * 
+	 * @param Store
+	 * @return
+	 */
 	Store updateStoreImg(Store s, String img_url);
 	
 	/**
@@ -82,5 +89,5 @@ public interface StoreService {
 	 * List<StoreFilterMapper>
 	 * @return
 	 */
-	List<User> getStoreFilterByType();
+	Object[] getStoreFilterByType();
 }

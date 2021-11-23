@@ -24,7 +24,7 @@ public class SOSDto implements Serializable{
 	private int level;
 
 	@JsonProperty("status")
-	private boolean status;
+	private int status;
 	
 	@JsonProperty("address")
 	@NotNull
@@ -62,11 +62,11 @@ public class SOSDto implements Serializable{
 		this.level = level;
 	}
 
-	public boolean isStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	

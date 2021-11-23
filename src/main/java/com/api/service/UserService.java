@@ -3,6 +3,7 @@ package com.api.service;
 import java.util.List;
 
 import com.api.dto.AddressDto;
+import com.api.dto.GrantAccessDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
@@ -129,4 +130,32 @@ public interface UserService {
 	 * @return SubcribeDto
 	 */
 	SubcribeDto getListSubcribe(Long id);
+	
+	/**
+	 * grant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto grantGroup(GrantAccessDto gdto);
+	
+	/**
+	 * ungrant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto unGrantGroup(GrantAccessDto gdto);
+	
+	/**
+	 * grant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto grantPermission(GrantAccessDto gdto);
+	
+	/**
+	 * grant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto unGrantPermission(GrantAccessDto gdto);
 }

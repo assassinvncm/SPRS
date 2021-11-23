@@ -36,7 +36,7 @@ public class SOSServiceImpl implements SOSService{
 		s.setDescription(sosDto.getDescription());
 		s.setAddress(mapStructMapper.addressDtoToAddress(sosDto.getAddress()));
 		s.setLevel(sosDto.getLevel());
-		s.setStatus(sosDto.isStatus());
+		s.setStatus(sosDto.getStatus());
 		u.setUser_sos(s);
 		userRepo.save(u);
 		return sosDto;

@@ -545,7 +545,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		rs.setDescription(sos.getDescription());
 		rs.setAddress(addressToAddressDto(sos.getAddress()));
 		rs.setLevel(sos.getLevel());
-		rs.setStatus(sos.isStatus());
+		rs.setStatus(sos.getStatus());
 		return rs;
 	}
 
@@ -556,7 +556,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		rs.setDescription(sosDto.getDescription());
 		rs.setAddress(addressDtoToAddress(sosDto.getAddress()));
 		rs.setLevel(sosDto.getLevel());
-		rs.setStatus(sosDto.isStatus());
+		rs.setStatus(sosDto.getStatus());
 		return rs;
 	}
 
