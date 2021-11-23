@@ -7,6 +7,7 @@ public class MapPointsDto {
 	private Long id;
 	private String type;
 	private Point point;
+	private String name; 
 	
 	public Long getId() {
 		return id;
@@ -26,6 +27,15 @@ public class MapPointsDto {
 	public void setPoint(Point point) {
 		this.point = point;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 	
 	
 }

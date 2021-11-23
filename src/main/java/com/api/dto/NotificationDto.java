@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 public class NotificationDto {
 
+	private Long id;
+	
 	private Object sender;
 
 	private String type;
@@ -13,8 +15,14 @@ public class NotificationDto {
 	private String status;
 
 	public Timestamp create_time;
-
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Object getSender() {
 		return sender;
