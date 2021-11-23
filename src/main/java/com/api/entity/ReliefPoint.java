@@ -68,7 +68,9 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@JsonIgnore
     private Address address;
 	
-
+	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+    private List<Notification> notifications;	
 
 	public String getName() {
 		return name;
@@ -172,6 +174,14 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 
 	public void setModified_date(Timestamp modified_date) {
 		this.modified_date = modified_date;
+	}
+
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
 	}
 	
 	

@@ -32,6 +32,13 @@ public interface UserService {
 	UserDto getUserbyToken(String requestTokenHeader);
 	
 	/**
+	 * 
+	 * @param requestTokenHeader
+	 * @return
+	 */
+	User getUserbyTokenAuth(String requestTokenHeader);
+	
+	/**
 	 * register user
 	 * @param userDto
 	 * @return user

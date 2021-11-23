@@ -6,6 +6,7 @@ import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
+import com.api.dto.NotificationDto;
 import com.api.dto.OrganizationDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
@@ -18,6 +19,7 @@ import com.api.entity.Address;
 import com.api.entity.Device;
 import com.api.entity.Group;
 import com.api.entity.Item;
+import com.api.entity.Notification;
 import com.api.entity.Organization;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
@@ -92,6 +94,10 @@ public interface MapStructMapper {
 	SOSDto SOSToSOSDto(SOS sos);
 	
 	SOS SOSDtoToSOS(SOSDto sosDto);
+	
+	NotificationDto notificationToNotificationDto(Notification notification);
+	
+	List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton);
 	
 	
 }
