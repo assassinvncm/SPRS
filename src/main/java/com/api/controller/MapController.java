@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.dto.MapPointsDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.SearchMapResponse;
 import com.api.dto.UserDto;
 import com.api.entity.ReliefPoint;
 import com.api.mapper.MapStructMapper;
@@ -75,9 +76,9 @@ public class MapController {
 
 	@RequestMapping(value = "/getPoints", method = RequestMethod.GET)
 	public ResponseEntity<?> getPoints(@RequestParam("long") double lo, @RequestParam("lat") double lat,
-			@RequestParam("radius") double radius) {
+			@RequestParam("radius") double radius, @RequestParam("filter") String typePoint) {
 
-		List<MapPointsDto> lstPoints = mapService.findAllPoints(lat, lo, radius);
+		List<MapPointsDto> lstPoints = mapService.findAllPoints(lat, lo, radius,typePoint);
 
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstPoints, null));
@@ -85,10 +86,10 @@ public class MapController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public ResponseEntity<?> search(@RequestParam("search") String searchStr, @RequestParam("lati") double lati,
-			@RequestParam("long") double longti) {
+			@RequestParam("long") double longti, @RequestParam("limit") int limit) {
 
-		mapService.search(searchStr, lati, longti);
+		List<SearchMapResponse> lstSearchMapRes =  mapService.search(searchStr, lati, longti, limit);
 
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", null, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstSearchMapRes, null));
 	}
 }

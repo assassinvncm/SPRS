@@ -24,11 +24,10 @@ import com.api.repositories.custom.UserRepositoryCustom;
 @Component
 public class UserRepositoryImpl implements UserRepositoryCustom{
 	public static final String SQL_Grant_Group = "CALL prc_grant_group";
+	
 	@PersistenceContext
 	private EntityManager entityManager;
-
-    @Autowired
-    private Environment env;
+	
 //	@Override
 //	public int grantGroup(long user_id, long group_id) {
 //		String dbName = env.getProperty("spring.jpa.properties.hibernate.default_schema");

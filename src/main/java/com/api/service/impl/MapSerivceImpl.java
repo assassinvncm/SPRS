@@ -1,7 +1,9 @@
 package com.api.service.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,12 +22,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.api.dto.MapPointsDto;
 import com.api.dto.Prediction;
-import com.api.dto.SearchResponse;
+import com.api.dto.SearchGoongMap;
+import com.api.dto.SearchMapResponse;
 import com.api.entity.Organization;
 import com.api.entity.ReliefPoint;
 import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.mapper.MapStructMapper;
+import com.api.repositories.MapRepository;
 import com.api.repositories.OrganizationRepository;
 import com.api.repositories.ReliefPointRepository;
 import com.api.repositories.SOSRepository;
@@ -228,15 +232,48 @@ public class MapSerivceImpl implements MapService {
 	@Value("${goong.map.api.key}")
 	private String api_key;
 
-	public void search(String text, double lati, double longti) {
+	@Autowired
+	MapRepository mapRepository;
+
+	@Override
+	public List<SearchMapResponse> search(String text, double lati, double longti, int numberOfRecord) {
+		List<SearchMapResponse> lstSearchMapRes = new ArrayList<SearchMapResponse>();
+
+		List<Object[]> lstRs = mapRepository.search(text, lati, longti, numberOfRecord);
+		for (Object[] obj : lstRs) {
+			SearchMapResponse smr = new SearchMapResponse();
+			BigInteger id = (BigInteger) obj[0];
+			smr.setPlace_id(id.toString());
+			smr.setName((String) obj[1]);
+			HashMap<String, String> location = new HashMap<String, String>();
+			location.put("latitu", (String) obj[2]);
+			location.put("longtitude", (String) obj[3]);
+			smr.setLocation(location);
+			smr.setDescription((String) obj[4]);
+			smr.setType((String) obj[5]);
+			lstSearchMapRes.add(smr);
+		}
+		//check if number of record is lack to call api goong map
+		if (lstRs.size() < numberOfRecord) {
+			int record = numberOfRecord - lstRs.size();
+			SearchGoongMap searchGoongMap = searchApiGoongMap(text, lati, longti, record);
+			List<Prediction> lstPredictions = searchGoongMap.getPredictions();
+			lstPredictions.forEach((pre) -> {
+				SearchMapResponse smr = new SearchMapResponse();
+				smr.setPlace_id(pre.getPlace_id());
+				smr.setDescription(pre.getDescription());
+				lstSearchMapRes.add(smr);	
+			});
+		}
 		
-		SearchResponse searchResponse = searchApiGoongMap(text, lati, longti);
+		return lstSearchMapRes;
+
 	}
 
-	public SearchResponse searchApiGoongMap(String searchText, double lati, double longti) {
+	public SearchGoongMap searchApiGoongMap(String searchText, double lati, double longti, int limit) {
 
 		String url = "https://rsapi.goong.io/Place/AutoComplete?api_key=" + api_key + "&location=" + lati + "," + longti
-				+ "&input=" + searchText;
+				+ "&input=" + searchText + "&limit=" + limit;
 
 		// HttpHeaders
 		HttpHeaders headers = new HttpHeaders();
@@ -246,24 +283,43 @@ public class MapSerivceImpl implements MapService {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		// HttpEntity<String>: To get result as String.
-		HttpEntity<SearchResponse> entity = new HttpEntity<SearchResponse>(headers);
+		HttpEntity<SearchGoongMap> entity = new HttpEntity<SearchGoongMap>(headers);
 
 		// RestTemplate
 		RestTemplate restTemplate = new RestTemplate();
 
 		// Gửi yêu cầu với phương thức GET, và các thông tin Headers.
-		ResponseEntity<SearchResponse> response = restTemplate.exchange(url, HttpMethod.GET, entity, SearchResponse.class);
-	
+		ResponseEntity<SearchGoongMap> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+				SearchGoongMap.class);
+
 		HttpStatus statusCode = response.getStatusCode();
-		
-		SearchResponse searchResponse = null;
+
+		SearchGoongMap searchGoongMap = null;
 		// Status Code: 200
 		if (statusCode == HttpStatus.OK) {
 			// Response Body Data
-			searchResponse = response.getBody();
+			searchGoongMap = response.getBody();
 		}
-		return searchResponse;
+		return searchGoongMap;
 
+	}
+
+	@Override
+	public List<MapPointsDto> findAllPoints(double la, double lo, double radius, String typePoint) {
+		// TODO Auto-generated method stub
+		List<MapPointsDto> lstMapPoints = new ArrayList<MapPointsDto>();
+		List<Object[]> mapPoints = mapRepository.getPoints(la, lo, radius, typePoint);
+		for (Object[] obj : mapPoints) {
+			MapPointsDto mp = new MapPointsDto();
+			BigInteger id = (BigInteger)obj[0];
+			mp.setId(id.longValue());
+			mp.setName((String)obj[1]);
+			mp.setPoint(new Point(Double.valueOf(obj[2].toString()),Double.valueOf(obj[3].toString())));
+			mp.setType((String)obj[4]);
+			lstMapPoints.add(mp);
+		}
+		
+		return lstMapPoints;
 	}
 
 }

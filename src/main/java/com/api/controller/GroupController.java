@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.dto.SPRSResponse;
 import com.api.entity.Group;
 import com.api.entity.Permission;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.PermissionRepository;
 import com.exception.AppException;
@@ -38,16 +39,19 @@ public class GroupController {
 
 	@Autowired
 	PermissionRepository perRepo;
+	
+	@Autowired
+	MapStructMapper mapper;
 
-	@RequestMapping(value = "/group", method = RequestMethod.GET)
-	public ResponseEntity<?> listAllContact() {
+	@RequestMapping(value = "/groups", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllGroup() {
 		logger.info("Start get all Group");
 		List<Group> listGroup = groupServ.findAll();
 		if (listGroup.isEmpty()) {
 			throw new AppException(404, "Group is not existed!");
 		}
 		logger.info("End get all Group");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, listGroup));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, mapper.lstGroupToGroupDto(listGroup)));
 	}
 	
 	@RequestMapping(value = "/group/{typeAccess}", method = RequestMethod.GET)
