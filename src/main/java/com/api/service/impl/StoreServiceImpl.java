@@ -18,7 +18,7 @@ import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
-import com.api.mapper.proc_mapper.StoreFilterMapper;
+import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
 import com.api.service.StoreService;
@@ -37,6 +37,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
 	ModelMapper modelMapper;
+	
+	@Autowired 
+	ProcedureMapper mapper;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -148,8 +151,9 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public Object[] getStoreFilterByType() {
-		Object[] stm = storeRepository.filterStoreByStatusType(true, "yess");
-		return stm;
+	public List<StoreDto> getStoreFilterByType(long user_id, int status, String type) {
+		//Object[] stm = storeRepository.filterStoreByStatusType(1, "yess");
+		List<Object[]> lsRs = storeRepository.getStoreByStatusOrType(user_id, status, type,1,2);
+		return mapStructMapper.lstStoreToStoreDto(mapper.getStoreByStatusOrType_Mapper(lsRs));
 	}
 }

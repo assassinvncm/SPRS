@@ -7,7 +7,6 @@ import com.api.dto.StoreDto;
 import com.api.entity.Address;
 import com.api.entity.Store;
 import com.api.entity.User;
-import com.api.mapper.proc_mapper.StoreFilterMapper;
 
 public interface StoreService {
 	/**
@@ -89,5 +88,5 @@ public interface StoreService {
 	 * List<StoreFilterMapper>
 	 * @return
 	 */
-	Object[] getStoreFilterByType();
+	List<StoreDto> getStoreFilterByType(long user_id, int status, String type);
 }

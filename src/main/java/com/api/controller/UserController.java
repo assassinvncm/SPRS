@@ -22,6 +22,7 @@ import com.api.dto.SPRSResponse;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.User;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
 import com.api.service.SOSService;
 import com.api.service.UserService;
@@ -43,13 +44,15 @@ public class UserController {
 	GroupRepository groupServ;
 	
 	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	MapStructMapper mapper;
 	
-//	@RequestMapping(value = "/users", method = RequestMethod.GET)
-//	public ResponseEntity<?> getAllUser() {
-//		List<User> lst = userService.getAllUser();
-//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, lst));
-//	}
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllUser() {
+		logger.info("Start get All User");
+		List<User> lst = userService.getAllUser();
+		logger.info("End get All User");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All User success!", "", null, mapper.lstUserToUserDto(lst)));
+	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){
