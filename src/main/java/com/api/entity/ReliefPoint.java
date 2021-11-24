@@ -68,7 +68,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@JsonIgnore
     private Address address;
 	
-	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
 	@JsonIgnore
     private List<Notification> notifications;	
 

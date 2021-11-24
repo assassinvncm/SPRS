@@ -34,6 +34,12 @@ public interface NotificationService {
 	 * @return
 	 */
 	int getQuantityUncheckNotification(Long user_id);
+	
+	/**
+	 * 
+	 * @param user_id
+	 */
+	void updateStatusCheckAll(Long user_id);
 
 	/**
 	 * get list notification by user id
