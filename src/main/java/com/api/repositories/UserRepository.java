@@ -14,9 +14,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.api.entity.User;
+import com.api.repositories.custom.UserRepositoryCustom;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
 	User findByUsername(String username);
 
 	Optional<User> findByPhone(String phone);

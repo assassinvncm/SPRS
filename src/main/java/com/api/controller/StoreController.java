@@ -27,7 +27,6 @@ import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
-import com.api.mapper.proc_mapper.StoreFilterMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AmazonClient;
 import com.api.service.StoreService;
@@ -74,7 +73,7 @@ public class StoreController {
 			@RequestBody SearchFilterDto sft) {
 		logger.info("Start get Store filter");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		Object[] lstStore = storeService.getStoreFilterByType();
+		List<StoreDto> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft.getStatus_store(),null, sft.getPageSize(), sft.getPageIndex());
 		logger.info("End get Store filter");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store owner success", "", lstStore, null));
 	}

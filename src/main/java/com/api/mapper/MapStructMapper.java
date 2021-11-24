@@ -37,7 +37,11 @@ public interface MapStructMapper {
 	
 	GroupDto groupToGroupDto(Group group);
 	
+	UserDto userToUserDto_forGet(User user);
+	
 	List<GroupDto> lstGroupToGroupDto(List<Group> lstGroup);
+	
+	List<UserDto> lstUserToUserDto(List<User> lstUser);
 	
 	OrganizationDto organizationToOrganizationDto(Organization organization);
 	

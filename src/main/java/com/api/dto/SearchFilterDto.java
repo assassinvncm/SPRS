@@ -15,6 +15,9 @@ public class SearchFilterDto {
 	@JsonProperty("status")
 	private Boolean status;
 	
+	@JsonProperty("status_store")
+	private int status_store;
+	
 	@JsonProperty("sort")
 	private Boolean sort;
 	
@@ -40,6 +43,14 @@ public class SearchFilterDto {
 		this.sort = sort;
 		this.pageSize = pageSize;
 		this.pageIndex = pageIndex;
+	}
+
+	public int getStatus_store() {
+		return status_store;
+	}
+
+	public void setStatus_store(int status_store) {
+		this.status_store = status_store;
 	}
 
 	public List<Long> getTypes() {
