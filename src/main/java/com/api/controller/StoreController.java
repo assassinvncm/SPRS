@@ -73,7 +73,7 @@ public class StoreController {
 			@RequestBody SearchFilterDto sft) {
 		logger.info("Start get Store filter");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		List<StoreDto> lstStore = storeService.getStoreFilterByType(userDto.getId(), 1,null);
+		List<StoreDto> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft.getStatus_store(),null, sft.getPageSize(), sft.getPageIndex());
 		logger.info("End get Store filter");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store owner success", "", lstStore, null));
 	}

@@ -88,5 +88,5 @@ public interface StoreService {
 	 * List<StoreFilterMapper>
 	 * @return
 	 */
-	List<StoreDto> getStoreFilterByType(long user_id, int status, String type);
+	List<StoreDto> getStoreFilterByType(long user_id, int status, String type, int page_size, int page_index);
 }

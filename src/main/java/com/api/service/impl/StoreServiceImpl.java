@@ -151,9 +151,9 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public List<StoreDto> getStoreFilterByType(long user_id, int status, String type) {
+	public List<StoreDto> getStoreFilterByType(long user_id, int status, String type, int page_size, int page_index) {
 		//Object[] stm = storeRepository.filterStoreByStatusType(1, "yess");
-		List<Object[]> lsRs = storeRepository.getStoreByStatusOrType(user_id, status, type,1,2);
+		List<Object[]> lsRs = storeRepository.getStoreByStatusOrType(user_id, status, type,page_index,page_size);
 		return mapStructMapper.lstStoreToStoreDto(mapper.getStoreByStatusOrType_Mapper(lsRs));
 	}
 }
