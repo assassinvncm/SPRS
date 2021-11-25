@@ -106,5 +106,11 @@ public class GroupServiceImpl implements GroupService{
 		List<Group> lstRs = groupRepo.getAllGroupByLevel(level);
 		return lstRs;
 	}
+
+	@Override
+	public List<Group> getAll() {
+		List<Group> lstRs = groupRepo.findAll();
+		return lstRs;
+	}
 	
 }

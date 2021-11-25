@@ -7,6 +7,7 @@ import com.api.entity.Permission;
 
 public interface PermissionService {
 	List<Permission> getAll();
+	List<Permission> getOwnPermission(Long user_id);
 	Permission getById(Long id);
 	Permission updatePermission(Permission p, Long id);
 	Permission createPermission(Permission p);

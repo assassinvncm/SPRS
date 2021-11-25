@@ -14,7 +14,8 @@ public class Constants {
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user",
 			"/sprs/api/users_v2/organizationalUser", "/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp",
-			"/sprs/api/validateOtp", "/sprs/api/store-manage/uploadImg" };// ,
+			"/sprs/api/validateOtp", "/sprs/api/store-manage/uploadImg", "/sprs/api/groups-register-mobile", "/sprs/api/groups-register-web"
+			,"/sprs/api/groups-all"};// ,
 	public static final String RESET_PASSWORD_MESSAGE = "Mật khẩu mới của bạn là "; // "/sprs/api/generateOtp",
 	// "/sprs/api/validateOtp"
 	// constants config otp

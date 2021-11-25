@@ -109,5 +109,5 @@ public interface MapStructMapper {
 	
 	List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton);
 	
-	
+	List<PermissionDto> lstPermissionToLstGrantAccess(List<Permission> per);
 }

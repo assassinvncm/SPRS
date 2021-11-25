@@ -17,6 +17,7 @@ import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
 import com.api.dto.NotificationDto;
 import com.api.dto.OrganizationDto;
+import com.api.dto.PermissionChildrenDto;
 import com.api.dto.PermissionDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
@@ -658,5 +659,86 @@ public class MapStructMapperImpl implements MapStructMapper {
 
 		return lstPermissionDto;
 	}
+	
+	
 
+	@Override
+	public List<PermissionDto> lstPermissionToLstGrantAccess(List<Permission> per) {
+		int lenght = getLenghtTree(per);
+		List<PermissionDto> lstRs = new ArrayList<PermissionDto>();
+		List<Permission> lstRoot = new ArrayList<Permission>();
+		List<Permission> lstLeaf = new ArrayList<Permission>();
+		for (Permission permission : per) {
+			if(permission.getNode_index() == 1) {
+				lstRoot.add(permission);
+				lstRs.add(permisisonToPermisionDto(permission));
+			}
+		}
+		for (Permission permission : per) {
+			if(permission.getNode_index() == 2) {
+				lstLeaf.add(permission);
+			}
+		}
+		for(int i = 0; i<lstRoot.size();i++) {
+			for (Permission permission2 : lstLeaf) {
+				if(lstRoot.get(i).getNode_to() == permission2.getNode_from()) {
+					lstRs.get(i).getChildren().add(new PermissionChildrenDto(permission2.getName(),permission2.getTo_page(),permission2.getIcon_name()));
+				}
+			}
+		}
+//		for (Permission permission : lstRoot) {
+//		}
+//		for(int i = lenght; i> 0;i--) {
+//			List<Permission> lstRoot = new ArrayList<Permission>();
+//			for (Permission permission : per) {
+//				if(permission.getNode_from() == i) {
+//					lstRoot.add(permission);
+//				}
+//			}
+//			lstRs = lstRoot;
+//			for (Permission permission : lstRoot) {
+//				List<Permission> lstLeaf = new ArrayList<Permission>();
+//				for (Permission permission2 : per) {
+//					if(permission.getNode_to() == 0) {
+//						if(permission.getNode_to() == permission2.getNode_from()) {
+//							lstLeaf.add(permission2);
+//							permission.setChildren(lstLeaf);
+//						}
+//					}
+//				}
+//			}
+//			if(i == lenght) {
+//				lstRs = lstRoot;
+//			}
+//		}
+		return lstRs;
+	}
+	
+	private int getLenghtTree(List<Permission> per) {
+		int lenght = 0;
+		for (Permission permission : per) {
+			if(permission.getNode_index() > lenght) {
+				lenght = permission.getNode_index();
+			}
+		}
+		return lenght;
+	}
+	
+//	private List<PermissionDto> addChildrenToParent(Permission p, List<Permission> pl){
+//		List<PermissionDto> lstPerDto = new ArrayList<PermissionDto>();
+//		for (Permission permission : pl) {
+//			if(p.getNode_from().equals(permission.getNode_to())) {
+//				
+//			}
+//		}
+//		return lstPerDto;
+//	}
+//	
+//	private PermissionDto perToPerDto(Permission p) {
+//		PermissionDto pRs = new PermissionDto();
+//		pRs.setName(p.getName());
+//		pRs.setIcon(p.getIcon_name());
+//		pRs.setTo(p.getTo_page());
+//		return pRs;
+//	}
 }

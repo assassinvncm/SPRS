@@ -102,7 +102,7 @@ public class StoreController {
 		logger.info("Start get Store by id: "+id);
 		Store st = storeService.getStoreById(id);
 		StoreDto rs = structMapper.storeToStoreDTO(st);
-		logger.info("Start get Store by id");
+		logger.info("End get Store by id: "+id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
 
