@@ -70,6 +70,7 @@ public interface DeviceService {
 	List<String> getDeviceTokenByDistrict(Long district_id);
 
 	List<String> getDeviceTokenBySubDistrict(Long subDistrict_id);
+	
 
 	void deleteDeviceToken(Long device_id);
 

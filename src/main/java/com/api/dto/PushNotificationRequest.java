@@ -1,6 +1,8 @@
 package com.api.dto;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.j2objc.annotations.Property;
@@ -11,6 +13,7 @@ public class PushNotificationRequest {
 	private List<String> lstToken;
 	private String title;
 	private String body;
+	private Map<String, String> data;
 	
 	public List<String> getTarget() {
 		return lstToken;
@@ -30,6 +33,20 @@ public class PushNotificationRequest {
 	public void setBody(String body) {
 		this.body = body;
 	}
+	public List<String> getLstToken() {
+		return lstToken;
+	}
+	public void setLstToken(List<String> lstToken) {
+		this.lstToken = lstToken;
+	}
+	public Map<String, String> getData() {
+		return data;
+	}
+	public void setData(Map<String, String> data) {
+		this.data = data;
+	}
+	
+	
 	
 	
 }

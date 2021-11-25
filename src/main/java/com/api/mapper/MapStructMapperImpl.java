@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Component;
 
 import com.api.dto.AddressDto;
@@ -606,6 +608,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		notiDto.setMessage(notification.getMessage());
 		notiDto.setStatus(notification.getStatus());
 		notiDto.setType(notification.getType());
+		notiDto.setCreate_time(notification.getCreate_time());
 		
 		if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_STORE)) {
 			notiDto.setSender(storeToStoreDTO(notification.getStore()));
@@ -619,14 +622,15 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
-	public List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton) {
+	public List<NotificationDto> lstNotificationToNotificationDto(Stream<Notification> lstNotificaiton) {
 		// TODO Auto-generated method stub
 		if(lstNotificaiton == null) {
 			return null;
 		}
 		List<NotificationDto> lstNotiDto = new ArrayList<NotificationDto>();
-		lstNotiDto = lstNotificaiton.stream().map(noti ->{
-			return notificationToNotificationDto(noti);
+		
+		lstNotiDto = lstNotificaiton.map((noti)->{
+			return  notificationToNotificationDto(noti);
 		}).collect(Collectors.toList());
 		
 		return lstNotiDto;

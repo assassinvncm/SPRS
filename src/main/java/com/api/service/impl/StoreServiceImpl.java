@@ -21,6 +21,7 @@ import com.api.mapper.MapStructMapper;
 import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
+import com.api.service.NotificationService;
 import com.api.service.StoreService;
 import com.exception.AppException;
 
@@ -40,6 +41,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired 
 	ProcedureMapper mapper;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -111,7 +115,7 @@ public class StoreServiceImpl implements StoreService{
 			throw new AppException(402,"Store is not Found!");
 		}
 		st.setStatus(s.getStatus());
-		
+		notificationService.sendPnsToDeviceSubcribeStore(st, "Cửa hàng đã mở cửa");
 		return storeRepository.save(st);
 	}
 

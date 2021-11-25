@@ -1,6 +1,9 @@
 package com.api.mapper;
 
 import java.util.List;
+import java.util.stream.Stream;
+
+import org.springframework.data.util.Streamable;
 
 import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
@@ -101,7 +104,7 @@ public interface MapStructMapper {
 	
 	NotificationDto notificationToNotificationDto(Notification notification);
 	
-	List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton);
+	List<NotificationDto> lstNotificationToNotificationDto(Stream<Notification> lstNotificaiton);
 	
 	
 }
