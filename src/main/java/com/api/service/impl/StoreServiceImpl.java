@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.dto.ReliefPointDto;
+import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.entity.Address;
 import com.api.entity.Image;
@@ -22,6 +23,7 @@ import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
 import com.api.service.StoreService;
+import com.common.utils.DateUtils;
 import com.exception.AppException;
 
 @Service
@@ -87,20 +89,51 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public Store updateStore(Store s) {
+	public Store updateStore(StoreDto s) {
 		// TODO Auto-generated method stub
+//		Store st = storeRepository.getById(s.getId());
+//		if(null == st) {
+//			throw new AppException(402,"Store is not Found!");
+//		}
+//		st.setClose_time(s.getClose_time());
+//		st.setDescription(s.getDescription());
+//		st.setOpen_time(s.getOpen_time());
+//		st.setStatus(s.getStatus());
+//		st.setLocation(s.getLocation());
+//		st.setStore_category(st.getStore_category());
+//		
+//		return storeRepository.save(st);
 		Store st = storeRepository.getById(s.getId());
-		if(null == st) {
-			throw new AppException(402,"Store is not Found!");
+		if (null == st) {
+			throw new AppException(402, "Store is not Found!");
 		}
-		st.setClose_time(s.getClose_time());
-		st.setDescription(s.getDescription());
-		st.setOpen_time(s.getOpen_time());
-		st.setStatus(s.getStatus());
-		st.setLocation(s.getLocation());
-		st.setStore_category(st.getStore_category());
+		if (s.getAddress().getId() == 0) {
+			throw new AppException(402, "Id of Address is not Found!");
+		}
+		s.getStoreDetail().forEach((sct) -> {
+			if(sct.getId() == 0) {
+				throw new AppException(402, "Id of Category is not Found!");
+			}
+		});
+
+		//BeanUtils.copyProperties(rp, reliefPoint);
+		Store storeTemp = mapStructMapper.storeDtoToStore(s);
+		List<StoreCategoryDto> lstStoreDetailDto = s.getStoreDetail();
+		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
+			StoreCategory storeDetail = new StoreCategory();
+			storeDetail.setId(storeDetailDto.getId());
+			storeDetail.setName(storeDetailDto.getName());
+			return storeDetail;
+		}).collect(Collectors.toList());
+		storeTemp.setStore_category(lstStoreDetail);
+		Address address = addressService.mapAddress(s.getAddress());
+		storeTemp.setLocation(address);
+		storeTemp.setClose_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
+		storeTemp.setDescription(s.getDescription());
+		storeTemp.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
+		storeTemp.setStatus(s.getStatus());
 		
-		return storeRepository.save(st);
+		return storeRepository.saveAndFlush(storeTemp);
 	}
 
 	@Override

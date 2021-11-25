@@ -17,6 +17,7 @@ import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
 import com.api.dto.NotificationDto;
 import com.api.dto.OrganizationDto;
+import com.api.dto.PermissionDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
@@ -34,6 +35,7 @@ import com.api.entity.Image;
 import com.api.entity.Item;
 import com.api.entity.Notification;
 import com.api.entity.Organization;
+import com.api.entity.Permission;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
@@ -398,8 +400,8 @@ public class MapStructMapperImpl implements MapStructMapper {
 		StoreDto storeDto = new StoreDto();
 		storeDto.setId(store.getId());
 		storeDto.setName(store.getName());
-		storeDto.setClose_time(store.getClose_time().toString());
-		storeDto.setOpen_time(store.getOpen_time().toString());
+		storeDto.setClose_time(store.getClose_time().toString().substring(0, 5));
+		storeDto.setOpen_time(store.getOpen_time().toString().substring(0, 5));
 		storeDto.setDescription(store.getDescription());
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
 		storeDto.setStoreDetail(lstStoreCateToStoreCateDto(store.getStore_category()));
@@ -630,6 +632,31 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}).collect(Collectors.toList());
 		
 		return lstNotiDto;
+	}
+
+	@Override
+	public PermissionDto permisisonToPermisionDto(Permission per) {
+		if (per == null) {
+			return null;
+		}
+
+		PermissionDto perDto = new PermissionDto();
+		perDto.setId(per.getId());
+		perDto.setName(per.getName());
+		return perDto;
+	}
+
+	@Override
+	public List<PermissionDto> lstPermissionToPermissionDto(List<Permission> lstPermission) {
+		if (lstPermission == null) {
+			return null;
+		}
+
+		List<PermissionDto> lstPermissionDto = lstPermission.stream().map(permission -> {
+			return permisisonToPermisionDto(permission);
+		}).collect(Collectors.toList());
+
+		return lstPermissionDto;
 	}
 
 }

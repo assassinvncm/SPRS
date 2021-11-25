@@ -253,7 +253,7 @@ public class MapSerivceImpl implements MapService {
 			smr.setType((String) obj[5]);
 			lstSearchMapRes.add(smr);
 		}
-		//check if number of record is lack to call api goong map
+		// check if number of record is lack to call api goong map
 		if (lstRs.size() < numberOfRecord) {
 			int record = numberOfRecord - lstRs.size();
 			SearchGoongMap searchGoongMap = searchApiGoongMap(text, lati, longti, record);
@@ -262,10 +262,10 @@ public class MapSerivceImpl implements MapService {
 				SearchMapResponse smr = new SearchMapResponse();
 				smr.setPlace_id(pre.getPlace_id());
 				smr.setDescription(pre.getDescription());
-				lstSearchMapRes.add(smr);	
+				lstSearchMapRes.add(smr);
 			});
 		}
-		
+
 		return lstSearchMapRes;
 
 	}
@@ -307,18 +307,23 @@ public class MapSerivceImpl implements MapService {
 	@Override
 	public List<MapPointsDto> findAllPoints(double la, double lo, double radius, String typePoint) {
 		// TODO Auto-generated method stub
+		if (typePoint == null || typePoint.isBlank()) {
+			typePoint = Constants.MAP_TYPE_RELIEFPOINT + "," + Constants.MAP_TYPE_SOS + "," + Constants.MAP_TYPE_STORE
+					+ "," + Constants.MAP_TYPE_ORGANIZATION;
+		}
+
 		List<MapPointsDto> lstMapPoints = new ArrayList<MapPointsDto>();
 		List<Object[]> mapPoints = mapRepository.getPoints(la, lo, radius, typePoint);
 		for (Object[] obj : mapPoints) {
 			MapPointsDto mp = new MapPointsDto();
-			BigInteger id = (BigInteger)obj[0];
+			BigInteger id = (BigInteger) obj[0];
 			mp.setId(id.longValue());
-			mp.setName((String)obj[1]);
-			mp.setPoint(new Point(Double.valueOf(obj[2].toString()),Double.valueOf(obj[3].toString())));
-			mp.setType((String)obj[4]);
+			mp.setName((String) obj[1]);
+			mp.setPoint(new Point(Double.valueOf(obj[2].toString()), Double.valueOf(obj[3].toString())));
+			mp.setType((String) obj[4]);
 			lstMapPoints.add(mp);
 		}
-		
+
 		return lstMapPoints;
 	}
 

@@ -3,6 +3,8 @@ package com.api.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.validation.constraints.Min;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,12 +87,13 @@ public class NotificationController {
 
 	@GetMapping("/get-all")
 	public ResponseEntity<?> getNotifications(@RequestHeader("Authorization") String requestTokenHeader,
-			@RequestParam("pageIndex") int pageIndex, @RequestParam("pageSize") int pageSize) {
+			@RequestParam("pageIndex") @Min(1) int pageIndex, @RequestParam("pageSize") @Min(1) int pageSize) {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 
 		List<NotificationDto> lstNotification = notificationService.getNotificationByUser(user.getId(), pageIndex,
 				pageSize);
+		notificationService.updateStatusCheckAll(user.getId());
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get list notification Successfull", "", lstNotification, null));
 	}

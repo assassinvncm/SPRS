@@ -32,51 +32,51 @@ public class MapController {
 	@Autowired
 	MapStructMapper mapStructMapper;
 
-	@RequestMapping(value = "/getReliefPoint", method = RequestMethod.GET)
-	public ResponseEntity<?> getReliefPoints(@RequestParam("long") double lo, @RequestParam("lat") double lat,
-			@RequestParam("radius") double radius) {
-
-		List<ReliefPoint> lstRp = (List<ReliefPoint>) mapService.findPointinRadius(lat, lo, radius, ReliefPoint.class);
-		List<ReliefPointDto> lstRpDto = mapStructMapper.lstReliefPointToreliefPointDto(lstRp);
-
-		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstRpDto, null));
-	}
-
-	@RequestMapping(value = "/getStore", method = RequestMethod.GET)
-	public ResponseEntity<?> getStores(@RequestParam("long") double lo, @RequestParam("lat") double lat,
-			@RequestParam("radius") double radius) {
-
-		// List<MapPointsDto> lstStore = mapService.getClass();
-
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", null, null));
-	}
-
-	@RequestMapping(value = "/getSos", method = RequestMethod.GET)
-	public ResponseEntity<?> getSOS(@RequestParam("long") double lo, @RequestParam("lat") double lat,
-			@RequestParam("radius") double radius) {
-
-		List<ReliefPoint> lstRp = (List<ReliefPoint>) mapService.findPointinRadius(lat, lo, radius, ReliefPoint.class);
-		List<ReliefPointDto> lstRpDto = mapStructMapper.lstReliefPointToreliefPointDto(lstRp);
-
-		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstRpDto, null));
-	}
-
-	@RequestMapping(value = "/getOrganizations", method = RequestMethod.GET)
-	public ResponseEntity<?> getOrganizations(@RequestParam("long") double lo, @RequestParam("lat") double lat,
-			@RequestParam("radius") double radius) {
-
-		List<ReliefPoint> lstRp = (List<ReliefPoint>) mapService.findPointinRadius(lat, lo, radius, ReliefPoint.class);
-		List<ReliefPointDto> lstRpDto = mapStructMapper.lstReliefPointToreliefPointDto(lstRp);
-
-		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstRpDto, null));
-	}
+//	@RequestMapping(value = "/getReliefPoint", method = RequestMethod.GET)
+//	public ResponseEntity<?> getReliefPoints(@RequestParam("long") double lo, @RequestParam("lat") double lat,
+//			@RequestParam("radius") double radius) {
+//
+//		List<ReliefPoint> lstRp = (List<ReliefPoint>) mapService.findPointinRadius(lat, lo, radius, ReliefPoint.class);
+//		List<ReliefPointDto> lstRpDto = mapStructMapper.lstReliefPointToreliefPointDto(lstRp);
+//
+//		return ResponseEntity
+//				.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstRpDto, null));
+//	}
+//
+//	@RequestMapping(value = "/getStore", method = RequestMethod.GET)
+//	public ResponseEntity<?> getStores(@RequestParam("long") double lo, @RequestParam("lat") double lat,
+//			@RequestParam("radius") double radius) {
+//
+//		// List<MapPointsDto> lstStore = mapService.getClass();
+//
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", null, null));
+//	}
+//
+//	@RequestMapping(value = "/getSos", method = RequestMethod.GET)
+//	public ResponseEntity<?> getSOS(@RequestParam("long") double lo, @RequestParam("lat") double lat,
+//			@RequestParam("radius") double radius) {
+//
+//		List<ReliefPoint> lstRp = (List<ReliefPoint>) mapService.findPointinRadius(lat, lo, radius, ReliefPoint.class);
+//		List<ReliefPointDto> lstRpDto = mapStructMapper.lstReliefPointToreliefPointDto(lstRp);
+//
+//		return ResponseEntity
+//				.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstRpDto, null));
+//	}
+//
+//	@RequestMapping(value = "/getOrganizations", method = RequestMethod.GET)
+//	public ResponseEntity<?> getOrganizations(@RequestParam("long") double lo, @RequestParam("lat") double lat,
+//			@RequestParam("radius") double radius) {
+//
+//		List<ReliefPoint> lstRp = (List<ReliefPoint>) mapService.findPointinRadius(lat, lo, radius, ReliefPoint.class);
+//		List<ReliefPointDto> lstRpDto = mapStructMapper.lstReliefPointToreliefPointDto(lstRp);
+//
+//		return ResponseEntity
+//				.ok(new SPRSResponse(Constants.SUCCESS, "Get List Relief Point success", "", lstRpDto, null));
+//	}
 
 	@RequestMapping(value = "/getPoints", method = RequestMethod.GET)
 	public ResponseEntity<?> getPoints(@RequestParam("long") double lo, @RequestParam("lat") double lat,
-			@RequestParam("radius") double radius, @RequestParam("filter") String typePoint) {
+			@RequestParam("radius") double radius, @RequestParam(value = "filter", required = false, defaultValue = "") String typePoint) {
 
 		List<MapPointsDto> lstPoints = mapService.findAllPoints(lat, lo, radius,typePoint);
 

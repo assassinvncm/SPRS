@@ -19,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.Group;
 import com.api.entity.Permission;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.PermissionRepository;
+import com.api.service.GroupService;
+import com.api.service.UserService;
 import com.exception.AppException;
 import com.ultils.Constants;
 
@@ -33,9 +36,12 @@ import com.ultils.Constants;
 public class GroupController {
 
 	public static Logger logger = LoggerFactory.getLogger(GroupController.class);
-
+	
 	@Autowired
-	GroupRepository groupServ;
+	UserService userServ;
+	
+	@Autowired
+	GroupService groupServ;
 
 	@Autowired
 	PermissionRepository perRepo;
@@ -43,100 +49,95 @@ public class GroupController {
 	@Autowired
 	MapStructMapper mapper;
 
-	@RequestMapping(value = "/groups", method = RequestMethod.GET)
-	public ResponseEntity<?> getAllGroup() {
-		logger.info("Start get all Group");
-		List<Group> listGroup = groupServ.findAll();
-		if (listGroup.isEmpty()) {
-			throw new AppException(404, "Group is not existed!");
-		}
-		logger.info("End get all Group");
+	@RequestMapping(value = "/groups-register", method = RequestMethod.GET)
+	public ResponseEntity<?> getGroupForRegister() {
+		logger.info("Start get all Group for register");
+		List<Group> listGroup = groupServ.getAllGroupForRegister(1);
+		logger.info("End get all Group for register");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group for register success", "", null, mapper.lstGroupToGroupDto(listGroup)));
+	}
+
+	@RequestMapping(value = "/groups-authoried/{user_id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllGroupAuthoried(@PathVariable("user_id") Long user_id) {
+		logger.info("Start get all Group authoried by user id: "+user_id);
+		List<Group> listGroup = groupServ.getAllGroupAuthoriedByUser(user_id);
+		logger.info("End get all Group authoried by user id: "+user_id);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, mapper.lstGroupToGroupDto(listGroup)));
+	}
+
+	@RequestMapping(value = "/groups-unauthoried/{user_id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllGroupUnAuthoried(@PathVariable("user_id") Long user_id) {
+		logger.info("Start get all Group unauthoried by user id: "+user_id);
+		List<Group> listGroup = groupServ.getAllGroupUnAuthoriedByUser(user_id);
+		logger.info("End get all Group unauthoried by user id: "+user_id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, mapper.lstGroupToGroupDto(listGroup)));
 	}
 	
-	@RequestMapping(value = "/group/{typeAccess}", method = RequestMethod.GET)
-	public ResponseEntity<?> listGroup(@PathVariable("typeAccess") String typeAccess) {
-		
-		if(typeAccess.equals("web")) {
-			
-		}else if(typeAccess.equals("mobile")) {
-			
-		}
-		
-		List<Group> listGroup = groupServ.findAll();
-		if (listGroup.isEmpty()) {
-			throw new AppException(404, "Group is not existed!");
-		}
-		logger.info("End get all Group");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, listGroup));
-	}
+//	@RequestMapping(value = "/group/{typeAccess}", method = RequestMethod.GET)
+//	public ResponseEntity<?> listGroup(@PathVariable("typeAccess") String typeAccess) {
+//		
+//		if(typeAccess.equals("web")) {
+//			
+//		}else if(typeAccess.equals("mobile")) {
+//			
+//		}
+//		
+//		List<Group> listGroup = groupServ.findAll();
+//		if (listGroup.isEmpty()) {
+//			throw new AppException(404, "Group is not existed!");
+//		}
+//		logger.info("End get all Group");
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, listGroup));
+//	}
 
 	@RequestMapping(value = "/group/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getGroup(@PathVariable(value = "id") Long id) {
 		logger.info("Start get Group by id: " + id);
-		Optional<Group> gr = groupServ.findById(id);
-		if (gr.isEmpty()) {;
-			throw new AppException(404, "Group is not existed!");
-		}
+		Group g = groupServ.getById(id);
 		logger.info("End get Group by id: " + id);
-		return new ResponseEntity<>(new SPRSResponse(Constants.SUCCESS, "", "", gr, null), HttpStatus.OK);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group by id: "+id+" success!", "", mapper.groupToGroupDto(g), null));
 	}
 
 	@RequestMapping(value = "/group", method = RequestMethod.POST)
 	public ResponseEntity<?> saveGroup(@Validated @RequestBody Group bean) {
 		logger.info("Start save Group");
-		Group gr = groupServ.findByName(bean.getName());
-		if (gr != null) {
-			throw new AppException(404, "Group is not existed!");
-		} else {
-			groupServ.save(bean);
-		}
+		Group g = groupServ.createGroup(bean);
 		logger.info("End save Group");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create group success!", "", null, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create group success!", "", mapper.groupToGroupDto(g), null));
 	}
 
 	@RequestMapping(value = "/group/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateGroup(@PathVariable(value = "id") Long id, @Validated @RequestBody Group bean) {
 		logger.info("Start update Group id: " + id);
-		Optional<Group> gr = groupServ.findById(id);
-		if (gr.isEmpty()) {
-			throw new AppException(404, "Group is not existed!");
-		}
-
-		BeanUtils.copyProperties(bean, gr);
-
+		Group g = groupServ.updateGroup(bean, id);
 		logger.info("End update Group id: " + id);
-		return ResponseEntity.ok(groupServ.save(gr.get()));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update group success!", "", mapper.groupToGroupDto(g), null));
 	}
 
 	@RequestMapping(value = "/group/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteGroup(@PathVariable(value = "id") Long id) {
 		logger.info("Start delete Group id: " + id);
-		Optional<Group> gr = groupServ.findById(id);
-		if (gr.isEmpty()) {
-			throw new AppException(404, "Group is not existed!");
-		}
-		groupServ.deleteById(gr.get().getId());
+		Group g = groupServ.deleteGroup(id);
 		logger.info("End delete Group id: " + id);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete group success!", "", mapper.groupToGroupDto(g), null));
 	}
 
-	public ResponseEntity<?> grantPermission(@Validated @RequestBody Group group) {
-		logger.info("Start grant permission!");
-		Optional<Group> g = groupServ.findById(group.getId());
-		if (g.isEmpty()) {
-			throw new AppException(404, "Group is not Found!");
-		}
-		Collection<Permission> lstTem = group.getPermissions();
-		for (Permission permis : lstTem) {
-			Optional<Permission> perTemp = perRepo.findById(permis.getId());
-			if (perTemp.isEmpty()) {
-				throw new AppException(404, "Permission not Found!");
-			}
-			groupServ.save(group);
-
-		}
-		logger.info("End grant permission!");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Grant permission success!", "", null, null));
-	}
+//	public ResponseEntity<?> grantPermission(@Validated @RequestBody Group group) {
+//		logger.info("Start grant permission!");
+//		Optional<Group> g = groupServ.findById(group.getId());
+//		if (g.isEmpty()) {
+//			throw new AppException(404, "Group is not Found!");
+//		}
+//		Collection<Permission> lstTem = group.getPermissions();
+//		for (Permission permis : lstTem) {
+//			Optional<Permission> perTemp = perRepo.findById(permis.getId());
+//			if (perTemp.isEmpty()) {
+//				throw new AppException(404, "Permission not Found!");
+//			}
+//			groupServ.save(group);
+//
+//		}
+//		logger.info("End grant permission!");
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Grant permission success!", "", null, null));
+//	}
 }

@@ -111,12 +111,31 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 			rf.setReliefPoint(reliefPoint);
 			return rf;
 		}).collect(Collectors.toList());
-		reliefPoint.setReliefInformations(lstRIfor);
+		
 		Address address = addressService.mapAddress(reliefPointDto.getAddress());
+		reliefPoint.setReliefInformations(lstRIfor);
 		reliefPoint.setAddress(address);
 		reliefPoint.setStatus(rp.getStatus());
 		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		
+//		List<ReliefInformation> lstReliefInfor = reliefPointDto.getReliefInformations().stream().map(reliefInforDto -> {
+//			ReliefInformation reliefInfor = new ReliefInformation();
+//			reliefInfor.setId(reliefInforDto.getId());
+//			reliefInfor.setItem(mapStructMapper.itemDtoToItem(reliefInforDto.getItem()));
+//			reliefInfor.setQuantity(reliefInforDto.getQuantity());
+//			reliefInfor.setReliefPoint(rp);
+//			return reliefInfor;
+//		}).collect(Collectors.toList());
+//		
+//		rp.setName(reliefPointDto.getName());
+//		rp.setDescription(reliefPointDto.getDescription());
+//		rp.setReliefInformations(lstReliefInfor);
+//		rp.setAddress(address);
+//		rp.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+//		rp.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+//		rp.setModified_date(DateUtils.getCurrentSqlDate());
 		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
 

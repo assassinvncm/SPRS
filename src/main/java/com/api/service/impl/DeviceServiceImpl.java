@@ -2,10 +2,13 @@ package com.api.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.api.controller.UserController;
 import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
 import com.api.entity.Address;
@@ -20,6 +23,8 @@ import com.exception.AppException;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
+	
+	public static Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
 
 	@Autowired
 	DeviceRepository deviceRepository;
@@ -46,13 +51,17 @@ public class DeviceServiceImpl implements DeviceService {
 		// }
 		
 		deleteDeviceByUserId(user.getId());
+		logger.info("Start Delete Device By Serial");
 		deviceRepository.deleteBySerial(deviceDto.getSerial());
+		logger.info("END Delete Device By Serial");
 		// insert db
 		Device device = mapStructMapper.deviceDtoToDevice(deviceDto);
 		Address address = addressService.mapAddress(deviceDto.getAddress());
 		device.setAddress(address);
 		device.setUser(user);
+		logger.info("Start Save Device");
 		Device responseDevice = deviceRepository.save(device);
+		logger.info("END Save Device");
 		return mapStructMapper.deviceToDeviceDto(responseDevice);
 	}
 
@@ -125,8 +134,12 @@ public class DeviceServiceImpl implements DeviceService {
 	public void deleteDeviceByUserId(Long uId) {
 		// TODO Auto-generated method stub
 		Device d = deviceRepository.findDeviceByUserId(uId);
-		if (d != null)
+		if (d != null) {
+			logger.info("Start Delete Device By User Id");
 			deviceRepository.delete(d);
+			logger.info("END Delete Device By User Id");
+		}
+			
 	}
 
 	@Override
