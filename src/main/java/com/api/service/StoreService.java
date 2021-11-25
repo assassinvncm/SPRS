@@ -56,7 +56,7 @@ public interface StoreService {
 	 * @param Store
 	 * @return
 	 */
-	Store updateStore(Store s);
+	Store updateStore(StoreDto s);
 	
 	/**
 	 * 

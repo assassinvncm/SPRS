@@ -110,8 +110,7 @@ public class StoreController {
 	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
 	public ResponseEntity<?> updateStore(@RequestBody StoreDto storeDto) {
 		logger.info("Start update Store");
-		Store s = structMapper.storeDtoToStore(storeDto);
-		storeService.updateStore(s);
+		storeService.updateStore(storeDto);
 		logger.info("End update Store");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}

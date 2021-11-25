@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
+import com.api.entity.Group;
 import com.api.entity.Permission;
 import com.api.entity.User;
+import com.api.mapper.MapStructMapper;
 import com.api.repositories.PermissionRepository;
+import com.api.service.PermissionService;
 import com.ultils.Constants;
 
 @RestController
@@ -27,58 +30,55 @@ public class PermissionController {
 	public static Logger logger = LoggerFactory.getLogger(PermissionController.class);
 	
 	@Autowired
-	PermissionRepository perRepo;
+	PermissionService perServ;
 	
-	@RequestMapping(value = "/permission", method = RequestMethod.GET)
+	@Autowired 
+	MapStructMapper mapper;
+	
+	@RequestMapping(value = "/permissions", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllPermission(){
 		logger.info("Start get all Permission");
-		List<Permission> lst = null;
-		try {
-			lst = perRepo.findAll();
-		} catch (Exception e) {
-			logger.info("Error get all User: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
-		}
+		List<Permission> lst = perServ.getAll();
 		logger.info("End get all Permission");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, lst));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All Permission success!", "", null, mapper.lstPermissionToPermissionDto(lst)));
 	}
 	
-	@RequestMapping(value = "/permission/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/permissions/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getPermissionById(@PathVariable(value = "id") Long id){
 		logger.info("Start Permission by id: "+id);
-		Optional<Permission> per = null;
-		try {
-			per = perRepo.findById(id);
-		} catch (Exception e) {
-			logger.info("Error get Permission by id: "+e.getMessage());
-			return ResponseEntity.ok(new SPRSResponse(Constants.SERVER_ERR,"",e.getMessage(), null, null));
-		}
-		logger.info("End get User by id: "+id);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", per.get(), null));
+		Permission p = perServ.getById(id);
+		logger.info("End get Permission by id: "+id);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Permission by id: "+id+" success!", "", mapper.permisisonToPermisionDto(p), null));
 	}
 	
-//	@RequestMapping(value = "/permission", method = RequestMethod.POST)
-//	public ResponseEntity<?> savePermission(@Validated @RequestBody Permission per){
-//		logger.info("Start save permission id: "+per.getId());
-//		Optional<Permission> perm = perRepo.findById(per.getId());
-//		if(perm.isEmpty()) {
-//			perRepo.save(per);
-//		}else {
-//			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!", null, null));
-//		}
-//		logger.info("End save permission id: "+per.getId());
-//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
-//	}
+	@RequestMapping(value = "/permissions", method = RequestMethod.POST)
+	public ResponseEntity<?> savePermission(@Validated @RequestBody Permission per){
+		logger.info("Start save permission id: "+per.getId());
+		Permission p = perServ.createPermission(per);
+		logger.info("End save permission id: "+per.getId());
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create Permission success!", "", mapper.permisisonToPermisionDto(p), null));
+	}
 	
-	@RequestMapping(value = "/permission/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/permissions/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updatePermission(@PathVariable(value = "id") Long id ,@Validated @RequestBody Permission per){
 		logger.info("Start update permission id: "+per.getId());
-		Optional<Permission> perm = perRepo.findById(per.getId());
-		if(perm.isEmpty()) {
-			return ResponseEntity.ok(new SPRSResponse(Constants.EXISTED,"","Permission is existed!", null, null));
-		}
-		perRepo.save(per);
+		Permission p = perServ.updatePermission(per, id);
 		logger.info("End update permission id: "+per.getId());
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Permission success!", "", mapper.permisisonToPermisionDto(p), null));
+	}
+	@RequestMapping(value = "/permissions-authoried/{group_id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllGroupAuthoried(@PathVariable("group_id") Long group_id) {
+		logger.info("Start get all Permission authoried by group id: "+group_id);
+		List<Permission> listGroup = perServ.getAllPermissionAuthoriedByGroup(group_id);
+		logger.info("End get all Permission authoried by group id: "+group_id);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get all permission authoried by group id: "+group_id+" success!", "", null, mapper.lstPermissionToPermissionDto(listGroup)));
+	}
+
+	@RequestMapping(value = "/permissions-unauthoried/{group_id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllGroupUnAuthoried(@PathVariable("group_id") Long group_id) {
+		logger.info("Start get all Permission unauthoried by group id: "+group_id);
+		List<Permission> listGroup = perServ.getAllPermissionUnAuthoriedByGroup(group_id);
+		logger.info("End get all Permission unauthoried by group id: "+group_id);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get all permission unauthoried by group id: "+group_id+" success!", "", null, mapper.lstPermissionToPermissionDto(listGroup)));
 	}
 }

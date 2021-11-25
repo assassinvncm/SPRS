@@ -33,6 +33,13 @@ public class Permission extends BaseEntity implements Serializable{
 	
 	@Column(name = "name")
 	private String name;
+	
+//	@Column(name = "name")
+//	private String name;
+//	
+//	@Column(name = "name")
+//	private String name;
+	
 
 	@ManyToMany(mappedBy = "group_permission")
 	@LazyCollection(LazyCollectionOption.FALSE)
