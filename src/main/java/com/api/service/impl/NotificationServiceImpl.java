@@ -2,22 +2,28 @@ package com.api.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.jobrunr.scheduling.JobScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.api.dto.AdminPushNotifcationRequest;
 import com.api.dto.NotificationDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.PushNotificationRequest;
 import com.api.dto.SubscriptionRequest;
 import com.api.entity.Device;
@@ -26,7 +32,10 @@ import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
+import com.api.mapper.proc_mapper.ProcedureMapper;
+import com.api.repositories.DeviceRepository;
 import com.api.repositories.NotificationRepository;
+import com.api.repositories.custom.DeviceRepositoryCustom;
 import com.api.service.DeviceService;
 import com.api.service.NotificationService;
 import com.common.utils.DateUtils;
@@ -55,10 +64,22 @@ public class NotificationServiceImpl implements NotificationService {
 	DeviceService deviceService;
 
 	@Autowired
+	DeviceRepository deviceRepository;
+
+	@Autowired
+	DeviceRepositoryCustom deviceRepositoryCustom;
+
+	@Autowired
 	NotificationRepository notificationRepository;
 
 	@Autowired
 	MapStructMapper mapStructMapper;
+
+	@Autowired
+	ProcedureMapper procedureMapper;
+
+	@Autowired
+	private JobScheduler jobScheduler;
 
 	@PostConstruct
 	private void initialize() {
@@ -78,7 +99,6 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
-	@Override
 	public void subscribeToTopic(SubscriptionRequest subscriptionRequest) {
 
 		try {
@@ -89,7 +109,6 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
-	@Override
 	public void unsubscribeFromTopic(SubscriptionRequest subscriptionRequest) {
 		try {
 			FirebaseMessaging.getInstance(firebaseApp).unsubscribeFromTopic(subscriptionRequest.getTokens(),
@@ -99,13 +118,11 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 	}
 
-	@Override
 	public String sendPnsToDevice(PushNotificationRequest pushNotificationRequest) {
 		Message message = Message.builder().setToken(pushNotificationRequest.getTarget().get(0))
 				.setNotification(new com.google.firebase.messaging.Notification(pushNotificationRequest.getTitle(),
 						pushNotificationRequest.getBody()))
-				.putData("content", pushNotificationRequest.getTitle())
-				.putData("body", pushNotificationRequest.getBody()).build();
+				.putAllData(pushNotificationRequest.getData()).build();
 
 		String response = null;
 		try {
@@ -117,7 +134,6 @@ public class NotificationServiceImpl implements NotificationService {
 		return response;
 	}
 
-	@Override
 	public BatchResponse sendPnsToDevices(PushNotificationRequest pushNotificationRequest) {
 		// List<TokenDevice> tokenDevices =
 		// tokenDeviceRepository.findByIdIn(pushNotificationRequestModel.getUids());
@@ -127,8 +143,7 @@ public class NotificationServiceImpl implements NotificationService {
 		MulticastMessage multicastMessage = MulticastMessage.builder().addAllTokens(pushNotificationRequest.getTarget())
 				.setNotification(new com.google.firebase.messaging.Notification(pushNotificationRequest.getTitle(),
 						pushNotificationRequest.getBody()))
-				.putData("content", pushNotificationRequest.getTitle())
-				.putData("body", pushNotificationRequest.getBody()).build();
+				.putAllData(pushNotificationRequest.getData()).build();
 
 		BatchResponse response = null;
 		try {
@@ -142,7 +157,6 @@ public class NotificationServiceImpl implements NotificationService {
 
 	}
 
-	@Override
 	public String sendPnsToTopic(PushNotificationRequest pushNotificationRequestModel) {
 //		Message message = Message.builder().setTopic(pushNotificationRequestModel.getTarget())
 //				.setNotification(com.google.firebase.messaging.Notification.builder()
@@ -172,7 +186,7 @@ public class NotificationServiceImpl implements NotificationService {
 //		sendPnsToDevices(pushNotificationRequest);
 	}
 
-	// @Override
+	@Override
 	public void sendPnsToDeviceSubcribeStore(Store store, String message) {
 		// TODO Auto-generated method stub
 
@@ -180,13 +194,6 @@ public class NotificationServiceImpl implements NotificationService {
 		List<Notification> notifications = new ArrayList<Notification>();
 		List<String> lstToken = new ArrayList<String>();
 
-		// set notification
-		Notification notification = new Notification();
-		notification.setMessage(message);
-		notification.setStore(store);
-		notification.setType(Constants.NOTIFICATION_TYPE_STORE);
-		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
-		notification.setCreate_time(DateUtils.getCurrentSqlDate());
 		List<User> user = new ArrayList<User>();
 		for (Device d : lstDevice) {
 			user.add(d.getUser());
@@ -196,14 +203,27 @@ public class NotificationServiceImpl implements NotificationService {
 		if (lstToken.isEmpty()) {
 			return;
 		}
-
+		// set notification
+		Notification notification = new Notification();
+		notification.setMessage(message);
+		notification.setStore(store);
+		notification.setType(Constants.NOTIFICATION_TYPE_STORE);
+		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
+		notification.setCreate_time(DateUtils.getCurrentSqlDate());
 		notification.setReceiver(user);
+		// save notification
+		Notification notificationRes = this.saveNotification(notification);
 
+		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
 		pushNotificationRequest.setTitle(store.getName());
 		pushNotificationRequest.setBody(message);
-		this.saveNotification(notification);
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("id", String.valueOf(notificationRes.getId()));
+		data.put("type", notificationRes.getType());
+		data.put("sender", String.valueOf(store.getId()));
+		pushNotificationRequest.setData(data);
 		this.sendPnsToDevices(pushNotificationRequest);
 	}
 
@@ -228,27 +248,47 @@ public class NotificationServiceImpl implements NotificationService {
 			return;
 		}
 		notification.setReceiver(user);
+		// save notification
+		Notification notificationRes = this.saveNotification(notification);
 
+		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
 		pushNotificationRequest.setTitle(rp.getName());
 		pushNotificationRequest.setBody(message);
-		this.saveNotification(notification);
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("id", String.valueOf(notificationRes.getId()));
+		data.put("type", notificationRes.getType());
+		data.put("sender", String.valueOf(rp.getId()));
+		pushNotificationRequest.setData(data);
+
+		// send push notification to device
 		this.sendPnsToDevices(pushNotificationRequest);
 	}
 
 	@Override
-	public void saveNotification(Notification notificaitons) {
-		notificationRepository.saveAndFlush(notificaitons);
+	public Notification saveNotification(Notification notificaitons) {
+		return notificationRepository.saveAndFlush(notificaitons);
 	}
 
 	@Override
-	public List<NotificationDto> getNotificationByUser(Long uId, int pageIndex, int pageSize) {
+	public PagingResponse<NotificationDto> getNotificationByUser(Long uId, int pageIndex, int pageSize) {
 		// TODO Auto-generated method stub
 		Sort sort = Sort.by("create_time").descending();
 		Pageable pageable = PageRequest.of(pageIndex - 1, pageSize, sort);
-		List<Notification> lstNotification = notificationRepository.getNotifications(uId, pageable);
-		return mapStructMapper.lstNotificationToNotificationDto(lstNotification);
+		Page<Notification> lstNotification = notificationRepository.getNotifications(uId, pageable);
+
+		PagingResponse<NotificationDto> pagingResonpne = new PagingResponse<NotificationDto>();
+		pagingResonpne.setObject(mapStructMapper.lstNotificationToNotificationDto(lstNotification.get()));
+		pagingResonpne.setTotalPage(lstNotification.getTotalPages());
+		return pagingResonpne;
+	}
+
+	@Override
+	public NotificationDto getNotificationById(Long notification_id) {
+		// TODO Auto-generated method stub
+		Notification notification = notificationRepository.getById(notification_id);
+		return mapStructMapper.notificationToNotificationDto(notification);
 	}
 
 	@Override
@@ -269,14 +309,77 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public int getQuantityUncheckNotification(Long user_id) {
 		// TODO Auto-generated method stub
-		int quantity = notificationRepository.getQuantityNotificationsByStatus(user_id, Constants.NOTIFICATION_STATUS_UNCHECK);
+		int quantity = notificationRepository.getQuantityNotificationsByStatus(user_id,
+				Constants.NOTIFICATION_STATUS_UNCHECK);
 		return quantity;
 	}
-	
+
 	@Override
 	public void updateStatusCheckAll(Long user_id) {
 		// TODO Auto-generated method stub
 		notificationRepository.updateUnCheckStatusByUserId(user_id, Constants.NOTIFICATION_STATUS_CHECK);
+	}
+
+	@Override
+	public void adminSendNotification(AdminPushNotifcationRequest admPsn, Long admin_id) {
+		// TODO Auto-generated method stub
+		List<Object[]> lstDeviceObj = deviceRepositoryCustom.getDeviceByAreasAndGroup(admPsn.getGroupUsers(),
+				admPsn.getSubdistrict_id(), admPsn.getDistrict_id(), admPsn.getCity_id());
+		List<Device> lstDevice = procedureMapper.getDevice(lstDeviceObj);
+
+		// set notification
+		Notification notification = new Notification();
+		notification.setMessage(admPsn.getMessage());
+		// notification.setSender(admPsn.get);
+		notification.setType(Constants.NOTIFICATION_TYPE_ADMIN);
+		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
+		notification.setCreate_time(DateUtils.getCurrentSqlDate());
+
+		List<String> lstToken = new ArrayList<String>();
+		List<User> users = new ArrayList<User>();
+		List<PushNotificationRequest> lstPushNotificationRequest = new ArrayList<PushNotificationRequest>();
+		for (int i = 0; i < lstDevice.size(); i++) {
+			users.add(lstDevice.get(i).getUser());
+
+			// add token to list
+			lstToken.add(lstDevice.get(i).getToken());
+
+			int count = i + 1;
+			// split batch to send notification 500/1request
+			if (count % 10 == 0 || i == lstDevice.size() - 1) {
+				PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+				pushNotificationRequest.setTarget(lstToken);
+				lstPushNotificationRequest.add(pushNotificationRequest);
+				lstToken = new ArrayList<String>();
+			}
+
+		}
+		if (lstDevice.isEmpty()) {
+			return;
+		}
+		notification.setReceiver(users);
+		// save notification
+		Notification notificationRes = this.saveNotification(notification);
+
+		// set data push notification
+		lstPushNotificationRequest = lstPushNotificationRequest.stream().map((noti) -> {
+			noti.setTitle(admPsn.getTitle());
+			noti.setBody(admPsn.getMessage());
+			Map<String, String> data = new HashMap<String, String>();
+			data.put("id", String.valueOf(notificationRes.getId()));
+			data.put("type", notificationRes.getType());
+			data.put("sender", String.valueOf(admin_id));
+			noti.setData(data);
+			return noti;
+		}).collect(Collectors.toList());
+		
+		jobScheduler.enqueue(lstPushNotificationRequest.stream(), (pushnotification) -> {
+			sendPnsToDevices(pushnotification);
+		});
+
+		// send push notification to device
+		// this.sendPnsToDevices(pushNotificationRequest);
+
 	}
 
 }

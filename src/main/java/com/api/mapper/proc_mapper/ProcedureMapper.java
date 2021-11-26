@@ -7,8 +7,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+
+import com.api.entity.Device;
+
 import com.api.dto.ReportResultDto;
+
 import com.api.entity.Store;
+import com.api.entity.User;
 
 @Component
 public class ProcedureMapper {
@@ -27,6 +32,20 @@ public class ProcedureMapper {
 		return rs;
 	}
 	
+
+	public List<Device> getDevice(List<Object[]> lstObj){
+		List<Device> rs = new ArrayList<Device>();
+		for(Object[] obj : lstObj) {
+			Device d = new Device();
+			d.setId(((BigInteger) obj[0]).longValue());
+			d.setToken((String)obj[1]);
+			//d.setAddress((String)obj[2]);
+			User u = new User();
+			u.setId(((BigInteger) obj[3]).longValue());
+			d.setUser(u);
+			d.setSerial((String)obj[4]);
+			rs.add(d);
+	}
 	public List<ReportResultDto> reportMapping(List<Object[]> lstObj) {
 		List<ReportResultDto> rs = new ArrayList<ReportResultDto>();
 		for(Object[] obj : lstObj) {
