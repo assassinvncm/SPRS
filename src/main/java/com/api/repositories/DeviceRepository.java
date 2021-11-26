@@ -27,11 +27,14 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 	@Query(value = "SELECT d.* FROM sprs_v1.sprs_store s \r\n"
 			+ "INNER JOIN sprs_v1.sprs_store_subcribe ss ON s.id = ss.store_id\r\n"
 			+ "INNER JOIN sprs_v1.sprs_users u ON ss.user_id = u.id\r\n"
-			+ "INNER JOIN sprs_v1.sprs_device d ON u.id = d.user_id\r\n" + "WHERE s.id = :cid", nativeQuery = true)
+			+ "LEFT JOIN sprs_v1.sprs_device d ON u.id = d.user_id\r\n" + "WHERE s.id = :cid", nativeQuery = true)
 	List<Device> findTokenUserByStore(@Param("cid") Long store_id);
 
 	@Query(value = "SELECT sd.* FROM sprs_device sd INNER JOIN sprs_users u ON sd.user_id = u.id WHERE u.id = :uid", nativeQuery = true)
 	Device findDeviceByUserId(@Param("uid") Long user_id);
+
+	@Query(value = "SELECT sd.* FROM sprs_device sd INNER JOIN sprs_users u ON sd.user_id = u.id WHERE u.id = :uid AND sd.serial = :serial ", nativeQuery = true)
+	Device findDeviceByUserIdAndSerial(@Param("uid") Long user_id, @Param("serial") String serial);
 
 	@Modifying
 	@Query("delete from Device d where d.serial = :serial")

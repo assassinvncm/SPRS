@@ -2,6 +2,7 @@ package com.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,17 +32,18 @@ public class DeviceController {
 	public ResponseEntity<?> createDevice(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody DeviceDto deviceDto) {
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
-		
-		deviceService.insertDevice(user,deviceDto);
+
+		deviceService.insertDevice(user, deviceDto);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteDevice(@RequestHeader("Authorization") String requestTokenHeader) {
+	public ResponseEntity<?> deleteDevice(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestParam("serialNumber") String serial) {
 
-		User user = userService.getUserbyTokenAuth(requestTokenHeader);	
-		deviceService.deleteDeviceByUserId(user.getId());
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		deviceService.deleteDeviceByUserIdAndSeri(user.getId(), serial);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
 	}
@@ -49,18 +51,18 @@ public class DeviceController {
 	@RequestMapping(value = "/update/token", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateDeviceToken(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestParam("token") String token) {
-		
+
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
-		deviceService.updateDeviceToken(user.getId(),token);
+		deviceService.updateDeviceToken(user.getId(), token);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
 	}
-	
-	@RequestMapping(value = "/update/address", method = RequestMethod.PUT)
-	public ResponseEntity<?> updateDeviceAddress(@RequestHeader("Authorization") String requestTokenHeader,
-			@RequestBody AddressDto addressDto) {
 
-		deviceService.updateDeviceAddress(addressDto);
+	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateDeviceAddress(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody AddressDto addressDto, @PathVariable("id") long device_id) {
+
+		deviceService.updateDeviceAddress(device_id, addressDto);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
 	}

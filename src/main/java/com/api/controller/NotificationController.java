@@ -130,7 +130,7 @@ public class NotificationController {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 
-		notificationService.adminSendNotification(admPns, user.getId());
+		notificationService.adminSendNotification(admPns, user);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
 	}

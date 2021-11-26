@@ -45,6 +45,8 @@ public class ProcedureMapper {
 			d.setUser(u);
 			d.setSerial((String)obj[4]);
 			rs.add(d);
+		}
+		return rs;
 	}
 	public List<ReportResultDto> reportMapping(List<Object[]> lstObj) {
 		List<ReportResultDto> rs = new ArrayList<ReportResultDto>();
