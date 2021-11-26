@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.jobrunr.scheduling.JobScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,9 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
 	ProcedureMapper procedureMapper;
+	
+	@Autowired
+	private JobScheduler jobScheduler;
 
 	@PostConstruct
 	private void initialize() {
@@ -352,8 +356,10 @@ public class NotificationServiceImpl implements NotificationService {
 		data.put("id", String.valueOf(notificationRes.getId()));
 		data.put("type", notificationRes.getType());
 		data.put("sender", String.valueOf(admin_id));
+		
+		//jobScheduler.enqueue(null);
 		pushNotificationRequest.setData(data);
-
+		
 		// send push notification to device
 		this.sendPnsToDevices(pushNotificationRequest);
 
