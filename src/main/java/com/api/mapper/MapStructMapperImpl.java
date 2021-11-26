@@ -648,6 +648,8 @@ public class MapStructMapperImpl implements MapStructMapper {
 		PermissionDto perDto = new PermissionDto();
 		perDto.setId(per.getId());
 		perDto.setName(per.getName());
+		perDto.setTo(per.getTo_page());
+		perDto.setIcon(per.getIcon_name());
 		return perDto;
 	}
 

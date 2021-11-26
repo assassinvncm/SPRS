@@ -15,10 +15,12 @@ public interface ReportRepository {
 //										,@Param("p_month") int p_month
 //										,@Param("p_year") int p_year
 //										,@Param("p_type_point") int p_type_point);
-	List<Object[]> getReport(String p_district
-							, String p_sub_district
-							, String p_city
-							, int p_month
-							, int p_year
-							, int p_type_point);
+	List<Object[]> getReport(
+			int p_district_id
+			, int p_sub_district_id
+			, int p_city_id
+			, String p_date_from
+			, String p_date_to
+			, int p_type_point
+			, String p_group_by);
 }
