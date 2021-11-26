@@ -77,7 +77,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
 	ProcedureMapper procedureMapper;
-	
+
 	@Autowired
 	private JobScheduler jobScheduler;
 
@@ -326,7 +326,6 @@ public class NotificationServiceImpl implements NotificationService {
 		List<Object[]> lstDeviceObj = deviceRepositoryCustom.getDeviceByAreasAndGroup(admPsn.getGroupUsers(),
 				admPsn.getSubdistrict_id(), admPsn.getDistrict_id(), admPsn.getCity_id());
 		List<Device> lstDevice = procedureMapper.getDevice(lstDeviceObj);
-		List<String> lstToken = new ArrayList<String>();
 
 		// set notification
 		Notification notification = new Notification();
@@ -335,12 +334,27 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setType(Constants.NOTIFICATION_TYPE_ADMIN);
 		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
 		notification.setCreate_time(DateUtils.getCurrentSqlDate());
+
+		List<String> lstToken = new ArrayList<String>();
 		List<User> users = new ArrayList<User>();
-		for (Device d : lstDevice) {
-			users.add(d.getUser());
-			lstToken.add(d.getToken());
+		List<PushNotificationRequest> lstPushNotificationRequest = new ArrayList<PushNotificationRequest>();
+		for (int i = 0; i < lstDevice.size(); i++) {
+			users.add(lstDevice.get(i).getUser());
+
+			// add token to list
+			lstToken.add(lstDevice.get(i).getToken());
+
+			int count = i + 1;
+			// split batch to send notification 500/1request
+			if (count % 10 == 0 || i == lstDevice.size() - 1) {
+				PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+				pushNotificationRequest.setTarget(lstToken);
+				lstPushNotificationRequest.add(pushNotificationRequest);
+				lstToken = new ArrayList<String>();
+			}
+
 		}
-		if (lstToken.isEmpty()) {
+		if (lstDevice.isEmpty()) {
 			return;
 		}
 		notification.setReceiver(users);
@@ -348,20 +362,23 @@ public class NotificationServiceImpl implements NotificationService {
 		Notification notificationRes = this.saveNotification(notification);
 
 		// set data push notification
-		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
-		pushNotificationRequest.setTarget(lstToken);
-		pushNotificationRequest.setTitle(admPsn.getTitle());
-		pushNotificationRequest.setBody(admPsn.getMessage());
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("id", String.valueOf(notificationRes.getId()));
-		data.put("type", notificationRes.getType());
-		data.put("sender", String.valueOf(admin_id));
+		lstPushNotificationRequest = lstPushNotificationRequest.stream().map((noti) -> {
+			noti.setTitle(admPsn.getTitle());
+			noti.setBody(admPsn.getMessage());
+			Map<String, String> data = new HashMap<String, String>();
+			data.put("id", String.valueOf(notificationRes.getId()));
+			data.put("type", notificationRes.getType());
+			data.put("sender", String.valueOf(admin_id));
+			noti.setData(data);
+			return noti;
+		}).collect(Collectors.toList());
 		
-		//jobScheduler.enqueue(null);
-		pushNotificationRequest.setData(data);
-		
+		jobScheduler.enqueue(lstPushNotificationRequest.stream(), (pushnotification) -> {
+			sendPnsToDevices(pushnotification);
+		});
+
 		// send push notification to device
-		this.sendPnsToDevices(pushNotificationRequest);
+		// this.sendPnsToDevices(pushNotificationRequest);
 
 	}
 
