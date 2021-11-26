@@ -11,6 +11,7 @@ import com.api.dto.GroupDto;
 import com.api.dto.ItemDto;
 import com.api.dto.NotificationDto;
 import com.api.dto.OrganizationDto;
+import com.api.dto.PermissionDto;
 import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.RequestDto;
@@ -24,6 +25,7 @@ import com.api.entity.Group;
 import com.api.entity.Item;
 import com.api.entity.Notification;
 import com.api.entity.Organization;
+import com.api.entity.Permission;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Request;
@@ -40,9 +42,13 @@ public interface MapStructMapper {
 	
 	GroupDto groupToGroupDto(Group group);
 	
+	PermissionDto permisisonToPermisionDto(Permission per);
+	
 	UserDto userToUserDto_forGet(User user);
 	
 	List<GroupDto> lstGroupToGroupDto(List<Group> lstGroup);
+	
+	List<PermissionDto> lstPermissionToPermissionDto(List<Permission> lstPermission);
 	
 	List<UserDto> lstUserToUserDto(List<User> lstUser);
 	
@@ -106,5 +112,5 @@ public interface MapStructMapper {
 	
 	List<NotificationDto> lstNotificationToNotificationDto(Stream<Notification> lstNotificaiton);
 	
-	
+	List<PermissionDto> lstPermissionToLstGrantAccess(List<Permission> per);
 }
