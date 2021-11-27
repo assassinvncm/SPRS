@@ -155,7 +155,8 @@ public class StoreServiceImpl implements StoreService{
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		st.getLstImage().add(new Image(st, img_url));
+		st.setImages(new Image(img_url));
+//		st.getLstImage().add(new Image(st, img_url));
 		
 		return storeRepository.save(s);
 	}
