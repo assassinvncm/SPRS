@@ -15,4 +15,6 @@ public interface OrganizationService {
 	
 	OrganizationDto getOrganizationByUser(long uId);
 	
+	OrganizationDto getOrganizationById(long OId);
+	
 }
