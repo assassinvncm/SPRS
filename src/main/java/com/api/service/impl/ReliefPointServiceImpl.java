@@ -43,33 +43,6 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	NotificationService notificationService;
 
 	@Override
-	public ReliefPoint getReliefPointById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ReliefPoint getReliefPointByUser(User user) {
-		// TODO Auto-generated method stub
-
-		return null;
-	}
-
-	@Override
-	public List<ReliefPoint> getReliefPointByLocation(Address address) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ReliefPointDto> getReliefPointByArea(AddressDto addressDto) {
-		// TODO Auto-generated method stub
-		List<ReliefPoint> rp = reliefPointRepository.findReliefPointByArea(addressDto.getId());
-
-		return null;
-	}
-
-	@Override
 	public ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
@@ -137,13 +110,6 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 //		rp.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 //		rp.setModified_date(DateUtils.getCurrentSqlDate());
 		return reliefPointRepository.saveAndFlush(reliefPoint);
-	}
-
-	@Override
-	public List<ReliefPointDto> getAllReliefPoint() {
-		// TODO Auto-generated method stub
-		List<ReliefPoint> lstReliefPoint = reliefPointRepository.findAll();
-		return mapStructMapper.lstReliefPointToreliefPointDto(lstReliefPoint);
 	}
 
 	@Override

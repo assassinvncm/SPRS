@@ -15,45 +15,13 @@ public interface ReliefPointService {
 	 * 
 	 * @return
 	 */
-	List<ReliefPointDto> getAllReliefPoint();
-	
-	/**
-	 * 
-	 * @return
-	 */
 	List<ReliefPointDto> getReliefPoints(Long uId,ReliefPointFilterDto reliefPointFilterDto);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	ReliefPoint getReliefPointById(Long id);
-	
-	/**
-	 * 
-	 * @return
-	 */
 	ReliefPointDto getReliefPointByIdAndUser(Long rpId, Long uId);
-	
-	/**
-	 * 
-	 * @return
-	 */
-	ReliefPoint getReliefPointByUser(User user);
-	
-	/**
-	 * 
-	 * @param location
-	 * @return
-	 */
-	List<ReliefPoint> getReliefPointByLocation(Address address);
-	
-	/**
-	 * 
-	 * @param location
-	 * @return
-	 */
-	List<ReliefPointDto> getReliefPointByArea(AddressDto addressDto);
 	
 	/**
 	 * 
