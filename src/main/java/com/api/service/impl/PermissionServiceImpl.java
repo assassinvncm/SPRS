@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.api.dto.SPRSResponse;
@@ -15,6 +16,8 @@ import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.PermissionRepository;
+import com.api.repositories.UserRepository;
+import com.api.repositories.custom.UserRepositoryCustom;
 import com.api.service.PermissionService;
 import com.exception.AppException;
 import com.ultils.Constants;
@@ -23,6 +26,9 @@ import com.ultils.Constants;
 public class PermissionServiceImpl implements PermissionService{
 	@Autowired
 	PermissionRepository perRepo;
+	
+	@Autowired
+	UserRepository userRepo;
 	
 	@Autowired
 	MapStructMapper mapStructMapper;
@@ -96,6 +102,19 @@ public class PermissionServiceImpl implements PermissionService{
 			}
 		}
 		return lstRs;
+	}
+
+	@Override
+	public List<Permission> getOwnPermission(Long user_id) {
+		User u = userRepo.getById(user_id);
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		List<Permission> listPermissions = new ArrayList<Permission>();
+		u.getGroups_user().forEach(r -> {
+			r.getPermissions().forEach(p -> listPermissions.add(p));
+		});
+		return listPermissions;
 	}
 
 }

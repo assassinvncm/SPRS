@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.api.dto.AddressDto;
+import com.api.dto.NotificationDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
 import com.api.entity.Address;
@@ -43,9 +46,11 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	NotificationService notificationService;
 
 	@Override
-	public ReliefPoint getReliefPointById(Long id) {
+	public ReliefPointDto getReliefPointById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		ReliefPoint rp = reliefPointRepository.getById(id);
+		ReliefPointDto rpDto = mapStructMapper.reliefPointToreliefPointDto(rp);
+		return rpDto;
 	}
 
 	@Override
@@ -159,9 +164,29 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	public List<ReliefPointDto> getReliefPoints(Long uId, ReliefPointFilterDto reliefPointFilterDto) {
 		// TODO Auto-generated method stub
 		List<ReliefPoint> reliefPoints = reliefPointRepository.findByTypeOrStatus(uId, reliefPointFilterDto);
-
+		
 		return mapStructMapper.lstReliefPointToreliefPointDto(reliefPoints);
 	}
+	
+//	@Override
+//	public PagingResponse<ReliefPointDto> getReliefPoints_v2(Long uId, ReliefPointFilterDto reliefPointFilterDto) {
+//		// TODO Auto-generated method stub
+//		String  typeSort = null;
+//		if(reliefPointFilterDto.getSort() == null || reliefPointFilterDto.getSort()) {
+//			typeSort = "desc";
+//		}else {
+//			typeSort = "asc";
+//		}
+//
+//		Pageable pageable = PageRequest.of(reliefPointFilterDto.getPageIndex() - 1, reliefPointFilterDto.getPageSize());
+//		
+//		Page<ReliefPoint> reliefPoints = reliefPointRepository.findByTypeOrStatys_v2(uId, reliefPointFilterDto.getTypes(),reliefPointFilterDto.getStatus(),typeSort,pageable);
+//		PagingResponse<ReliefPointDto> pagingResonpne = new PagingResponse<ReliefPointDto>();
+//		pagingResonpne.setObject(mapStructMapper.lstReliefPointStreamToReliefPointDto(reliefPoints.get()));
+//		pagingResonpne.setTotalPage(reliefPoints.getTotalPages());
+//		pagingResonpne.setTotalRecord(reliefPoints.getSize());
+//		return pagingResonpne;
+//	}
 
 	@Override
 	@Transactional

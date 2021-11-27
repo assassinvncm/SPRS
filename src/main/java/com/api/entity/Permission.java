@@ -17,6 +17,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import com.api.dto.PermissionDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -40,15 +41,44 @@ public class Permission extends BaseEntity implements Serializable{
 	@Column(name = "icon_name")
 	private String icon_name;
 	
+	@Column(name = "node_index")
+	private int node_index;
+	
 	@Column(name = "node_from")
-	private String node_from;
+	private int node_from;
 	
 	@Column(name = "node_to")
-	private String node_to;
+	private int node_to;
+
+//	private List<PermissionDto> children;
 
 	@ManyToMany(mappedBy = "group_permission")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Group> groups_link = new ArrayList<Group>();
+
+//	public List<PermissionDto> getChildren() {
+//		return children;
+//	}
+//
+//	public void setChildren(List<PermissionDto> children) {
+//		this.children = children;
+//	}
+
+	public int getNode_index() {
+		return node_index;
+	}
+
+	public void setNode_index(int node_index) {
+		this.node_index = node_index;
+	}
+
+	public void setNode_from(int node_from) {
+		this.node_from = node_from;
+	}
+
+	public void setNode_to(int node_to) {
+		this.node_to = node_to;
+	}
 
 	public String getTo_page() {
 		return to_page;
@@ -66,32 +96,12 @@ public class Permission extends BaseEntity implements Serializable{
 		this.icon_name = icon_name;
 	}
 
-	public String getNode_from() {
-		return node_from;
-	}
-
-	public void setNode_from(String node_from) {
-		this.node_from = node_from;
-	}
-
-	public String getNode_to() {
-		return node_to;
-	}
-
-	public void setNode_to(String node_to) {
-		this.node_to = node_to;
-	}
-
 	public Collection<Group> getGroups() {
 		return groups_link;
 	}
 
 	public void setGroups(List<Group> groups) {
 		this.groups_link = groups;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public String getCode() {
@@ -108,6 +118,14 @@ public class Permission extends BaseEntity implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getNode_from() {
+		return node_from;
+	}
+
+	public int getNode_to() {
+		return node_to;
 	}
 	
 }

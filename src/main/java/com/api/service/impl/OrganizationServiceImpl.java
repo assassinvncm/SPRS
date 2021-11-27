@@ -52,4 +52,13 @@ public class OrganizationServiceImpl implements OrganizationService{
 		return orgDto;
 	}
 
+	@Override
+	public OrganizationDto getOrganizationById(long OId) {
+		// TODO Auto-generated method stub
+		Organization organization = organizationRepository.findById(OId).orElseThrow(() -> new AppException(402, "Point has removed"));
+		OrganizationDto orgDto = mapStructMapper.organizationToOrganizationDto(organization);
+		orgDto.setAddress(mapStructMapper.addressToAddressDto(organization.getAddress()));
+		return orgDto;
+	}
+
 }

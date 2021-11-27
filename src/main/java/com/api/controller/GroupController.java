@@ -49,13 +49,38 @@ public class GroupController {
 	@Autowired
 	MapStructMapper mapper;
 
-	@RequestMapping(value = "/groups-register", method = RequestMethod.GET)
+	@RequestMapping(value = "/groups-all", method = RequestMethod.GET)
+	public ResponseEntity<?> getAll() {
+		logger.info("Start get all Group");
+		List<Group> listGroup = groupServ.getAll();
+		logger.info("End get all Group");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get all groups success", "", null, mapper.lstGroupToGroupDto(listGroup)));
+	}
+
+	@RequestMapping(value = "/groups-register-orgUser", method = RequestMethod.GET)
+	public ResponseEntity<?> getGroupForOrgzUserRegister() {
+		logger.info("Start get all Group for organize user register");
+		List<Group> listGroup = groupServ.getAllGroupForRegister(3);
+		logger.info("End get all Group for organize user register");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group organize user register success", "", null, mapper.lstGroupToGroupDto(listGroup)));
+	}
+
+	@RequestMapping(value = "/groups-register-web", method = RequestMethod.GET)
 	public ResponseEntity<?> getGroupForRegister() {
 		logger.info("Start get all Group for register");
 		List<Group> listGroup = groupServ.getAllGroupForRegister(1);
 		logger.info("End get all Group for register");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group for register success", "", null, mapper.lstGroupToGroupDto(listGroup)));
 	}
+
+	@RequestMapping(value = "/groups-register-mobile", method = RequestMethod.GET)
+	public ResponseEntity<?> getGroupForRegisterMobile() {
+		logger.info("Start get all Group for mobile register");
+		List<Group> listGroup = groupServ.getAllGroupForRegister(2);
+		logger.info("End get all Group for mobile register");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group for mobile register success", "", null, mapper.lstGroupToGroupDto(listGroup)));
+	}
+
 
 	@RequestMapping(value = "/groups-authoried/{user_id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllGroupAuthoried(@PathVariable("user_id") Long user_id) {

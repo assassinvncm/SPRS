@@ -28,6 +28,9 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Query("update User u set u.password = :newPass where u.id = :uId")
 	void updateUser(@Param("uId") Long id, @Param("newPass") String newPass);
 	
+	@Query("SELECT u FROM User u WHERE u.username LIKE %:name%")
+	List<User> searchByNameLike(@Param("name") String name);
+	
 	@Transactional
 	@Procedure(procedureName  = "prc_grant_group")
 	String grantGroup(@Param("user_id") long user_id, @Param("group_id") long group_id);

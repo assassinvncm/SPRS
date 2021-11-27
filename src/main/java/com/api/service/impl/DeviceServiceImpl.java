@@ -23,7 +23,7 @@ import com.exception.AppException;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
-	
+
 	public static Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
 
 	@Autowired
@@ -49,14 +49,17 @@ public class DeviceServiceImpl implements DeviceService {
 		// delete device in db by userId
 
 		// }
-		
+
 		deleteDeviceByUserId(user.getId());
 		logger.info("Start Delete Device By Serial");
 		deviceRepository.deleteBySerial(deviceDto.getSerial());
 		logger.info("END Delete Device By Serial");
 		// insert db
 		Device device = mapStructMapper.deviceDtoToDevice(deviceDto);
-		Address address = addressService.mapAddress(deviceDto.getAddress());
+		Address address = null;
+		if (deviceDto.getAddress() != null) {
+			address = addressService.mapAddress(deviceDto.getAddress());
+		}
 		device.setAddress(address);
 		device.setUser(user);
 		logger.info("Start Save Device");
@@ -80,12 +83,15 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	@Override
-	public void updateDeviceAddress(AddressDto addressDto) {
+	public void updateDeviceAddress(long device_id, AddressDto addressDto) {
 		// TODO Auto-generated method stub
-		if (addressDto.getId() == 0) {
-			throw new AppException(402, "address id not found");
-		}
-		addressService.saveAddress(addressDto);
+//		if (addressDto.getId() == 0) {
+//			throw new AppException(402, "address id not found");
+//		}
+		Device d = deviceRepository.findById(device_id).orElseThrow(() -> new AppException(403, "User not have device "));
+		Address address = addressService.mapAddress(addressDto);
+		d.setAddress(address);
+		deviceRepository.saveAndFlush(d);
 
 	}
 
@@ -130,7 +136,6 @@ public class DeviceServiceImpl implements DeviceService {
 		return null;
 	}
 
-	@Override
 	public void deleteDeviceByUserId(Long uId) {
 		// TODO Auto-generated method stub
 		Device d = deviceRepository.findDeviceByUserId(uId);
@@ -139,7 +144,21 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceRepository.delete(d);
 			logger.info("END Delete Device By User Id");
 		}
-			
+
+	}
+
+	@Override
+	public void deleteDeviceByUserIdAndSeri(Long uId, String seriNumber) {
+		// TODO Auto-generated method stub
+		Device d = deviceRepository.findDeviceByUserIdAndSerial(uId, seriNumber);
+		if (d != null) {
+			logger.info("Start Delete Device By User Id");
+			deviceRepository.delete(d);
+			logger.info("END Delete Device By User Id");
+		} else {
+			logger.info("Device login another device, not delete device");
+		}
+
 	}
 
 	@Override

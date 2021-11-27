@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,14 @@ public class UserController {
 	
 	@Autowired
 	MapStructMapper mapper;
+	
+	@RequestMapping(value = "/users/search/{name}", method = RequestMethod.GET)
+	public ResponseEntity<?> getSearch(@PathVariable(value = "name") String name) {
+		logger.info("Start get search User like");
+		List<User> lst = userService.getUsernameLike(name);
+		logger.info("End get search User like");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Search like User success!", "", null, mapper.lstUserToUserDto(lst)));
+	}
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllUser() {
@@ -81,8 +90,9 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users_v2/organizationalUser", method = RequestMethod.POST)
-	public ResponseEntity<?> registerOrganizationalUser_v2(@Validated @RequestBody UserDto userDto) {
-		userService.registerOrganizationUser_v2(userDto);
+	public ResponseEntity<?> registerOrganizationalUser_v2(@RequestHeader ("Authorization") String requestTokenHeader, @Validated @RequestBody UserDto userDto) {
+		User u = userService.getNativeUserbyToken(requestTokenHeader);
+		userService.registerOrganizationUser_v2(userDto, u);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
 	}
 	

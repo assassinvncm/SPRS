@@ -1,5 +1,6 @@
 package com.api.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -116,6 +117,19 @@ public class UserSerivceImpl implements UserService {
 		userDto.setPassword(user.getPassword());
 		//userDto.setRequest();
 		return userDto;
+	}
+
+	@Override
+	public User getNativeUserbyToken(String requestTokenHeader) {
+		// TODO Auto-generated method stub
+		logger.info("Start get User");
+
+		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
+		
+		User user = Optional.ofNullable(userRepository.findByUsername(username))
+				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
+		logger.info("End get User");
+		return user;
 	}
 	
 	@Override
@@ -243,7 +257,7 @@ public class UserSerivceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void registerOrganizationUser_v2(UserDto userDto) {
+	public void registerOrganizationUser_v2(UserDto userDto, User admin) {
 		logger.info("Start save Organizational User");
 		User u = userRepository.findByUsername(userDto.getUsername());
 		if (u != null) {
@@ -253,28 +267,32 @@ public class UserSerivceImpl implements UserService {
 		if (userRepository.findByPhone(userDto.getPhone()).isPresent()) {
 			throw new AppException(403, "Phone is exsit!");
 		}
-		List<GroupDto> lstTem = userDto.getGroups_user();
-		for (GroupDto groupDto : lstTem) {
-			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
-			if (grTemp.isEmpty()) {
-				throw new AppException(403, "Group is not exist!");
-			}
-		}
+//		List<GroupDto> lstTem = userDto.getGroups_user();
+//		for (GroupDto groupDto : lstTem) {
+//			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
+//			if (grTemp.isEmpty()) {
+//				throw new AppException(403, "Group is not exist!");
+//			}
+//		}
 
-		Organization organization = organizationRepository.findById(userDto.getOrganization().getId())
+		Organization organization = organizationRepository.findById(admin.getOrganization().getId())
 				.orElseThrow(() -> new AppException(403, "organization is not exist!"));
 		// chưa check admin organization phải tồn tại
 
 		User user = modelMapper.map(userDto, User.class);
 		Address address = addressService.mapAddress(userDto.getAddress());
-		Address addressOrg = addressService.mapAddress(userDto.getOrganization().getAddress());
+		Address addressOrg = addressService.mapAddress(mapStructMapper.addressToAddressDto(address));
 		user.setAddress(address);
-		user.getOrganization().setAddress(addressOrg);
+//		user.getOrganization().setAddress(addressOrg);
 		user.setOrganization(organization);
 
 		user.setIsActive(false);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		Group g = groupRepository.findByCode(Constants.ORG_USER_PER_CODE);
+		List<Group> user_gr = new ArrayList<Group>();
+		user_gr.add(g);
+		user.setGroups_user(user_gr);
 		userRepository.save(user);
 		logger.info("End save Organization");
 		logger.info("Start save request");
@@ -342,9 +360,9 @@ public class UserSerivceImpl implements UserService {
 		if (u.getGroups_user().get(0).getId() == 3) {
 			req.setOrganization(u.getOrganization());
 		} else {
-			Group g = new Group();
+			Group g = groupRepository.findByCode(Constants.SYSTEM_ADMIN_PER_CODE);
 			// sai set id. ID phải là id của admin
-			g.setId(10);
+//			g.setId(10);
 			req.setGroup(g);
 		}
 
@@ -551,5 +569,11 @@ public class UserSerivceImpl implements UserService {
 			break;
 		}
 		return gdto;
+	}
+
+	@Override
+	public List<User> getUsernameLike(String name) {
+		List<User> rs = userRepository.searchByNameLike(name);
+		return rs;
 	}
 }

@@ -11,17 +11,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.Group;
 import com.api.entity.Permission;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.PermissionRepository;
 import com.api.service.PermissionService;
+import com.api.service.UserService;
 import com.ultils.Constants;
 
 @RestController
@@ -32,8 +35,20 @@ public class PermissionController {
 	@Autowired
 	PermissionService perServ;
 	
+	@Autowired
+	UserService userSerivce;
+	
 	@Autowired 
 	MapStructMapper mapper;
+	
+	@RequestMapping(value = "/permissions/getOwn", method = RequestMethod.GET)
+	public ResponseEntity<?> getOwnPermission(@RequestHeader ("Authorization") String requestTokenHeader){
+		logger.info("Start get own Permission");
+		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
+		List<Permission> lst = perServ.getOwnPermission(userDto.getId());
+		logger.info("End get own Permission");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All Permission success!", "", null, mapper.lstPermissionToLstGrantAccess(lst)));
+	}
 	
 	@RequestMapping(value = "/permissions", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllPermission(){

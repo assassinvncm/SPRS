@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
 import com.api.dto.SPRSResponse;
@@ -71,6 +72,7 @@ public class RefliefPointController {
 
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		List<ReliefPointDto> lstReliefPoint = reliefPointService.getReliefPoints(userDto.getId(), rpf);
+		//PagingResponse<ReliefPointDto> lstReliefPoint = reliefPointService.get(userDto.getId(), rpf)
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", lstReliefPoint, null));
 	}
@@ -85,6 +87,18 @@ public class RefliefPointController {
 			@RequestParam(name = "id") long rpId) {
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		ReliefPointDto rpDto = reliefPointService.getReliefPointByIdAndUser(rpId, userDto.getId());
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
+	}
+	
+	/**
+	 * get relief point by Id
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/common/reliefPoint", method = RequestMethod.GET)
+	public ResponseEntity<?> getReliefPointById(@RequestParam(name = "id") long rpId) {
+		ReliefPointDto rpDto = reliefPointService.getReliefPointById(rpId);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
 	}

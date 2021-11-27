@@ -14,6 +14,8 @@ public interface GroupRepository extends JpaRepository<Group, Long>{
 	Group findByName(String name);
 	
 	Optional<Group> findById(Long id);
+	
+	Group findByCode(String code);
 
 	@Query("select gr from Group gr where gr.level = :level")
 	List<Group> getAllGroupByLevel(@Param("level") int level);

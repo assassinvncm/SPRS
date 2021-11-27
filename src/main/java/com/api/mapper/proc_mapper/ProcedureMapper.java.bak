@@ -7,13 +7,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-
-import com.api.entity.Device;
-
 import com.api.dto.ReportResultDto;
-
 import com.api.entity.Store;
-import com.api.entity.User;
 
 @Component
 public class ProcedureMapper {
@@ -32,34 +27,17 @@ public class ProcedureMapper {
 		return rs;
 	}
 	
-
-	public List<Device> getDevice(List<Object[]> lstObj){
-		List<Device> rs = new ArrayList<Device>();
-		for(Object[] obj : lstObj) {
-			Device d = new Device();
-			d.setId(((BigInteger) obj[0]).longValue());
-			d.setToken((String)obj[1]);
-			//d.setAddress((String)obj[2]);
-			User u = new User();
-			u.setId(((BigInteger) obj[3]).longValue());
-			d.setUser(u);
-			d.setSerial((String)obj[4]);
-			rs.add(d);
-		}
-		return rs;
-	}
-	
 	public List<ReportResultDto> reportMapping(List<Object[]> lstObj) {
 		List<ReportResultDto> rs = new ArrayList<ReportResultDto>();
 		for(Object[] obj : lstObj) {
 			ReportResultDto rpRs = new ReportResultDto();
 			rpRs.setMonth((Integer) obj[0]);
-			rpRs.setMonth((Integer) obj[1]);
-			rpRs.setYear((Integer) obj[2]);
-			rpRs.setType_point((Integer) obj[3]);
-			rpRs.setTotal(((BigInteger) obj[4]).doubleValue());
+			rpRs.setYear((Integer) obj[1]);
+			rpRs.setType_point((Integer) obj[2]);
+			rpRs.setTotal(((BigInteger) obj[3]).intValue());
 			rs.add(rpRs);
 		}
 		return rs;
 	}
+	
 }

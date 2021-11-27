@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.dto.AdminPushNotifcationRequest;
 import com.api.dto.NotificationDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.SPRSResponse;
 import com.api.entity.User;
 import com.api.repositories.NotificationRepository;
@@ -78,11 +82,11 @@ public class NotificationController {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 
-		int quantity  =notificationService.getQuantityUncheckNotification(user.getId());
+		int quantity = notificationService.getQuantityUncheckNotification(user.getId());
 		HashMap<String, Integer> quantityNotification = new HashMap<String, Integer>();
 		quantityNotification.put("quantity", quantity);
-		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Get quantity uncheck notification Successfull", "", quantityNotification, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get quantity uncheck notification Successfull",
+				"", quantityNotification, null));
 	}
 
 	@GetMapping("/get-all")
@@ -91,11 +95,22 @@ public class NotificationController {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 
-		List<NotificationDto> lstNotification = notificationService.getNotificationByUser(user.getId(), pageIndex,
-				pageSize);
+		PagingResponse<NotificationDto> lstNotification = notificationService.getNotificationByUser(user.getId(),
+				pageIndex, pageSize);
 		notificationService.updateStatusCheckAll(user.getId());
+		return ResponseEntity.ok(
+				new SPRSResponse(Constants.SUCCESS, "Get list notification Successfull", "", lstNotification, null));
+	}
+
+	@GetMapping("/get/{id}")
+	public ResponseEntity<?> getNotificationbyId(@RequestHeader("Authorization") String requestTokenHeader,
+			@PathVariable("id") Long id) {
+
+		// User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		NotificationDto noti = notificationService.getNotificationById(id);
+
 		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Get list notification Successfull", "", lstNotification, null));
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get list notification Successfull", "", noti, null));
 	}
 
 	@PutMapping("/update/{id}")
@@ -105,15 +120,27 @@ public class NotificationController {
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 
 		notificationService.updateStatusNotification(notiId, status);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
 	}
-	@Autowired
-	NotificationRepository repo;
-	@PutMapping("/delete/{id}")
-	public ResponseEntity<?> delete(@RequestHeader("Authorization") String requestTokenHeader, @PathVariable("id") Long id) {
 
+	@PostMapping("/send-notifications")
+	public ResponseEntity<?> sendNotifications(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody AdminPushNotifcationRequest admPns) {
 
-		repo.deleteById(id);
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+
+		notificationService.adminSendNotification(admPns, user);
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
 	}
+
+//	@PutMapping("/delete/{id}")
+//	public ResponseEntity<?> delete(@RequestHeader("Authorization") String requestTokenHeader,
+//			@PathVariable("id") Long id) {
+//
+//		repo.deleteById(id);
+//		return ResponseEntity
+//				.ok(new SPRSResponse(Constants.SUCCESS, "update status notification Successfull", "", "", null));
+//	}
 }

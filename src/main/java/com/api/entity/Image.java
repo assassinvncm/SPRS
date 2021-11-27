@@ -12,26 +12,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "SPRS_Image")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Image extends BaseEntity{
-	@ManyToOne
-	@JoinColumn(name = "store_id", referencedColumnName="id",nullable = false)
-	private Store store;
 
 	@Column(name = "img_url")
 	private String img_url;
 
 	
-	public Image(Store store, String img_url) {
+	public Image() {
 		super();
-		this.store = store;
+	}
+
+	public Image(String img_url) {
+		super();
 		this.img_url = img_url;
-	}
-
-	public Store getStore() {
-		return store;
-	}
-
-	public void setStore(Store store) {
-		this.store = store;
 	}
 
 	public String getImg_url() {
