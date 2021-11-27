@@ -32,15 +32,30 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 
-	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	@RequestMapping(value = "/authenticate-mobile", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationTokenForMobile(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 //		final UserDetails userDetails = userDetailsService
 //				.loadUserByUsername(authenticationRequest.getUsername());
 		
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final UserDetails userDetails = userDetailsService.loadUserByUsernameByPlatform(authenticationRequest.getUsername(),2);
+
+		final String token = jwtTokenUtil.generateToken(userDetails);
+
+		return ResponseEntity.ok(new JwtResponse(token));
+	}
+
+	@RequestMapping(value = "/authenticate-web", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationTokenForWeb(@RequestBody JwtRequest authenticationRequest) throws Exception {
+
+		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+//		final UserDetails userDetails = userDetailsService
+//				.loadUserByUsername(authenticationRequest.getUsername());
+		
+		final UserDetails userDetails = userDetailsService.loadUserByUsernameByPlatform(authenticationRequest.getUsername(),1);
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 

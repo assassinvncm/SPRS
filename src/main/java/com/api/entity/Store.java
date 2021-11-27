@@ -55,10 +55,15 @@ public class Store extends BaseEntity implements Serializable{
 	@JsonIgnore
     private Address location;
 	
-	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
-	@JsonIgnore
-    private List<Image> lstImage;
+//	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
+//	@JsonIgnore
+//    private List<Image> lstImage;
 //	cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "image_id",insertable = true, updatable = false)
+	private Image images;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_store_category",
 			joinColumns = @JoinColumn(name = "store_id",insertable = true, updatable = false),
@@ -71,6 +76,20 @@ public class Store extends BaseEntity implements Serializable{
 	
 	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
     private List<Notification> notifications;
+
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
+	}
 
 	public List<User> getStore_user() {
 		return store_user;
@@ -86,14 +105,6 @@ public class Store extends BaseEntity implements Serializable{
 
 	public void setStore_category(List<StoreCategory> store_category) {
 		this.store_category = store_category;
-	}
-
-	public List<Image> getLstImage() {
-		return lstImage;
-	}
-
-	public void setLstImage(List<Image> lstImage) {
-		this.lstImage = lstImage;
 	}
 
 	public String getName() {
@@ -155,9 +166,6 @@ public class Store extends BaseEntity implements Serializable{
 	@Override
 	public String toString() {
 		return "Store [name=" + name + ", description=" + description + ", open_time=" + open_time + ", close_time="
-				+ close_time + ", status=" + status + ", users=" + users + ", location=" + location + ", lstImage="
-				+ lstImage + ", store_category=" + store_category + ", store_user=" + store_user + "]";
+				+ close_time + ", status=" + status + ", users=" + users + ", location=" + location  + ", store_category=" + store_category + ", store_user=" + store_user + "]";
 	}
-	
-	
 }

@@ -40,6 +40,9 @@ public class Group extends BaseEntity implements Serializable{
 
 	@Column(name = "level")
 	private int level;
+
+	@Column(name = "platform")
+	private int platform;
 	
 	@ManyToMany//(fetch = FetchType.EAGER)
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -72,6 +75,18 @@ public class Group extends BaseEntity implements Serializable{
 //	}
 	public String getName() {
 		return name;
+	}
+	/**
+	 * @return the platform
+	 */
+	public int getPlatform() {
+		return platform;
+	}
+	/**
+	 * @param platform the platform to set
+	 */
+	public void setPlatform(int platform) {
+		this.platform = platform;
 	}
 	public void setName(String name) {
 		this.name = name;

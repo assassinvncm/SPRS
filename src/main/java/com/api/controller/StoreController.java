@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -142,11 +143,10 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}
 
-	@RequestMapping(value = "/uploadImg/{id}", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
-	public ResponseEntity<?> uploadImg(@PathVariable(value = "id") Long id, @Validated @RequestPart(value = "file") MultipartFile file) {
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImg(@RequestParam(value = "file") MultipartFile file, String store_id) {
 		logger.info("Start uploadImg Store");
-		Store st = storeService.getStoreById(id);
+		Store st = storeService.getStoreById(Long.parseLong(store_id));
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}

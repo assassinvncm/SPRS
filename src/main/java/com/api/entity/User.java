@@ -53,6 +53,7 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
+	//@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id",insertable = true, updatable = false)
 	private Address address;

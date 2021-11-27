@@ -34,6 +34,12 @@ public interface UserService {
 	
 	/**
 	 * 
+	 * @return user
+	 */
+	User getNativeUserbyToken(String requestTokenHeader);
+	
+	/**
+	 * 
 	 * @param requestTokenHeader
 	 * @return
 	 */
@@ -66,7 +72,7 @@ public interface UserService {
 	 * @param user
 	 * @return
 	 */
-	void registerOrganizationUser_v2(UserDto userDto);
+	void registerOrganizationUser_v2(UserDto userDto, User admin);
 	
 	/**
 	 * 
@@ -109,6 +115,13 @@ public interface UserService {
 	 * @return
 	 */
 	User getOne(Long id);
+	
+	/**
+	 * 
+	 * @param name
+	 * @return List<User>
+	 */
+	List<User> getUsernameLike(String name);
 	
 	/**
 	 * 

@@ -38,4 +38,13 @@ public class ReportController {
 		logger.info("End get report");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report success", "", rs, null));
 	}
+
+	@RequestMapping(value = "/getReportOverview", method = RequestMethod.GET)
+	public ResponseEntity<?> getReportOverview() {
+		logger.info("Start get report Overview");
+		List<ReportResultDto> rs = reportServ.getReport(new ReportDto());
+		logger.info("End get report Overview");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
+	}
+	
 }

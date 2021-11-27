@@ -48,17 +48,18 @@ public class ProcedureMapper {
 		}
 		return rs;
 	}
+	
 	public List<ReportResultDto> reportMapping(List<Object[]> lstObj) {
 		List<ReportResultDto> rs = new ArrayList<ReportResultDto>();
 		for(Object[] obj : lstObj) {
 			ReportResultDto rpRs = new ReportResultDto();
 			rpRs.setMonth((Integer) obj[0]);
-			rpRs.setYear((Integer) obj[1]);
-			rpRs.setType_point((Integer) obj[2]);
-			rpRs.setTotal(((BigInteger) obj[3]).intValue());
+			rpRs.setMonth((Integer) obj[1]);
+			rpRs.setYear((Integer) obj[2]);
+			rpRs.setType_point((Integer) obj[3]);
+			rpRs.setTotal(((BigInteger) obj[4]).doubleValue());
 			rs.add(rpRs);
 		}
 		return rs;
 	}
-	
 }
