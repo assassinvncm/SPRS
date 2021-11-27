@@ -113,4 +113,7 @@ public interface MapStructMapper {
 	List<NotificationDto> lstNotificationToNotificationDto(Stream<Notification> lstNotificaiton);
 	
 	List<PermissionDto> lstPermissionToLstGrantAccess(List<Permission> per);
+	
+	List<ReliefPointDto> lstReliefPointStreamToReliefPointDto(Stream<ReliefPoint> lstReliefPoint);
+	
 }

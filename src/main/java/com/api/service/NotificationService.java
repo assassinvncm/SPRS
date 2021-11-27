@@ -10,6 +10,7 @@ import com.api.dto.SubscriptionRequest;
 import com.api.entity.Notification;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
+import com.api.entity.User;
 import com.google.firebase.messaging.BatchResponse;
 
 public interface NotificationService {
@@ -87,5 +88,5 @@ public interface NotificationService {
 	 * admin system send notification 
 	 * @param admPsn
 	 */
-	void adminSendNotification(AdminPushNotifcationRequest admPsn, Long admin_id);
+	void adminSendNotification(AdminPushNotifcationRequest admPsn, User admin);
 }

@@ -611,7 +611,8 @@ public class MapStructMapperImpl implements MapStructMapper {
 		notiDto.setMessage(notification.getMessage());
 		notiDto.setStatus(notification.getStatus());
 		notiDto.setType(notification.getType());
-		notiDto.setCreate_time(notification.getCreate_time());
+		Date creatimeDate = DateUtils.convertSqlDateToJavaDate(notification.getCreate_time());
+		notiDto.setCreate_time(creatimeDate);
 		
 		if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_STORE)) {
 			notiDto.setSender(storeToStoreDTO(notification.getStore()));
@@ -728,6 +729,20 @@ public class MapStructMapperImpl implements MapStructMapper {
 			}
 		}
 		return lenght;
+	}
+
+	@Override
+	public List<ReliefPointDto> lstReliefPointStreamToReliefPointDto(Stream<ReliefPoint> lstReliefPoint) {
+		// TODO Auto-generated method stub
+		if(lstReliefPoint == null) {
+			return null;
+		}
+		List<ReliefPointDto> lstReliefPointDto = new ArrayList<ReliefPointDto>();
+		
+		lstReliefPointDto = lstReliefPoint.map((rp)->{
+			return  reliefPointToreliefPointDto(rp);
+		}).collect(Collectors.toList());
+		return lstReliefPointDto;
 	}
 	
 //	private List<PermissionDto> addChildrenToParent(Permission p, List<Permission> pl){

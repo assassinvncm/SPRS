@@ -281,6 +281,7 @@ public class NotificationServiceImpl implements NotificationService {
 		PagingResponse<NotificationDto> pagingResonpne = new PagingResponse<NotificationDto>();
 		pagingResonpne.setObject(mapStructMapper.lstNotificationToNotificationDto(lstNotification.get()));
 		pagingResonpne.setTotalPage(lstNotification.getTotalPages());
+		pagingResonpne.setTotalRecord(lstNotification.getNumber());
 		return pagingResonpne;
 	}
 
@@ -321,7 +322,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public void adminSendNotification(AdminPushNotifcationRequest admPsn, Long admin_id) {
+	public void adminSendNotification(AdminPushNotifcationRequest admPsn, User admin) {
 		// TODO Auto-generated method stub
 		List<Object[]> lstDeviceObj = deviceRepositoryCustom.getDeviceByAreasAndGroup(admPsn.getGroupUsers(),
 				admPsn.getSubdistrict_id(), admPsn.getDistrict_id(), admPsn.getCity_id());
@@ -330,7 +331,7 @@ public class NotificationServiceImpl implements NotificationService {
 		// set notification
 		Notification notification = new Notification();
 		notification.setMessage(admPsn.getMessage());
-		// notification.setSender(admPsn.get);
+		notification.setSender(admin);
 		notification.setType(Constants.NOTIFICATION_TYPE_ADMIN);
 		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
 		notification.setCreate_time(DateUtils.getCurrentSqlDate());
@@ -368,7 +369,7 @@ public class NotificationServiceImpl implements NotificationService {
 			Map<String, String> data = new HashMap<String, String>();
 			data.put("id", String.valueOf(notificationRes.getId()));
 			data.put("type", notificationRes.getType());
-			data.put("sender", String.valueOf(admin_id));
+			data.put("sender", String.valueOf(admin.getId()));
 			noti.setData(data);
 			return noti;
 		}).collect(Collectors.toList());

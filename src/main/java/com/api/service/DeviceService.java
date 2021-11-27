@@ -30,7 +30,7 @@ public interface DeviceService {
 	 * 
 	 * @param addressDto
 	 */
-	void updateDeviceAddress(AddressDto addressDto);
+	void updateDeviceAddress(long device_id , AddressDto addressDto);
 
 	/**
 	 * update new token
@@ -74,5 +74,5 @@ public interface DeviceService {
 
 	void deleteDeviceToken(Long device_id);
 
-	void deleteDeviceByUserId(Long uId);
+	void deleteDeviceByUserIdAndSeri(Long uId, String seriNumber);
 }
