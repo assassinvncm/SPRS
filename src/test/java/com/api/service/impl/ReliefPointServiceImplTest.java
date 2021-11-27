@@ -67,10 +67,23 @@ class ReliefPointServiceImplTest {
 	/**
 	 * Test method for {@link com.api.service.impl.ReliefPointServiceImpl#getReliefPointById(java.lang.Long)}.
 	 */
-//	@Test
-//	void testGetReliefPointById_UTCID01() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	void testGetReliefPointById_UTCID01() {
+		//set input data for method
+		long id = 2;
+		
+		//mock data
+		ReliefPoint rp = new ReliefPoint();
+		//mock
+		Mockito.when(reliefPointRepository.getById(id)).thenReturn(rp);
+		ReliefPointDto rpDto = new ReliefPointDto();
+		rpDto.setId(2);
+		Mockito.when(mapStructMapper.reliefPointToreliefPointDto(rp)).thenReturn(rpDto);
+		
+		//call method
+		ReliefPointDto rpDtoRes = reliefPointService.getReliefPointById(id);
+		assertEquals(rpDto.getId(), rpDtoRes.getId());
+	}
 		
 
 	/**
@@ -112,11 +125,6 @@ class ReliefPointServiceImplTest {
 		//call method
 		ReliefPoint rpRes = reliefPointService.createReliefPoint(rpDto);
 		assertEquals(rp.getId(), rpRes.getId());
-	}
-	
-	@Test
-	void testCreateReliefPoint_UTCID02() {
-		
 	}
 
 	/**

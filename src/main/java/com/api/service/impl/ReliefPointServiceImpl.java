@@ -54,27 +54,6 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
-	public ReliefPoint getReliefPointByUser(User user) {
-		// TODO Auto-generated method stub
-
-		return null;
-	}
-
-	@Override
-	public List<ReliefPoint> getReliefPointByLocation(Address address) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<ReliefPointDto> getReliefPointByArea(AddressDto addressDto) {
-		// TODO Auto-generated method stub
-		List<ReliefPoint> rp = reliefPointRepository.findReliefPointByArea(addressDto.getId());
-
-		return null;
-	}
-
-	@Override
 	public ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
