@@ -90,6 +90,18 @@ public class RefliefPointController {
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
 	}
+	
+	/**
+	 * get relief point by Id
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/common/reliefPoint", method = RequestMethod.GET)
+	public ResponseEntity<?> getReliefPointById(@RequestParam(name = "id") long rpId) {
+		ReliefPointDto rpDto = reliefPointService.getReliefPointById(rpId);
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
+	}
 
 //	@RequestMapping(value = "/get", method = RequestMethod.GET)
 //	public ResponseEntity<?> getReliefPointByCity(@RequestParam(name = "") long id) {
