@@ -331,9 +331,7 @@ public class UserSerivceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to create store", "Create Store", user);
-
 		userRepository.save(user);
-		logger.info("End save Organization");
 		logger.info("Start save Request");
 		requestRepository.save(req);
 		logger.info("End save Request");

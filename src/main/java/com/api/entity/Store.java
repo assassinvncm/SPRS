@@ -61,7 +61,7 @@ public class Store extends BaseEntity implements Serializable{
 //	cascade= {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "image_id",insertable = true, updatable = false)
+	@JoinColumn(name = "image_id")
 	private Image images;
 	
 	@ManyToMany(fetch = FetchType.LAZY)

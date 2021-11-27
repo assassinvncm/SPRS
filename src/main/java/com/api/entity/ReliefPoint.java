@@ -71,6 +71,24 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
 	@JsonIgnore
     private List<Notification> notifications;	
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "image_id")
+	private Image images;
+
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
+	}
 
 	public String getName() {
 		return name;
@@ -183,7 +201,4 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
 	}
-	
-	
-
 }

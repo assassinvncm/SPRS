@@ -53,9 +53,6 @@ public class StoreController {
 	@Autowired
 	private MapStructMapper structMapper;
 	
-	@Autowired
-	private AmazonClient amazonClient;
-	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
 	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
@@ -146,14 +143,9 @@ public class StoreController {
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadImg(@RequestParam(value = "file") MultipartFile file, String store_id) {
 		logger.info("Start uploadImg Store");
-		Store st = storeService.getStoreById(Long.parseLong(store_id));
-		if(null == st) {
-			throw new AppException(402,"Store is not Found!");
-		}
-		String img_url = amazonClient.uploadFile(file);
-		storeService.updateStoreImg(st,img_url);
+		Store st = storeService.uploadStoreImg(file, store_id);
 		logger.info("End uploadImg Store");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+st.getId()+" success", "", st, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for store success", "", "", null));
 	}
 	
 	@RequestMapping(value = "/subcribe", method = RequestMethod.POST)

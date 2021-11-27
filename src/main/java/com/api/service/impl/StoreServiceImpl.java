@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.ReliefPointDto;
 import com.api.dto.StoreCategoryDto;
@@ -22,6 +23,7 @@ import com.api.mapper.MapStructMapper;
 import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
+import com.api.service.AmazonClient;
 import com.api.service.StoreService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
@@ -42,6 +44,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired 
 	ProcedureMapper mapper;
+	
+	@Autowired
+	private AmazonClient amazonClient;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -149,16 +154,17 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public Store updateStoreImg(Store s, String img_url) {
+	public Store uploadStoreImg(MultipartFile file, String store_id) {
 		// TODO Auto-generated method stub
-		Store st = storeRepository.getById(s.getId());
+		Store st = getStoreById(Long.parseLong(store_id));
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
+		String img_url = amazonClient.uploadFile(file);
 		st.setImages(new Image(img_url));
 //		st.getLstImage().add(new Image(st, img_url));
 		
-		return storeRepository.save(s);
+		return storeRepository.save(st);
 	}
 
 	@Override

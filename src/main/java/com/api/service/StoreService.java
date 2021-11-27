@@ -2,6 +2,8 @@ package com.api.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.api.dto.ReliefPointDto;
 import com.api.dto.StoreDto;
 import com.api.entity.Address;
@@ -70,7 +72,7 @@ public interface StoreService {
 	 * @param Store
 	 * @return
 	 */
-	Store updateStoreImg(Store s, String img_url);
+	Store uploadStoreImg(MultipartFile file, String store_id);
 	
 	/**
 	 * 

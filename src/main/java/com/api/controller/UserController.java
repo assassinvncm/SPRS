@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ public class UserController {
 	MapStructMapper mapper;
 	
 	@RequestMapping(value = "/users/search/{name}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> getSearch(@PathVariable(value = "name") String name) {
 		logger.info("Start get search User like");
 		List<User> lst = userService.getUsernameLike(name);
@@ -78,6 +80,7 @@ public class UserController {
 //	}
 	
 	@RequestMapping(value = "/users_v2/user", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> registerUser_v2(@Validated @RequestBody UserDto userDto) {
 		userService.registerUser_v2(userDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));
@@ -97,12 +100,13 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users_v2/ownStore", method = RequestMethod.POST)
-	public ResponseEntity<?> registerOownStore_v2(@Validated @RequestBody UserDto userDto) {
+	public ResponseEntity<?> registerOwnStore_v2(@Validated @RequestBody UserDto userDto) {
 		userService.registerStoreUser_v2(userDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/users/grantGroup", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> grantGroup(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start grant group");
 		userService.grantGroup(gtdo);
@@ -111,6 +115,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users/unGrantGroup", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> unGrantGroup(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start ungrant group");
 		userService.unGrantGroup(gtdo);
@@ -119,6 +124,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users/grantPermission", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> grantPermission(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start grant permission");
 		userService.grantPermission(gtdo);
@@ -127,6 +133,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users/unGrantPermission", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> unGrantPermission(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start ungrant permission");
 		userService.unGrantPermission(gtdo);
