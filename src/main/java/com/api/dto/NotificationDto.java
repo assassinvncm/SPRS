@@ -1,6 +1,9 @@
 package com.api.dto;
 
 import java.sql.Timestamp;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class NotificationDto {
 
@@ -13,8 +16,9 @@ public class NotificationDto {
 	private String message;
 
 	private String status;
-
-	public Timestamp create_time;
+	
+	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
+	private Date create_time;
 	
 	public Long getId() {
 		return id;
@@ -60,11 +64,11 @@ public class NotificationDto {
 		this.status = status;
 	}
 
-	public Timestamp getCreate_time() {
+	public Date getCreate_time() {
 		return create_time;
 	}
 
-	public void setCreate_time(Timestamp create_time) {
+	public void setCreate_time(Date create_time) {
 		this.create_time = create_time;
 	}
 

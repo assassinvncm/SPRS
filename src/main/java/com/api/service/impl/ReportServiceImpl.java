@@ -22,12 +22,24 @@ public class ReportServiceImpl implements ReportService{
 	
 	@Override
 	public List<ReportResultDto> getReport(ReportDto rpdto) {
-		List<Object[]> lstObj = rpRepo.getReport(rpdto.getDistrict()
-				, rpdto.getSub_district()
-				, rpdto.getCity()
-				, rpdto.getMonth()
-				, rpdto.getYear()
-				, rpdto.getType_point());
+		String group_by = "";
+		switch (rpdto.getType_time()) {
+			case 1: group_by = "m_year";
+				break;
+			case 2: group_by = "m_month";
+				break;
+			case 3: group_by = "m_day";
+				break;
+			default:
+				group_by = "";
+		}
+		List<Object[]> lstObj = rpRepo.getReport(rpdto.getDistrict_id()
+				, rpdto.getSub_district_id()
+				, rpdto.getCity_id()
+				, rpdto.getDate_from()
+				, rpdto.getDate_to()
+				, rpdto.getType_point()
+				, group_by);
 		
 		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
 		return lstRs;

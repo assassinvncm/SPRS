@@ -23,23 +23,25 @@ public class ReportRepositoryImpl implements ReportRepository{
 	private EntityManager em;
 	
 	@Override
-	public List<Object[]> getReport(String p_district, String p_sub_district, String p_city, int p_month, int p_year,
-			int p_type_point) {
+	public List<Object[]> getReport(int p_district_id, int p_sub_district_id, int p_city_id, String p_date_from, String p_date_to,
+			int p_type_point, String p_group_by) {
 		List<Object[]> rs = new ArrayList<Object[]>();
 		try {
 			StoredProcedureQuery storedProcedure = em.createStoredProcedureQuery("prc_report_get_report");
-			storedProcedure.registerStoredProcedureParameter("p_district", String.class, ParameterMode.IN);
-			storedProcedure.registerStoredProcedureParameter("p_sub_district", String.class, ParameterMode.IN);
-			storedProcedure.registerStoredProcedureParameter("p_city", String.class, ParameterMode.IN);
-			storedProcedure.registerStoredProcedureParameter("p_month", Integer.class, ParameterMode.IN);
-			storedProcedure.registerStoredProcedureParameter("p_year", Integer.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_district_id", Integer.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_sub_district_id", Integer.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_city_id", Integer.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_date_from", String.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_date_to", String.class, ParameterMode.IN);
 			storedProcedure.registerStoredProcedureParameter("p_type_point", Integer.class, ParameterMode.IN);
-			storedProcedure.setParameter("p_district", p_district);
-			storedProcedure.setParameter("p_sub_district", p_sub_district);
-			storedProcedure.setParameter("p_city", p_city);
-			storedProcedure.setParameter("p_month", p_month);
-			storedProcedure.setParameter("p_year", p_year);
+			storedProcedure.registerStoredProcedureParameter("p_group_by", String.class, ParameterMode.IN);
+			storedProcedure.setParameter("p_district_id", p_district_id);
+			storedProcedure.setParameter("p_sub_district_id", p_sub_district_id);
+			storedProcedure.setParameter("p_city_id", p_city_id);
+			storedProcedure.setParameter("p_date_from", p_date_from);
+			storedProcedure.setParameter("p_date_to", p_date_to);
 			storedProcedure.setParameter("p_type_point", p_type_point);
+			storedProcedure.setParameter("p_group_by", p_group_by);
 			storedProcedure.execute();
 			rs = storedProcedure.getResultList();
 		} catch (Exception e) {

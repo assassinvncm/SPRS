@@ -2,11 +2,15 @@ package com.api.service;
 
 import java.util.List;
 
+import com.api.dto.AdminPushNotifcationRequest;
 import com.api.dto.NotificationDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.PushNotificationRequest;
 import com.api.dto.SubscriptionRequest;
 import com.api.entity.Notification;
 import com.api.entity.ReliefPoint;
+import com.api.entity.Store;
+import com.api.entity.User;
 import com.google.firebase.messaging.BatchResponse;
 
 public interface NotificationService {
@@ -18,15 +22,6 @@ public interface NotificationService {
 	 */
 	void sendPnsToDeviceInCity(Long city_id);
 
-	void subscribeToTopic(SubscriptionRequest subscriptionRequest);
-
-	void unsubscribeFromTopic(SubscriptionRequest subscriptionRequest);
-
-	String sendPnsToDevice(PushNotificationRequest pushNotificationRequest);
-
-	BatchResponse sendPnsToDevices(PushNotificationRequest pushNotificationRequest);
-
-	String sendPnsToTopic(PushNotificationRequest pushNotificationRequestModel);
 	
 	/**
 	 * get quantity of notification that un check
@@ -46,12 +41,19 @@ public interface NotificationService {
 	 * 
 	 * @return list<Notification>
 	 */
-	List<NotificationDto> getNotificationByUser(Long uId, int pageIndex, int pageSize);
+	PagingResponse<NotificationDto> getNotificationByUser(Long uId, int pageIndex, int pageSize);
+	
+	/**
+	 * get notification by notification id
+	 * 
+	 * @return list<Notification>
+	 */
+	NotificationDto getNotificationById(Long notification_id);
 
 	/**
 	 * save list notification
 	 */
-	void saveNotification(Notification notifications);
+	Notification saveNotification(Notification notifications);
 
 	/**
 	 * update status notification
@@ -60,8 +62,31 @@ public interface NotificationService {
 	 * @param status
 	 */
 	void updateStatusNotification(Long notiId, String status);
-
+	
+	/**
+	 * 
+	 * @param object
+	 * @param pushNotificationRequest
+	 */
 	void PushNotificationJob(Object object, PushNotificationRequest pushNotificationRequest);
 
+	/**
+	 * push notification to device when user create new relief Point
+	 * @param rp
+	 * @param message
+	 */
 	void sendPnsToDeviceWhenCreateReliefPoint(ReliefPoint rp, String message);
+	
+	/**
+	 * push notification to device that user subscribe store
+	 * @param store
+	 * @param message
+	 */
+	void sendPnsToDeviceSubcribeStore(Store store, String message);
+	
+	/**
+	 * admin system send notification 
+	 * @param admPsn
+	 */
+	void adminSendNotification(AdminPushNotifcationRequest admPsn, User admin);
 }

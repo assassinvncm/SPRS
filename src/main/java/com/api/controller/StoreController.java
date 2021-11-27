@@ -105,6 +105,15 @@ public class StoreController {
 		logger.info("End get Store by id: "+id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
+	
+	@RequestMapping(value = "common/get/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getStoreByIdCommon(@PathVariable(value = "id") Long id) {
+		logger.info("Start get Store by id: "+id);
+		Store st = storeService.getStoreById(id);
+		StoreDto rs = structMapper.storeToStoreDTO(st);
+		logger.info("End get Store by id: "+id);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
+	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")

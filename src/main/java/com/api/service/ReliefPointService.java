@@ -3,6 +3,7 @@ package com.api.service;
 import java.util.List;
 
 import com.api.dto.AddressDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
 import com.api.entity.Address;
@@ -16,6 +17,20 @@ public interface ReliefPointService {
 	 * @return
 	 */
 	List<ReliefPointDto> getReliefPoints(Long uId,ReliefPointFilterDto reliefPointFilterDto);
+	
+	/**
+	 * 
+	 * @param uId
+	 * @param reliefPointFilterDto
+	 * @return
+	 */
+	//PagingResponse<ReliefPointDto> getReliefPoints_v2(Long uId, ReliefPointFilterDto reliefPointFilterDto);
+	
+	/**
+	 * get  reliefpoint by id
+	 * @return
+	 */
+	ReliefPointDto getReliefPointById(Long id);
 	
 	/**
 	 * 

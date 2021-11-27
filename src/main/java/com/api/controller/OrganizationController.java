@@ -58,4 +58,12 @@ public class OrganizationController {
 		return ResponseEntity.ok(
 				new SPRSResponse(Constants.SUCCESS, "Get organization by user successfull", "", orgDto, null));
 	}
+	
+	@RequestMapping(value = "common/origanization", method = RequestMethod.GET)
+	public ResponseEntity<?> getOrganizationById(@RequestParam("id") Long id) {
+		// check access
+		OrganizationDto orgDto = organizationService.getOrganizationById(id);
+		return ResponseEntity.ok(
+				new SPRSResponse(Constants.SUCCESS, "Get organization by user successfull", "", orgDto, null));
+	}
 }

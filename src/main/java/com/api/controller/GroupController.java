@@ -57,6 +57,14 @@ public class GroupController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get all groups success", "", null, mapper.lstGroupToGroupDto(listGroup)));
 	}
 
+	@RequestMapping(value = "/groups-register-orgUser", method = RequestMethod.GET)
+	public ResponseEntity<?> getGroupForOrgzUserRegister() {
+		logger.info("Start get all Group for organize user register");
+		List<Group> listGroup = groupServ.getAllGroupForRegister(3);
+		logger.info("End get all Group for organize user register");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group organize user register success", "", null, mapper.lstGroupToGroupDto(listGroup)));
+	}
+
 	@RequestMapping(value = "/groups-register-web", method = RequestMethod.GET)
 	public ResponseEntity<?> getGroupForRegister() {
 		logger.info("Start get all Group for register");
@@ -70,7 +78,7 @@ public class GroupController {
 		logger.info("Start get all Group for mobile register");
 		List<Group> listGroup = groupServ.getAllGroupForRegister(2);
 		logger.info("End get all Group for mobile register");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group for register success", "", null, mapper.lstGroupToGroupDto(listGroup)));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get group for mobile register success", "", null, mapper.lstGroupToGroupDto(listGroup)));
 	}
 
 

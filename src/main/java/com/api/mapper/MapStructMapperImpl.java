@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Component;
 
 import com.api.dto.AddressDto;
@@ -609,6 +611,8 @@ public class MapStructMapperImpl implements MapStructMapper {
 		notiDto.setMessage(notification.getMessage());
 		notiDto.setStatus(notification.getStatus());
 		notiDto.setType(notification.getType());
+		Date creatimeDate = DateUtils.convertSqlDateToJavaDate(notification.getCreate_time());
+		notiDto.setCreate_time(creatimeDate);
 		
 		if(notiDto.getType().equalsIgnoreCase(Constants.NOTIFICATION_TYPE_STORE)) {
 			notiDto.setSender(storeToStoreDTO(notification.getStore()));
@@ -622,14 +626,15 @@ public class MapStructMapperImpl implements MapStructMapper {
 	}
 
 	@Override
-	public List<NotificationDto> lstNotificationToNotificationDto(List<Notification> lstNotificaiton) {
+	public List<NotificationDto> lstNotificationToNotificationDto(Stream<Notification> lstNotificaiton) {
 		// TODO Auto-generated method stub
 		if(lstNotificaiton == null) {
 			return null;
 		}
 		List<NotificationDto> lstNotiDto = new ArrayList<NotificationDto>();
-		lstNotiDto = lstNotificaiton.stream().map(noti ->{
-			return notificationToNotificationDto(noti);
+		
+		lstNotiDto = lstNotificaiton.map((noti)->{
+			return  notificationToNotificationDto(noti);
 		}).collect(Collectors.toList());
 		
 		return lstNotiDto;
@@ -644,6 +649,8 @@ public class MapStructMapperImpl implements MapStructMapper {
 		PermissionDto perDto = new PermissionDto();
 		perDto.setId(per.getId());
 		perDto.setName(per.getName());
+		perDto.setTo(per.getTo_page());
+		perDto.setIcon(per.getIcon_name());
 		return perDto;
 	}
 
@@ -722,6 +729,20 @@ public class MapStructMapperImpl implements MapStructMapper {
 			}
 		}
 		return lenght;
+	}
+
+	@Override
+	public List<ReliefPointDto> lstReliefPointStreamToReliefPointDto(Stream<ReliefPoint> lstReliefPoint) {
+		// TODO Auto-generated method stub
+		if(lstReliefPoint == null) {
+			return null;
+		}
+		List<ReliefPointDto> lstReliefPointDto = new ArrayList<ReliefPointDto>();
+		
+		lstReliefPointDto = lstReliefPoint.map((rp)->{
+			return  reliefPointToreliefPointDto(rp);
+		}).collect(Collectors.toList());
+		return lstReliefPointDto;
 	}
 	
 //	private List<PermissionDto> addChildrenToParent(Permission p, List<Permission> pl){

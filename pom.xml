@@ -128,6 +128,16 @@
 			<artifactId>mockito-core</artifactId>
 			<version>3.11.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jobrunr</groupId>
+			<artifactId>jobrunr-spring-boot-starter</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse</groupId>
+		    <artifactId>yasson</artifactId>
+		    <version>1.0.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>
