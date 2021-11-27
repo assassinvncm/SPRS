@@ -46,9 +46,11 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	NotificationService notificationService;
 
 	@Override
-	public ReliefPoint getReliefPointById(Long id) {
+	public ReliefPointDto getReliefPointById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		ReliefPoint rp = reliefPointRepository.getById(id);
+		ReliefPointDto rpDto = mapStructMapper.reliefPointToreliefPointDto(rp);
+		return rpDto;
 	}
 
 	@Override

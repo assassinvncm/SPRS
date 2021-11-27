@@ -33,10 +33,10 @@ public interface ReliefPointService {
 	//PagingResponse<ReliefPointDto> getReliefPoints_v2(Long uId, ReliefPointFilterDto reliefPointFilterDto);
 	
 	/**
-	 * 
+	 * get  reliefpoint by id
 	 * @return
 	 */
-	ReliefPoint getReliefPointById(Long id);
+	ReliefPointDto getReliefPointById(Long id);
 	
 	/**
 	 * 
