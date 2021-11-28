@@ -14,7 +14,7 @@ import com.api.repositories.custom.StoreRepositoryCustom;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long>{
-	@Query(value = "CALL prc_store_getStoreByTypeOrStatus(:user_id,:status,:type,:current_page,:page_size);", nativeQuery = true)
-	List<Object[]> getStoreByStatusOrType(@Param("user_id") Long user_id,@Param("status") int status,@Param("type") String type,@Param("current_page") 
-	int current_page,@Param("page_size") int page_size);
+	@Query(value = "CALL prc_store_getStoreByTypeOrStatus(:p_user_id,:p_status,:p_type,:p_current_page,:p_page_size);", nativeQuery = true)
+	List<Object[]> getStoreByStatusOrType(@Param("p_user_id") Long p_user_id,@Param("p_status") int p_status,@Param("p_type") Long types,@Param("p_current_page") 
+	int p_current_page,@Param("p_page_size") int p_page_size);
 }

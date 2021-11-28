@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
@@ -133,10 +134,11 @@ public class StoreServiceImpl implements StoreService{
 		storeTemp.setStore_category(lstStoreDetail);
 		Address address = addressService.mapAddress(s.getAddress());
 		storeTemp.setLocation(address);
-		storeTemp.setClose_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
+		storeTemp.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
 		storeTemp.setDescription(s.getDescription());
 		storeTemp.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
 		storeTemp.setStatus(s.getStatus());
+		storeTemp.setName(s.getName());
 		
 		return storeRepository.saveAndFlush(storeTemp);
 	}
@@ -154,13 +156,13 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public Store uploadStoreImg(MultipartFile file, String store_id) {
+	public Store uploadStoreImg(ImageDto image) {
 		// TODO Auto-generated method stub
-		Store st = getStoreById(Long.parseLong(store_id));
+		Store st = getStoreById(image.getId());
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		String img_url = amazonClient.uploadFile(file);
+		String img_url = amazonClient.uploadFile(image);
 		st.setImages(new Image(img_url));
 //		st.getLstImage().add(new Image(st, img_url));
 		
@@ -191,9 +193,8 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public List<StoreDto> getStoreFilterByType(long user_id, int status, String type, int page_size, int page_index) {
-		//Object[] stm = storeRepository.filterStoreByStatusType(1, "yess");
-		List<Object[]> lsRs = storeRepository.getStoreByStatusOrType(user_id, status, type,page_index,page_size);
+	public List<StoreDto> getStoreFilterByType(long user_id, int status, Long types, int page_size, int page_index) {
+		List<Object[]> lsRs = storeRepository.getStoreByStatusOrType(user_id, status, types,page_index,page_size);
 		return mapStructMapper.lstStoreToStoreDto(mapper.getStoreByStatusOrType_Mapper(lsRs));
 	}
 }

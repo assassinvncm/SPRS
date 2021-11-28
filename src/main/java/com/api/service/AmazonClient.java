@@ -17,6 +17,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.util.Base64;
+import com.api.dto.ImageDto;
 import com.ultils.Constants;
 
 @Service
@@ -38,16 +40,17 @@ public class AmazonClient {
        this.s3client = new AmazonS3Client(credentials);
     }
     
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
+    private File convertBase64ToFile(ImageDto image) throws IOException {
+    	byte[] imageByte= Base64.decode(image.getEncodedImage());
+        File convFile = new File(image.getImageName());
         FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
+        fos.write(imageByte);
         fos.close();
         return convFile;
     }
     
-    private String generateFileName(MultipartFile multiPart) {
-        return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
+    private String generateFileName(ImageDto image) {
+        return new Date().getTime() + "-" + image.getImageName().replace(" ", "_");
     }
     
     private void uploadFileTos3bucket(String fileName, File file) {
@@ -55,12 +58,12 @@ public class AmazonClient {
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
     
-    public String uploadFile(MultipartFile multipartFile) {
+    public String uploadFile(ImageDto image) {
 
         String fileUrl = "";
         try {
-            File file = convertMultiPartToFile(multipartFile);
-            String fileName = generateFileName(multipartFile);
+            File file = convertBase64ToFile(image);
+            String fileName = generateFileName(image);
 //            fileUrl = "https://" + bucketName + "." + endpointUrl.substring(8) + "/" + fileName;
 //            fileUrl = Constants.IMAGE_URL + fileName;
             fileUrl = fileName;

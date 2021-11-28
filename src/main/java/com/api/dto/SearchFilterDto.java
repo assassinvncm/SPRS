@@ -12,6 +12,9 @@ public class SearchFilterDto {
 	@JsonProperty("types")
 	private List<Long> types;
 	
+	@JsonProperty("type")
+	private Long type;
+	
 	@JsonProperty("status")
 	private Boolean status;
 	
@@ -43,6 +46,20 @@ public class SearchFilterDto {
 		this.sort = sort;
 		this.pageSize = pageSize;
 		this.pageIndex = pageIndex;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public Long getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(Long type) {
+		this.type = type;
 	}
 
 	public int getStatus_store() {

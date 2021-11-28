@@ -12,9 +12,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.AddressDto;
+import com.api.dto.ImageDto;
 import com.api.dto.NotificationDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
@@ -185,12 +187,12 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
-	public ReliefPoint uploadReliefImg(MultipartFile file, String relief_id) {
-		ReliefPoint rp = reliefPointRepository.getById(Long.parseLong(relief_id));
+	public ReliefPoint uploadReliefImg(ImageDto image) {
+		ReliefPoint rp = reliefPointRepository.getById(image.getId());
 		if(null == rp) {
 			throw new AppException(402,"Relief point is not Found!");
 		}
-		String img_url = amazonClient.uploadFile(file);
+		String img_url = amazonClient.uploadFile(image);
 		rp.setImages(new Image(img_url));
 //		st.getLstImage().add(new Image(st, img_url));
 		
