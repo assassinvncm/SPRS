@@ -54,17 +54,17 @@ public class DeviceController {
 			@RequestParam("token") String token) {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
-		deviceService.updateDeviceToken(user.getId(), token);
+		DeviceDto deviceDto = deviceService.updateDeviceToken(user.getId(), token);
 		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
+				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", deviceDto, null));
 	}
 
 	@RequestMapping(value = "/update/{serial}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateDeviceAddress(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody AddressDto addressDto, @PathVariable("serial") String serial) {
 
-		deviceService.updateDeviceAddress(serial, addressDto);
+		DeviceDto deviceDto = deviceService.updateDeviceAddress(serial, addressDto);
 		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
+				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", deviceDto, null));
 	}
 }
