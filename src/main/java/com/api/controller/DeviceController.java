@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.dto.AddressDto;
 import com.api.dto.DeviceDto;
 import com.api.dto.SPRSResponse;
+import com.api.entity.Device;
 import com.api.entity.User;
 import com.api.service.DeviceService;
 import com.api.service.UserService;
@@ -33,9 +34,9 @@ public class DeviceController {
 			@RequestBody DeviceDto deviceDto) {
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 
-		deviceService.insertDevice(user, deviceDto);
+		DeviceDto d = deviceService.insertDevice(user, deviceDto);
 		return ResponseEntity
-				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
+				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", d, null));
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
@@ -58,11 +59,11 @@ public class DeviceController {
 				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
 	}
 
-	@RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/update/{serial}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateDeviceAddress(@RequestHeader("Authorization") String requestTokenHeader,
-			@RequestBody AddressDto addressDto, @PathVariable("id") long device_id) {
+			@RequestBody AddressDto addressDto, @PathVariable("serial") String serial) {
 
-		deviceService.updateDeviceAddress(device_id, addressDto);
+		deviceService.updateDeviceAddress(serial, addressDto);
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Update reliefpoint By ID " + "" + " success", "", null, null));
 	}

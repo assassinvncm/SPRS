@@ -44,5 +44,7 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 	@Modifying
 	@Query(value = "DELETE FROM sprs_device WHERE sprs_device.user_id = :uid", nativeQuery = true)
 	void deleteByUserId(@Param("uid") Long user_id);
+	
+	Optional<Device> findBySerial(String serial);
 
 }
