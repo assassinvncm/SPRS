@@ -14,6 +14,12 @@ public class ReportDto {
 	private int type_chart;
 	private int type_point;
 	
+	public ReportDto() {
+		super();
+		date_from = "";
+		date_to = "";
+	}
+
 	public String getDate_from() {
 		return date_from;
 	}

@@ -1,11 +1,18 @@
 package com.api.dto;
 
 public class ReportResultDto {
+	private int day;
 	private int month;
 	private int year;
-	private int total;
+	private double total;
 	private int type_point;
 	
+	public int getDay() {
+		return day;
+	}
+	public void setDay(int day) {
+		this.day = day;
+	}
 	public int getMonth() {
 		return month;
 	}
@@ -18,10 +25,10 @@ public class ReportResultDto {
 	public void setYear(int year) {
 		this.year = year;
 	}
-	public int getTotal() {
+	public double getTotal() {
 		return total;
 	}
-	public void setTotal(int total) {
+	public void setTotal(double total) {
 		this.total = total;
 	}
 	public int getType_point() {

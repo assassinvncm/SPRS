@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,9 +52,6 @@ public class StoreController {
 	
 	@Autowired
 	private MapStructMapper structMapper;
-	
-	@Autowired
-	private AmazonClient amazonClient;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
@@ -142,18 +140,12 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}
 
-	@RequestMapping(value = "/uploadImg/{id}", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
-	public ResponseEntity<?> uploadImg(@PathVariable(value = "id") Long id, @Validated @RequestPart(value = "file") MultipartFile file) {
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImg(@RequestParam(value = "file") MultipartFile file, String store_id) {
 		logger.info("Start uploadImg Store");
-		Store st = storeService.getStoreById(id);
-		if(null == st) {
-			throw new AppException(402,"Store is not Found!");
-		}
-		String img_url = amazonClient.uploadFile(file);
-		storeService.updateStoreImg(st,img_url);
+		Store st = storeService.uploadStoreImg(file, store_id);
 		logger.info("End uploadImg Store");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+st.getId()+" success", "", st, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for store success", "", "", null));
 	}
 	
 	@RequestMapping(value = "/subcribe", method = RequestMethod.POST)

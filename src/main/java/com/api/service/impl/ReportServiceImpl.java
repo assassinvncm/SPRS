@@ -42,6 +42,16 @@ public class ReportServiceImpl implements ReportService{
 				, group_by);
 		
 		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
+		int total = 0;
+		for (ReportResultDto reportResultDto : lstRs) {
+			total += reportResultDto.getTotal();
+		}
+
+		for (ReportResultDto reportResultDto : lstRs) {
+			double percent = reportResultDto.getTotal()*100/total;
+			reportResultDto.setTotal(percent);
+		}
+		
 		return lstRs;
 	}
 

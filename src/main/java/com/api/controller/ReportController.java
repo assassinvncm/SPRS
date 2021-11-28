@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,10 +33,21 @@ public class ReportController {
 	ProcedureMapper mapper;
 
 	@RequestMapping(value = "/getReport", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getAll(@RequestBody ReportDto rpdto) {
 		logger.info("Start get report");
 		List<ReportResultDto> rs = reportServ.getReport(rpdto);
 		logger.info("End get report");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report success", "", rs, null));
 	}
+
+	@RequestMapping(value = "/getReportOverview", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
+	public ResponseEntity<?> getReportOverview() {
+		logger.info("Start get report Overview");
+		List<ReportResultDto> rs = reportServ.getReport(new ReportDto());
+		logger.info("End get report Overview");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
+	}
+	
 }

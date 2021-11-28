@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,6 +60,7 @@ public class PermissionController {
 	}
 	
 	@RequestMapping(value = "/permissions/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> getPermissionById(@PathVariable(value = "id") Long id){
 		logger.info("Start Permission by id: "+id);
 		Permission p = perServ.getById(id);
@@ -67,6 +69,7 @@ public class PermissionController {
 	}
 	
 	@RequestMapping(value = "/permissions", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> savePermission(@Validated @RequestBody Permission per){
 		logger.info("Start save permission id: "+per.getId());
 		Permission p = perServ.createPermission(per);
@@ -75,6 +78,7 @@ public class PermissionController {
 	}
 	
 	@RequestMapping(value = "/permissions/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> updatePermission(@PathVariable(value = "id") Long id ,@Validated @RequestBody Permission per){
 		logger.info("Start update permission id: "+per.getId());
 		Permission p = perServ.updatePermission(per, id);
@@ -82,7 +86,8 @@ public class PermissionController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Permission success!", "", mapper.permisisonToPermisionDto(p), null));
 	}
 	@RequestMapping(value = "/permissions-authoried/{group_id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getAllGroupAuthoried(@PathVariable("group_id") Long group_id) {
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
+	public ResponseEntity<?> getAllPermissionAuthoried(@PathVariable("group_id") Long group_id) {
 		logger.info("Start get all Permission authoried by group id: "+group_id);
 		List<Permission> listGroup = perServ.getAllPermissionAuthoriedByGroup(group_id);
 		logger.info("End get all Permission authoried by group id: "+group_id);
@@ -90,7 +95,8 @@ public class PermissionController {
 	}
 
 	@RequestMapping(value = "/permissions-unauthoried/{group_id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getAllGroupUnAuthoried(@PathVariable("group_id") Long group_id) {
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
+	public ResponseEntity<?> getAllPermissionUnAuthoried(@PathVariable("group_id") Long group_id) {
 		logger.info("Start get all Permission unauthoried by group id: "+group_id);
 		List<Permission> listGroup = perServ.getAllPermissionUnAuthoriedByGroup(group_id);
 		logger.info("End get all Permission unauthoried by group id: "+group_id);
