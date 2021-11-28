@@ -58,6 +58,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> getAllUser() {
 		logger.info("Start get All User");
 		List<User> lst = userService.getAllUser();
@@ -80,7 +81,6 @@ public class UserController {
 //	}
 	
 	@RequestMapping(value = "/users_v2/user", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> registerUser_v2(@Validated @RequestBody UserDto userDto) {
 		userService.registerUser_v2(userDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create user success!", "", null, null));

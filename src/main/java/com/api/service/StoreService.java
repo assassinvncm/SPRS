@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.StoreDto;
 import com.api.entity.Address;
@@ -72,7 +73,7 @@ public interface StoreService {
 	 * @param Store
 	 * @return
 	 */
-	Store uploadStoreImg(MultipartFile file, String store_id);
+	Store uploadStoreImg(ImageDto image);
 	
 	/**
 	 * 
@@ -90,5 +91,5 @@ public interface StoreService {
 	 * List<StoreFilterMapper>
 	 * @return
 	 */
-	List<StoreDto> getStoreFilterByType(long user_id, int status, String type, int page_size, int page_index);
+	List<StoreDto> getStoreFilterByType(long user_id, int status, Long types, int page_size, int page_index);
 }

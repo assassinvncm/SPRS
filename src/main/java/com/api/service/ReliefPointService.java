@@ -2,9 +2,11 @@ package com.api.service;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.AddressDto;
+import com.api.dto.ImageDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
@@ -100,5 +102,5 @@ public interface ReliefPointService {
 	 * @param MultipartFile, store_id
 	 * @return
 	 */
-	ReliefPoint uploadReliefImg(MultipartFile file, String relief_id);
+	ReliefPoint uploadReliefImg(ImageDto image);
 }

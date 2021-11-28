@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
@@ -71,7 +72,7 @@ public class StoreController {
 			@RequestBody SearchFilterDto sft) {
 		logger.info("Start get Store filter");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		List<StoreDto> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft.getStatus_store(),null, sft.getPageSize(), sft.getPageIndex());
+		List<StoreDto> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft.getStatus_store(),sft.getType(), sft.getPageSize(), sft.getPageIndex());
 		logger.info("End get Store filter");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store owner success", "", lstStore, null));
 	}
@@ -140,10 +141,18 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}
 
+//	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+//	public ResponseEntity<?> uploadImg(@RequestParam(value = "file") MultipartFile file, String store_id) {
+//		logger.info("Start uploadImg Store");
+//		Store st = storeService.uploadStoreImg(file, store_id);
+//		logger.info("End uploadImg Store");
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for store success", "", "", null));
+//	}
+
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadImg(@RequestParam(value = "file") MultipartFile file, String store_id) {
+	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg Store");
-		Store st = storeService.uploadStoreImg(file, store_id);
+		Store st = storeService.uploadStoreImg(image);
 		logger.info("End uploadImg Store");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for store success", "", "", null));
 	}
