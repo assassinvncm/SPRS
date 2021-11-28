@@ -407,13 +407,13 @@ public class UserSerivceImpl implements UserService {
 		if(encNewPass.equals(userDto.getPassword())) {
 			throw new AppException(402,"Password must not the same old passs");
 		}
-		
-		User user = mapStructMapper.userDtoToUser(userDto);
-		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
-		user.setPassword(encNewPass);
-		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
-		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
-		userRepository.save(user);
+		userRepository.updateUser(userDto.getId(), encNewPass);
+//		User user = mapStructMapper.userDtoToUser(userDto);
+//		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
+//		user.setPassword(encNewPass);
+//		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
+//		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
+//		userRepository.save(user);
 	}
 
 	@Override
