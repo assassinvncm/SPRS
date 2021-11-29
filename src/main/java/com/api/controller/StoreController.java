@@ -106,7 +106,7 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
 	
-	@RequestMapping(value = "common/get/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/common/get/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getStoreByIdCommon(@PathVariable(value = "id") Long id) {
 		logger.info("Start get Store by id: "+id);
 		Store st = storeService.getStoreById(id);

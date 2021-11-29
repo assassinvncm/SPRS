@@ -54,4 +54,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Procedure(procedureName  = "prc_ungrant_permission")
 	String ungrantPermission(@Param("group_id") long group_id, @Param("permission_id") long permission_id);
 	
+	@Query("SELECT u FROM User u INNER JOIN u.user_sos s WHERE s.id = :SOS_id")
+	Optional<User> getUserBySosId(@Param("SOS_id") long id);
+	
 }
