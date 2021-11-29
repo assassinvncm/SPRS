@@ -1,7 +1,9 @@
 package com.api.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -20,6 +22,7 @@ import com.api.controller.UserController;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.GroupDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
@@ -42,8 +45,12 @@ import com.api.service.UserService;
 import com.exception.AppException;
 import com.exception.ProcException;
 import com.jwt.config.JwtTokenUtil;
+import org.springframework.data.domain.Sort;
 import com.ultils.Constants;
 import com.ultils.Ultilities;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UserSerivceImpl implements UserService {
@@ -573,5 +580,23 @@ public class UserSerivceImpl implements UserService {
 	public List<User> getUsernameLike(String name) {
 		List<User> rs = userRepository.searchByNameLike(name);
 		return rs;
+	}
+
+	@Override
+	public Map<String, Object> getOwnOrganizeUser(UserDto u, SearchFilterDto filter) {
+		List<UserDto> lstUsrRs = new ArrayList<UserDto>();
+		Sort sortable = null;
+	    if (filter.getSort()) {
+	      sortable = Sort.by("username").descending();
+	    }
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(),sortable);
+		Page<User> lstRs = userRepository.getOwnOrganizeUser(u.getOrganization().getId(), u.getId(), pageable);
+	    lstUsrRs = mapStructMapper.lstUserToUserDto(lstRs.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("users", lstUsrRs);
+        response.put("currentPage", lstRs.getNumber());
+        response.put("totalItems", lstRs.getTotalElements());
+        response.put("totalPages", lstRs.getTotalPages());
+		return response;
 	}
 }
