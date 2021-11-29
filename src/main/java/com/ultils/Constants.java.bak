@@ -8,7 +8,7 @@ public class Constants {
 	public static final String SERVER_ERR = "501";
 	public static final String OTP_MESSAGE = "Mã xác minh SPRS của bạn là ";
 	public static final String[] NONE_AUTH = { "/utilities/**", "/swagger-ui.html", "/swagger-ui/**",
-			"/sprs/api/address/**", "/v3/**", "/sprs/api/item", "/authenticate",
+			"/sprs/api/address/**", "/v3/**", "/sprs/api/item", "/authenticate-web", "/authenticate-mobile",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/forgotPassword", "/sprs/api/reliefPoint-manage/get",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
@@ -46,4 +46,11 @@ public class Constants {
 	public static final String MAP_TYPE_RELIEFPOINT = "rp";
 	public static final String MAP_TYPE_ORGANIZATION = "org";
 	public static final String MAP_TYPE_SOS = "sos";
+	
+	//Constant for Group permission
+	public static final String USER_PER_CODE = "PER_NORMU_ACEN";
+	public static final String ORG_USER_PER_CODE = "PER_ORGU_ACEN";
+	public static final String ORG_ADMIN_PER_CODE = "PER_ORGADM_ACEN";
+	public static final String STORE_PER_CODE = "PER_STR_ACEN";
+	public static final String SYSTEM_ADMIN_PER_CODE = "PER_SYSADM_ACEN";
 }
