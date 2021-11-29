@@ -42,4 +42,19 @@ public class SOSServiceImpl implements SOSService{
 		return sosDto;
 	}
 
+	@Override
+	public SOSDto getSOSCommon(long id) {
+		User u = userRepo.getUserBySosId(id).orElseThrow(()-> new AppException(403,"SOS not exist"));
+		
+		SOSDto SOSDto = mapStructMapper.SOSToSOSDto(u.getUser_sos());
+		UserDto uDto = new UserDto();
+		uDto.setId(u.getId());
+		uDto.setAddress(mapStructMapper.addressToAddressDto(u.getAddress()));
+		uDto.setPhone(u.getPhone());
+		uDto.setFull_name(u.getFull_name());
+		SOSDto.setUser(uDto);
+				
+		return SOSDto;
+	}
+
 }

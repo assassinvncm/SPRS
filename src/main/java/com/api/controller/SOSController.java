@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SOSDto;
@@ -50,7 +51,7 @@ public class SOSController {
 	private MapStructMapper structMapper;
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_NORMU_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_SOS')")
 	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody SOSDto s) {
 		logger.info("Start update SOS");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
@@ -61,11 +62,20 @@ public class SOSController {
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_SOS')")
 	public ResponseEntity<?> getAllStore(@RequestHeader ("Authorization") String requestTokenHeader) {
 		logger.info("Start get SOS");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
 		User u = userRepo.getById(userDto.getId());
 		logger.info("End get SOS");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get SOS success", "", structMapper.SOSToSOSDto(u.getUser_sos()), null));
+	}
+	
+	@RequestMapping(value = "/common/get", method = RequestMethod.GET)
+	public ResponseEntity<?> getSOSDetail(@RequestParam("id") long id) {
+		logger.info("Start get SOS common");
+		SOSDto sosDto = sosServ.getSOSCommon(id);
+		logger.info("End get SOS common");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get SOS success", "", sosDto, null));
 	}
 }
