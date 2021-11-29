@@ -29,9 +29,6 @@ public class SOSDto implements Serializable{
 	@JsonProperty("address")
 	@NotNull
 	private AddressDto address;
-	
-	@JsonProperty("user")
-	private UserDto user;
 
 	public AddressDto getAddress() {
 		return address;
@@ -72,15 +69,5 @@ public class SOSDto implements Serializable{
 	public void setStatus(int status) {
 		this.status = status;
 	}
-
-	public UserDto getUser() {
-		return user;
-	}
-
-	public void setUser(UserDto user) {
-		this.user = user;
-	}
-	
-	
 	
 }

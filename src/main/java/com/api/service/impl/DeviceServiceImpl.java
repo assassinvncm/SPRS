@@ -83,16 +83,16 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	@Override
-	public void updateDeviceAddress(long device_id, AddressDto addressDto) {
+	public DeviceDto updateDeviceAddress(String serial, AddressDto addressDto) {
 		// TODO Auto-generated method stub
 //		if (addressDto.getId() == 0) {
 //			throw new AppException(402, "address id not found");
 //		}
-		Device d = deviceRepository.findById(device_id).orElseThrow(() -> new AppException(403, "User not have device "));
+		Device d = deviceRepository.findBySerial(serial).orElseThrow(() -> new AppException(403, "User not have device "));
 		Address address = addressService.mapAddress(addressDto);
 		d.setAddress(address);
-		deviceRepository.saveAndFlush(d);
-
+		Device  deviceRes= deviceRepository.saveAndFlush(d);
+		return mapStructMapper.deviceToDeviceDto(deviceRes);
 	}
 
 	@Override

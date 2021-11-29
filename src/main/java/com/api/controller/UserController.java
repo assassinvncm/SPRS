@@ -3,6 +3,7 @@ package com.api.controller;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.GrantAccessDto;
+import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.User;
@@ -48,6 +52,7 @@ public class UserController {
 	MapStructMapper mapper;
 	
 	@RequestMapping(value = "/users/search/{name}", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> getSearch(@PathVariable(value = "name") String name) {
 		logger.info("Start get search User like");
 		List<User> lst = userService.getUsernameLike(name);
@@ -56,11 +61,20 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> getAllUser() {
 		logger.info("Start get All User");
 		List<User> lst = userService.getAllUser();
 		logger.info("End get All User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All User success!", "", null, mapper.lstUserToUserDto(lst)));
+	}
+
+	@RequestMapping(value = "/getOwnOrg", method = RequestMethod.POST)
+	public ResponseEntity<?> getOwnOrganizeUser(@RequestHeader("Authorization") String requestTokenHeader, @RequestBody SearchFilterDto filter) {
+
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		Map<String, Object> lstRs = userService.getOwnOrganizeUser(userDto, filter);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get own organize user success", "", lstRs, null));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
@@ -97,12 +111,13 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users_v2/ownStore", method = RequestMethod.POST)
-	public ResponseEntity<?> registerOownStore_v2(@Validated @RequestBody UserDto userDto) {
+	public ResponseEntity<?> registerOwnStore_v2(@Validated @RequestBody UserDto userDto) {
 		userService.registerStoreUser_v2(userDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Request to create account suscess!", "", null, null));
 	}
 	
 	@RequestMapping(value = "/users/grantGroup", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> grantGroup(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start grant group");
 		userService.grantGroup(gtdo);
@@ -111,6 +126,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users/unGrantGroup", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> unGrantGroup(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start ungrant group");
 		userService.unGrantGroup(gtdo);
@@ -119,6 +135,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users/grantPermission", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> grantPermission(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start grant permission");
 		userService.grantPermission(gtdo);
@@ -127,6 +144,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/users/unGrantPermission", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> unGrantPermission(@Validated @RequestBody GrantAccessDto gtdo) {
 		logger.info("Start ungrant permission");
 		userService.unGrantPermission(gtdo);

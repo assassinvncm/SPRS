@@ -6,9 +6,11 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 
+import com.api.entity.Image;
 import com.api.entity.ReliefInformation;
 import com.api.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
@@ -54,6 +56,9 @@ public class ReliefPointDto {
 	@JsonProperty("modified_date")
 	public String modified_date;
 
+	@JsonProperty("images")
+    private Image images;
+
 	public ReliefPointDto() {
 		super();
 	}
@@ -70,6 +75,20 @@ public class ReliefPointDto {
 		this.user_rp = user_rp;
 		this.reliefInformations = reliefInformations;
 		this.address = address;
+	}
+
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
 	}
 
 	public long getId() {

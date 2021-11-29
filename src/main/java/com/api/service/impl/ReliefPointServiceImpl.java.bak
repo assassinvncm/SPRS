@@ -21,7 +21,6 @@ import com.api.dto.NotificationDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
-import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Image;
 import com.api.entity.ReliefInformation;
@@ -60,16 +59,6 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		// TODO Auto-generated method stub
 		ReliefPoint rp = reliefPointRepository.getById(id);
 		ReliefPointDto rpDto = mapStructMapper.reliefPointToreliefPointDto(rp);
-		
-		//convert dto to entity
-		UserDto uDto = new UserDto();
-		User u = rp.getUser_rp();
-		uDto.setId(u.getId());
-		uDto.setAddress(mapStructMapper.addressToAddressDto(u.getAddress()));
-		uDto.setPhone(u.getPhone());
-		uDto.setFull_name(u.getFull_name());
-		
-		rpDto.setUser_rp(uDto);
 		return rpDto;
 	}
 

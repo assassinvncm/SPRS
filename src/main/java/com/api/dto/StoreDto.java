@@ -36,16 +36,22 @@ public class StoreDto {
 	@JsonProperty("address")
 	@NotNull
 	private AddressDto address;
-	
-	@JsonIgnore
-    private List<Image> lstImage;
 
-	public List<Image> getLstImage() {
-		return lstImage;
+	@JsonProperty("images")
+    private Image images;
+
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
 	}
 
-	public void setLstImage(List<Image> lstImage) {
-		this.lstImage = lstImage;
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
 	}
 
 	public UserDto getUser_st() {

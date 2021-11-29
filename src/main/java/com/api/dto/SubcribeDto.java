@@ -13,7 +13,6 @@ public class SubcribeDto {
 	private Long store_id;
 	
 	@JsonProperty("user_id")
-	@NotEmpty
 	private Long user_id;
 	
 	@JsonProperty("user_subcribe")

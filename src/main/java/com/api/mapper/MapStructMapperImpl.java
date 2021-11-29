@@ -387,8 +387,12 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);
 		}).collect(Collectors.toList());
-
 		reliefPointDto.setReliefInformations(rpDto);
+
+		if(reliefPointDto.getImages()!=null) {
+			reliefPoint.getImages().setImg_url(Constants.IMAGE_URL+reliefPoint.getImages().getImg_url());
+			reliefPointDto.setImages(reliefPoint.getImages());
+		}
 //		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
 
 		return reliefPointDto;
@@ -403,13 +407,17 @@ public class MapStructMapperImpl implements MapStructMapper {
 		StoreDto storeDto = new StoreDto();
 		storeDto.setId(store.getId());
 		storeDto.setName(store.getName());
+		storeDto.setStatus(store.getStatus());
 		storeDto.setClose_time(store.getClose_time().toString().substring(0, 5));
 		storeDto.setOpen_time(store.getOpen_time().toString().substring(0, 5));
 		storeDto.setDescription(store.getDescription());
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
 		storeDto.setStoreDetail(lstStoreCateToStoreCateDto(store.getStore_category()));
 		storeDto.setUser_st(userToUserDto(store.getUsers()));
-
+		if(store.getImages()!=null) {
+			store.getImages().setImg_url(Constants.IMAGE_URL+store.getImages().getImg_url());
+			storeDto.setImages(store.getImages());
+		}
 		return storeDto;
 	}
 
@@ -649,6 +657,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		PermissionDto perDto = new PermissionDto();
 		perDto.setId(per.getId());
 		perDto.setName(per.getName());
+		perDto.setCode(per.getCode());
 		perDto.setTo(per.getTo_page());
 		perDto.setIcon(per.getIcon_name());
 		return perDto;

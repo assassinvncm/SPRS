@@ -1,6 +1,7 @@
 package com.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
@@ -53,9 +55,6 @@ public class StoreController {
 	@Autowired
 	private MapStructMapper structMapper;
 	
-	@Autowired
-	private AmazonClient amazonClient;
-	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
 	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
@@ -74,7 +73,7 @@ public class StoreController {
 			@RequestBody SearchFilterDto sft) {
 		logger.info("Start get Store filter");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		List<StoreDto> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft.getStatus_store(),null, sft.getPageSize(), sft.getPageIndex());
+		Map<String, Object> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft);
 		logger.info("End get Store filter");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store owner success", "", lstStore, null));
 	}
@@ -107,7 +106,7 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
 	
-	@RequestMapping(value = "common/get/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/common/get/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getStoreByIdCommon(@PathVariable(value = "id") Long id) {
 		logger.info("Start get Store by id: "+id);
 		Store st = storeService.getStoreById(id);
@@ -143,17 +142,20 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete Store By ID "+storeDto.getId()+" success", "", storeDto, null));
 	}
 
+//	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+//	public ResponseEntity<?> uploadImg(@RequestParam(value = "file") MultipartFile file, String store_id) {
+//		logger.info("Start uploadImg Store");
+//		Store st = storeService.uploadStoreImg(file, store_id);
+//		logger.info("End uploadImg Store");
+//		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for store success", "", "", null));
+//	}
+
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
-	public ResponseEntity<?> uploadImg(@RequestParam(value = "file") MultipartFile file, String store_id) {
+	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg Store");
-		Store st = storeService.getStoreById(Long.parseLong(store_id));
-		if(null == st) {
-			throw new AppException(402,"Store is not Found!");
-		}
-		String img_url = amazonClient.uploadFile(file);
-		storeService.updateStoreImg(st,img_url);
+		Store st = storeService.uploadStoreImg(image);
 		logger.info("End uploadImg Store");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update Store By ID "+st.getId()+" success", "", st, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for store success", "", "", null));
 	}
 	
 	@RequestMapping(value = "/subcribe", method = RequestMethod.POST)

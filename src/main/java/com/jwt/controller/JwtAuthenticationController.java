@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.exception.AppException;
+import com.exception.AuthenException;
 import com.jwt.config.JwtTokenUtil;
 import com.jwt.entity.JwtRequest;
 import com.jwt.entity.JwtResponse;
@@ -68,7 +70,7 @@ public class JwtAuthenticationController {
 		} catch (DisabledException e) {
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
+			throw new AppException(207, "Sai mật khẩu");// AuthenException("Sai mật khẩu");// ("INVALID_CREDENTIALS", e);
 		}
 	}
 }

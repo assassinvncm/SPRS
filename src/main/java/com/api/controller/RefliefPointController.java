@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.api.dto.ImageDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
@@ -51,8 +54,14 @@ public class RefliefPointController {
 	@Autowired
 	UserService userService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
+		logger.info("Start uploadImg Store");
+		ReliefPoint rp = reliefPointService.uploadReliefImg(image);
+		logger.info("End uploadImg Store");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for relief point success", "", "", null));
+	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,

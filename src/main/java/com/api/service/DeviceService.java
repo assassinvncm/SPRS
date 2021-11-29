@@ -30,7 +30,7 @@ public interface DeviceService {
 	 * 
 	 * @param addressDto
 	 */
-	void updateDeviceAddress(long device_id , AddressDto addressDto);
+	DeviceDto updateDeviceAddress(String serial , AddressDto addressDto);
 
 	/**
 	 * update new token
