@@ -1,9 +1,11 @@
 package com.api.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.api.dto.AddressDto;
 import com.api.dto.GrantAccessDto;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
@@ -178,4 +180,11 @@ public interface UserService {
 	 * @return GrantAccessDto
 	 */
 	GrantAccessDto unGrantPermission(GrantAccessDto gdto);
+	
+	/**
+	 * 
+	 * @param name
+	 * @return List<User>
+	 */
+	Map<String, Object> getOwnOrganizeUser(UserDto u, SearchFilterDto filter);
 }

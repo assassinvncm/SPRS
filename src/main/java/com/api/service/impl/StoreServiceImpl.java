@@ -1,18 +1,27 @@
 package com.api.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
+import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Image;
 import com.api.entity.ReliefInformation;
@@ -193,8 +202,20 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public List<StoreDto> getStoreFilterByType(long user_id, int status, Long types, int page_size, int page_index) {
-		List<Object[]> lsRs = storeRepository.getStoreByStatusOrType(user_id, status, types,page_index,page_size);
-		return mapStructMapper.lstStoreToStoreDto(mapper.getStoreByStatusOrType_Mapper(lsRs));
+	public Map<String, Object> getStoreFilterByType(long user_id, SearchFilterDto filter) {
+		List<StoreDto> lstStoreRs = new ArrayList<StoreDto>();
+		Sort sortable = null;
+	    if (filter.getSort()) {
+	      sortable = Sort.by("name").descending();
+	    }
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize());
+		Page<Store> pageStore = storeRepository.getStoreByStatusOrType(user_id, filter.getStatus_store(),filter.getType(),pageable);
+		lstStoreRs = mapStructMapper.lstStoreToStoreDto(pageStore.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("stores", lstStoreRs);
+        response.put("currentPage", pageStore.getNumber());
+        response.put("totalItems", pageStore.getTotalElements());
+        response.put("totalPages", pageStore.getTotalPages());
+		return response;
 	}
 }

@@ -50,7 +50,7 @@ public class SOSController {
 	private MapStructMapper structMapper;
 	
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_NORMU_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_SOS')")
 	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody SOSDto s) {
 		logger.info("Start update SOS");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
@@ -61,6 +61,7 @@ public class SOSController {
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_SOS')")
 	public ResponseEntity<?> getAllStore(@RequestHeader ("Authorization") String requestTokenHeader) {
 		logger.info("Start get SOS");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
