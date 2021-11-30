@@ -12,7 +12,7 @@ public interface RequestService {
 	
 	List<Request> getRequestbySysAdmin(Long id);
 	
-	List<RequestDto> filterRequestSysAdmin(Long gid,String status);
+	List<RequestDto> filterRequestSysAdmin(Long gid,String status, String search);
 	List<RequestDto> filterRequestOrgAdmin (Long oid,String status);
 	Request handleRequest(Request req);
 	

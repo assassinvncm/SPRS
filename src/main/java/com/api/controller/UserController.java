@@ -3,6 +3,7 @@ package com.api.controller;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.GrantAccessDto;
+import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.User;
@@ -64,6 +67,14 @@ public class UserController {
 		List<User> lst = userService.getAllUser();
 		logger.info("End get All User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All User success!", "", null, mapper.lstUserToUserDto(lst)));
+	}
+
+	@RequestMapping(value = "/getOwnOrg", method = RequestMethod.POST)
+	public ResponseEntity<?> getOwnOrganizeUser(@RequestHeader("Authorization") String requestTokenHeader, @RequestBody SearchFilterDto filter) {
+
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		Map<String, Object> lstRs = userService.getOwnOrganizeUser(userDto, filter);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get own organize user success", "", lstRs, null));
 	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)

@@ -1,11 +1,13 @@
 package com.api.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.StoreDto;
 import com.api.entity.Address;
 import com.api.entity.Store;
@@ -91,5 +93,12 @@ public interface StoreService {
 	 * List<StoreFilterMapper>
 	 * @return
 	 */
-	List<StoreDto> getStoreFilterByType(long user_id, int status, Long types, int page_size, int page_index);
+	Map<String, Object> getStoreFilterByType(long user_id, SearchFilterDto filter);
+	
+	/**
+	 * get infor store by store_id
+	 * @param store
+	 * @return
+	 */
+	Map<String, Object> getStoreCommon(long store_id, User u);
 }

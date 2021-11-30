@@ -7,5 +7,12 @@ import com.api.entity.User;
 public interface SOSService {
 	
 	SOSDto updateStatusSOS(SOSDto dto, UserDto u);
+	
+	/**
+	 * get SOS detail 
+	 * @param id
+	 * @return
+	 */
+	SOSDto getSOSCommon(long id);
 
 }

@@ -1,6 +1,7 @@
 package com.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class StoreController {
 			@RequestBody SearchFilterDto sft) {
 		logger.info("Start get Store filter");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		List<StoreDto> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft.getStatus_store(),sft.getType(), sft.getPageSize(), sft.getPageIndex());
+		Map<String, Object> lstStore = storeService.getStoreFilterByType(userDto.getId(), sft);
 		logger.info("End get Store filter");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store owner success", "", lstStore, null));
 	}
@@ -105,11 +106,14 @@ public class StoreController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
 	
-	@RequestMapping(value = "common/get/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getStoreByIdCommon(@PathVariable(value = "id") Long id) {
+	@RequestMapping(value = "/common/get/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getStoreByIdCommon(@RequestHeader (required = false, value = "Authorization", defaultValue = "") String requestTokenHeader, @PathVariable(value = "id") Long id) {
 		logger.info("Start get Store by id: "+id);
-		Store st = storeService.getStoreById(id);
-		StoreDto rs = structMapper.storeToStoreDTO(st);
+		User u = null;
+		if(!requestTokenHeader.isBlank()) {
+			u = userSerivce.getUserbyTokenAuth(requestTokenHeader);
+		}
+		Map<String, Object> rs = storeService.getStoreCommon(id,u);
 		logger.info("End get Store by id: "+id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}

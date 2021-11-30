@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 
 import com.api.dto.SOSDto;
 import com.api.dto.UserDto;
+import com.api.entity.Address;
 import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.SOSRepository;
 import com.api.repositories.UserRepository;
+import com.api.service.AddressService;
 import com.api.service.SOSService;
 import com.exception.AppException;
 
@@ -25,6 +27,9 @@ public class SOSServiceImpl implements SOSService{
 	
 	@Autowired
 	MapStructMapper mapStructMapper;
+	
+	@Autowired
+	AddressService addressService;
 
 	@Override
 	public SOSDto updateStatusSOS(SOSDto sosDto, UserDto udto) {
@@ -32,14 +37,31 @@ public class SOSServiceImpl implements SOSService{
 		if(null == u) {
 			throw new AppException(402,"User is not Found!");
 		}
+
+		Address address = addressService.mapAddress(sosDto.getAddress());
 		SOS s = u.getUser_sos();
 		s.setDescription(sosDto.getDescription());
-		s.setAddress(mapStructMapper.addressDtoToAddress(sosDto.getAddress()));
+		s.setAddress(address);
 		s.setLevel(sosDto.getLevel());
 		s.setStatus(sosDto.getStatus());
 		u.setUser_sos(s);
 		userRepo.save(u);
 		return sosDto;
+	}
+
+	@Override
+	public SOSDto getSOSCommon(long id) {
+		User u = userRepo.getUserBySosId(id).orElseThrow(()-> new AppException(403,"SOS not exist"));
+		
+		SOSDto SOSDto = mapStructMapper.SOSToSOSDto(u.getUser_sos());
+		UserDto uDto = new UserDto();
+		uDto.setId(u.getId());
+		uDto.setAddress(mapStructMapper.addressToAddressDto(u.getAddress()));
+		uDto.setPhone(u.getPhone());
+		uDto.setFull_name(u.getFull_name());
+		SOSDto.setUser(uDto);
+				
+		return SOSDto;
 	}
 
 }

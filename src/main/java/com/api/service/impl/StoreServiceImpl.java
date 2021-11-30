@@ -1,18 +1,27 @@
 package com.api.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
+import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Image;
 import com.api.entity.ReliefInformation;
@@ -123,7 +132,7 @@ public class StoreServiceImpl implements StoreService{
 		});
 
 		//BeanUtils.copyProperties(rp, reliefPoint);
-		Store storeTemp = mapStructMapper.storeDtoToStore(s);
+		//Store storeTemp = mapStructMapper.storeDtoToStore(s);
 		List<StoreCategoryDto> lstStoreDetailDto = s.getStoreDetail();
 		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
 			StoreCategory storeDetail = new StoreCategory();
@@ -131,16 +140,16 @@ public class StoreServiceImpl implements StoreService{
 			storeDetail.setName(storeDetailDto.getName());
 			return storeDetail;
 		}).collect(Collectors.toList());
-		storeTemp.setStore_category(lstStoreDetail);
+		st.setStore_category(lstStoreDetail);
 		Address address = addressService.mapAddress(s.getAddress());
-		storeTemp.setLocation(address);
-		storeTemp.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
-		storeTemp.setDescription(s.getDescription());
-		storeTemp.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
-		storeTemp.setStatus(s.getStatus());
-		storeTemp.setName(s.getName());
+		st.setLocation(address);
+		st.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
+		st.setDescription(s.getDescription());
+		st.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
+		st.setStatus(s.getStatus());
+		st.setName(s.getName());
 		
-		return storeRepository.saveAndFlush(storeTemp);
+		return storeRepository.saveAndFlush(st);
 	}
 
 	@Override
@@ -193,8 +202,42 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public List<StoreDto> getStoreFilterByType(long user_id, int status, Long types, int page_size, int page_index) {
-		List<Object[]> lsRs = storeRepository.getStoreByStatusOrType(user_id, status, types,page_index,page_size);
-		return mapStructMapper.lstStoreToStoreDto(mapper.getStoreByStatusOrType_Mapper(lsRs));
+	public Map<String, Object> getStoreFilterByType(long user_id, SearchFilterDto filter) {
+		List<StoreDto> lstStoreRs = new ArrayList<StoreDto>();
+		Sort sortable = null;
+	    if (filter.getSort()) {
+	      sortable = Sort.by("name").descending();
+	    }
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize());
+		Page<Store> pageStore = storeRepository.getStoreByStatusOrType(user_id, filter.getStatus_store(),filter.getType(),pageable);
+		lstStoreRs = mapStructMapper.lstStoreToStoreDto(pageStore.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("stores", lstStoreRs);
+        response.put("currentPage", pageStore.getNumber());
+        response.put("totalItems", pageStore.getTotalElements());
+        response.put("totalPages", pageStore.getTotalPages());
+		return response;
+	}
+	
+	@Override
+	public Map<String, Object> getStoreCommon(long store_id, User user) {
+		// TODO Auto-generated method stub
+		Store st = storeRepository.getById(store_id);
+		boolean isSubcribe = false;
+		if(user != null){
+			List<User> lstU = st.getStore_user();
+			for(User u : lstU) {
+				if(user.getId() == u.getId()) {
+					isSubcribe = true;
+					break;
+				}
+			}
+		}
+		
+		StoreDto stDto =  mapStructMapper.storeToStoreDTO(st);
+		Map<String, Object> response = new HashMap<>();
+		response.put("stores", stDto);
+	    response.put("isSubcribe", isSubcribe);
+		return 	response;
 	}
 }

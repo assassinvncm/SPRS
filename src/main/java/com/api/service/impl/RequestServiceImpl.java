@@ -48,9 +48,10 @@ public class RequestServiceImpl implements RequestService{
 	
 
 	@Override
-	public List<RequestDto> filterRequestSysAdmin(Long gid, String status) {
+	public List<RequestDto> filterRequestSysAdmin(Long gid, String status, String search) {
 		// TODO Auto-generated method stub
-		List<Request> req = requestRepository.filterRequestOfAdmin(gid,status);
+		
+		List<Request> req = requestRepository.filterRequestOfAdmin(gid, status , search);
 		 
 		return mapStructMapper.lstRequestToRequestDto(req);
 	}
