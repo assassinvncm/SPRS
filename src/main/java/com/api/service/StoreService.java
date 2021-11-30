@@ -94,4 +94,11 @@ public interface StoreService {
 	 * @return
 	 */
 	Map<String, Object> getStoreFilterByType(long user_id, SearchFilterDto filter);
+	
+	/**
+	 * get infor store by store_id
+	 * @param store
+	 * @return
+	 */
+	Map<String, Object> getStoreCommon(long store_id, User u);
 }

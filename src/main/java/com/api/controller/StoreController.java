@@ -107,10 +107,13 @@ public class StoreController {
 	}
 	
 	@RequestMapping(value = "/common/get/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getStoreByIdCommon(@PathVariable(value = "id") Long id) {
+	public ResponseEntity<?> getStoreByIdCommon(@RequestHeader (required = false, value = "Authorization", defaultValue = "") String requestTokenHeader, @PathVariable(value = "id") Long id) {
 		logger.info("Start get Store by id: "+id);
-		Store st = storeService.getStoreById(id);
-		StoreDto rs = structMapper.storeToStoreDTO(st);
+		User u = null;
+		if(!requestTokenHeader.isBlank()) {
+			u = userSerivce.getUserbyTokenAuth(requestTokenHeader);
+		}
+		Map<String, Object> rs = storeService.getStoreCommon(id,u);
 		logger.info("End get Store by id: "+id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
