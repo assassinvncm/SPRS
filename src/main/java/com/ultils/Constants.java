@@ -12,7 +12,7 @@ public class Constants {
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/forgotPassword", "/sprs/api/reliefPoint-manage/get",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
-			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user",
+			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user","/sprs/api/users_v2/ownStore",
 			"/sprs/api/users_v2/organizationalUser", "/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp",
 			"/sprs/api/validateOtp", "/sprs/api/store-manage/uploadImg", "/sprs/api/groups-register-mobile", "/sprs/api/groups-register-web"
 			,"/sprs/api/groups-all","/sprs/api/*/common/**"};// ,
