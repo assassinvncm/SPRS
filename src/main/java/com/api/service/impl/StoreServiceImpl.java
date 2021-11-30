@@ -218,4 +218,26 @@ public class StoreServiceImpl implements StoreService{
         response.put("totalPages", pageStore.getTotalPages());
 		return response;
 	}
+	
+	@Override
+	public Map<String, Object> getStoreCommon(long store_id, User user) {
+		// TODO Auto-generated method stub
+		Store st = storeRepository.getById(store_id);
+		boolean isSubcribe = false;
+		if(user != null){
+			List<User> lstU = st.getStore_user();
+			for(User u : lstU) {
+				if(user.getId() == u.getId()) {
+					isSubcribe = true;
+					break;
+				}
+			}
+		}
+		
+		StoreDto stDto =  mapStructMapper.storeToStoreDTO(st);
+		Map<String, Object> response = new HashMap<>();
+		response.put("stores", stDto);
+	    response.put("isSubcribe", isSubcribe);
+		return 	response;
+	}
 }

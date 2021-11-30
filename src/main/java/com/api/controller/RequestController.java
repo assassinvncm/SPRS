@@ -67,10 +67,10 @@ public class RequestController {
 	
 	@RequestMapping("/request-systemAdmin/{status}")
 	public ResponseEntity<?> filterRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
-			@PathVariable("status") String status) {
+			@PathVariable("status") String status, @RequestParam(required = false, value = "search", defaultValue = "") String search) {
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		
-		List<RequestDto> requestDtos = requestService.filterRequestSysAdmin(userDto.getGroups_user().get(0).getId(),status);
+		List<RequestDto> requestDtos = requestService.filterRequestSysAdmin(userDto.getGroups_user().get(0).getId(),status, search);
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get request success!", "", requestDtos, null));
 	}

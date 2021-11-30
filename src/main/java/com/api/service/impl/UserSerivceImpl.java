@@ -42,6 +42,7 @@ import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
 import com.api.service.SOSService;
 import com.api.service.UserService;
+import com.common.utils.DateUtils;
 import com.exception.AppException;
 import com.exception.ProcException;
 import com.jwt.config.JwtTokenUtil;
@@ -293,19 +294,20 @@ public class UserSerivceImpl implements UserService {
 //		user.getOrganization().setAddress(addressOrg);
 		user.setOrganization(organization);
 
-		user.setIsActive(false);
-//		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+		user.setIsActive(true);
+		user.setCreate_time(DateUtils.getCurrentSqlDate());
+		//user.create_by(null);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Group g = groupRepository.findByCode(Constants.ORG_USER_PER_CODE);
 		List<Group> user_gr = new ArrayList<Group>();
 		user_gr.add(g);
 		user.setGroups_user(user_gr);
 		userRepository.save(user);
-		logger.info("End save Organization");
-		logger.info("Start save request");
-		Request req = createRequestRegister("request to register", null, user);
-		requestRepository.save(req);
-		logger.info("End save Request");
+		logger.info("End save Organization user");
+//		logger.info("Start save request");
+//		Request req = createRequestRegister("request to register", null, user);
+//		requestRepository.save(req);
+//		logger.info("End save Request");
 		// return user;
 	}
 
