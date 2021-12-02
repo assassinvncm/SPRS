@@ -216,5 +216,47 @@ public class GroupSeviceImplTest {
 	    //compare
 	    assertEquals(id,gcheck.getId());
 	}
+	
+	@Test
+	public void testUpdateGroup_UTCID01() {
+		
+		// Set data test
+		long id = 1;
+		Group g = new Group();
+		g.setId(1);
+		
+		// Mock
+		Mockito.when(groupRepo.findById(id)).thenReturn(Optional.of(g));
+		Mockito.when(groupRepo.save(g)).thenReturn(g);
+		
+		// Call method
+		Group gcheck = groupServ.updateGroup(g,id);
+		
+	    //compare
+	    assertEquals(id,gcheck.getId());
+	}
+	
+	@Test
+	public void testUpdateGroup_UTCID02() {
+		
+		// Set data test
+		long id = 1;
+		Group g = new Group();
+		g.setId(1);
+		
+		// Mock
+		Mockito.when(groupRepo.findById(id)).thenReturn(Optional.empty());
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			groupServ.updateGroup(g,id);
+	    }); 
+		String expectedMessage = "Group is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    //compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
 
 }

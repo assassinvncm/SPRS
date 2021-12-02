@@ -44,11 +44,11 @@ public class PermissionServiceImpl implements PermissionService{
 
 	@Override
 	public Permission getById(Long id) {
-		Optional<Permission> gr = perRepo.findById(id);
-		if (gr.isEmpty()) {;
-			throw new AppException(404, "Group is not existed!");
+		Optional<Permission> p = perRepo.findById(id);
+		if (p.isEmpty()) {;
+			throw new AppException(404, "Permission is not existed!");
 		}
-		return gr.get();
+		return p.get();
 	}
 
 	@Override
@@ -65,10 +65,8 @@ public class PermissionServiceImpl implements PermissionService{
 		Permission per = perRepo.findByName(p.getName());
 		if (per != null) {
 			throw new AppException(404, "Permission is existed!");
-		} else {
-			perRepo.save(per);
 		}
-		return per;
+		return perRepo.save(p);
 	}
 	
 	@Override
