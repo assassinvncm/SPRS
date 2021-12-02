@@ -187,4 +187,11 @@ public interface UserService {
 	 * @return List<User>
 	 */
 	Map<String, Object> getOwnOrganizeUser(UserDto u, SearchFilterDto filter);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return user
+	 */
+	User unActiveOrganizeUser(Long id);
 }

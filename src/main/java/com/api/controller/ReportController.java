@@ -18,6 +18,7 @@ import com.api.dto.SPRSResponse;
 import com.api.mapper.MapStructMapper;
 import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.service.ReportService;
+import com.common.utils.DateUtils;
 import com.ultils.Constants;
 
 @RestController
@@ -32,10 +33,24 @@ public class ReportController {
 	@Autowired 
 	ProcedureMapper mapper;
 
-	@RequestMapping(value = "/getReport", method = RequestMethod.POST)
+	@RequestMapping(value = "/getReportMonth", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
-	public ResponseEntity<?> getAll(@RequestBody ReportDto rpdto) {
+	public ResponseEntity<?> getReportMonth(@RequestBody ReportDto rpdto) {
 		logger.info("Start get report");
+		List<ReportResultDto> rs = reportServ.getReport(rpdto);
+		logger.info("End get report");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report success", "", rs, null));
+	}
+
+	@RequestMapping(value = "/getReportYear", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
+	public ResponseEntity<?> getReportYear(@RequestBody ReportDto rpdto) {
+		logger.info("Start get report");
+		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
+		String monthAgo = DateUtils.getMonthAgo("yyyy-MM-dd", 12);
+		rpdto.setDate_from(monthAgo);
+		rpdto.setDate_to(currDate);
+		rpdto.setType_time(2);
 		List<ReportResultDto> rs = reportServ.getReport(rpdto);
 		logger.info("End get report");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report success", "", rs, null));
@@ -45,7 +60,7 @@ public class ReportController {
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getReportOverview() {
 		logger.info("Start get report Overview");
-		List<ReportResultDto> rs = reportServ.getReport(new ReportDto());
+		List<ReportResultDto> rs = reportServ.getReportOverview(new ReportDto());
 		logger.info("End get report Overview");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
 	}

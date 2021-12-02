@@ -2,16 +2,35 @@ package com.api.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import com.api.entity.Address;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ReportDto {
+	
+	@JsonProperty("district_id")
 	private int district_id;
+	
+	@JsonProperty("sub_district_id")
 	private int sub_district_id;
+	
+	@JsonProperty("city_id")
 	private int city_id;
+	
+	@JsonProperty("date_from")
 	private String date_from;
+	
+	@JsonProperty("date_to")
 	private String date_to;
+	
+	@JsonProperty("type_time")
 	private int type_time;
+	
+	@JsonProperty("type_chart")
 	private int type_chart;
+	
+	@JsonProperty("type_point")
 	private int type_point;
 	
 	public ReportDto() {

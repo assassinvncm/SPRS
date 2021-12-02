@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import com.exception.AppException;
 
@@ -120,6 +122,35 @@ public class DateUtils {
 
 		return rs;
 
+	}
+
+	public static String getDateAgo(String formatDate, int dateAgo) {
+		java.util.Date today = new java.util.Date();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -dateAgo);
+		java.util.Date dates = cal.getTime();
+		SimpleDateFormat f = new SimpleDateFormat(formatDate);
+		String date = f.format(dates);
+		return date;
+	}
+
+	public static String getMonthAgo(String formatDate, int monthAgo) {
+		java.util.Date today = new java.util.Date();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.MONTH, -monthAgo);
+		java.util.Date dates = cal.getTime();
+		SimpleDateFormat f = new SimpleDateFormat(formatDate);
+		String date = f.format(dates);
+		return date;
+	}
+
+	public static String getCurrentDate(String formatDate) {
+		java.util.Date today = new java.util.Date();
+		SimpleDateFormat f = new SimpleDateFormat(formatDate);
+		String date = f.format(today);
+		return date;
 	}
 
 	public static String getDatehhmm(java.sql.Date sqlDate) {

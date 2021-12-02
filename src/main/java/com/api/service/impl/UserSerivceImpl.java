@@ -249,11 +249,12 @@ public class UserSerivceImpl implements UserService {
 		Address addressOrg = addressService.mapAddress(userDto.getOrganization().getAddress());
 		user.setAddress(address);
 		user.getOrganization().setAddress(addressOrg);
+		user.getOrganization().setCreate_time(DateUtils.getCurrentSqlDate());
 		user.setIsActive(false);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
-		Request req = createRequestRegister("request to register", null, user);
+		Request req = createRequestRegister("Request to register", null, user);
 
 		userRepository.save(user);
 		logger.info("End save Organization");
@@ -590,9 +591,11 @@ public class UserSerivceImpl implements UserService {
 		Sort sortable = null;
 	    if (filter.getSort()) {
 	      sortable = Sort.by("username").descending();
+	    }else {
+		      sortable = Sort.by("username").ascending();
 	    }
 	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(),sortable);
-		Page<User> lstRs = userRepository.getOwnOrganizeUser(u.getOrganization().getId(), u.getId(), pageable);
+		Page<User> lstRs = userRepository.getOwnOrganizeUser(u.getOrganization().getId(), u.getId(), filter.getSearch(), pageable);
 	    lstUsrRs = mapStructMapper.lstUserToUserDto(lstRs.getContent());
 	    Map<String, Object> response = new HashMap<>();
         response.put("users", lstUsrRs);
@@ -600,5 +603,15 @@ public class UserSerivceImpl implements UserService {
         response.put("totalItems", lstRs.getTotalElements());
         response.put("totalPages", lstRs.getTotalPages());
 		return response;
+	}
+
+	@Override
+	public User unActiveOrganizeUser(Long id) {
+		User u = userRepository.getById(id);
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		u.setIsActive(false);
+		return userRepository.saveAndFlush(u);
 	}
 }

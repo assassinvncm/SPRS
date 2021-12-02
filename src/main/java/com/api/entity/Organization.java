@@ -2,6 +2,7 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -56,7 +57,8 @@ public class Organization extends BaseEntity implements Serializable{
 	@JsonProperty("request")
 	private List<Request> request;
 	
-	
+	@Column(updatable = false,columnDefinition = "TIMESTAMP")
+	public Timestamp create_time;
 
 	public Organization() {
 		super();
@@ -71,6 +73,20 @@ public class Organization extends BaseEntity implements Serializable{
 		this.address = address;
 		this.user = user;
 		this.request = request;
+	}
+
+	/**
+	 * @return the create_time
+	 */
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
 	}
 
 	public String getName() {

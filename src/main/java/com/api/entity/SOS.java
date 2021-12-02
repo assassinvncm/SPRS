@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +55,25 @@ public class SOS extends BaseEntity implements Serializable{
 	@JsonIgnore
     private Address address;
 	
+	@Column(updatable = false,columnDefinition = "TIMESTAMP")
+	public Timestamp create_time;
+	
 	public SOS() {
 		super();
+	}
+
+	/**
+	 * @return the create_time
+	 */
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
 	}
 
 	public SOS(String description, int level, Integer status, String gPS_Long, String gPS_Lati) {

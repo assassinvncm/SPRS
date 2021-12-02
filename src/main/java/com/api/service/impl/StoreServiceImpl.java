@@ -96,6 +96,7 @@ public class StoreServiceImpl implements StoreService{
 			Address address = addressService.mapAddress(s.getAddress());
 			store.setLocation(address);
 			store.setStatus(1); 
+			store.setCreate_time(DateUtils.getCurrentSqlDate());
 			str = storeRepository.save(store);
 		} catch (Exception e) {
 			e.printStackTrace();

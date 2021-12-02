@@ -53,7 +53,7 @@ public class ProcedureMapper {
 		List<ReportResultDto> rs = new ArrayList<ReportResultDto>();
 		for(Object[] obj : lstObj) {
 			ReportResultDto rpRs = new ReportResultDto();
-			rpRs.setMonth((Integer) obj[0]);
+			rpRs.setDay((Integer) obj[0]);
 			rpRs.setMonth((Integer) obj[1]);
 			rpRs.setYear((Integer) obj[2]);
 			rpRs.setType_point((Integer) obj[3]);
