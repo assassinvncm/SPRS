@@ -132,7 +132,7 @@ public class StoreServiceImpl implements StoreService{
 		});
 
 		//BeanUtils.copyProperties(rp, reliefPoint);
-		Store storeTemp = mapStructMapper.storeDtoToStore(s);
+		//Store storeTemp = mapStructMapper.storeDtoToStore(s);
 		List<StoreCategoryDto> lstStoreDetailDto = s.getStoreDetail();
 		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
 			StoreCategory storeDetail = new StoreCategory();
@@ -140,16 +140,16 @@ public class StoreServiceImpl implements StoreService{
 			storeDetail.setName(storeDetailDto.getName());
 			return storeDetail;
 		}).collect(Collectors.toList());
-		storeTemp.setStore_category(lstStoreDetail);
+		st.setStore_category(lstStoreDetail);
 		Address address = addressService.mapAddress(s.getAddress());
-		storeTemp.setLocation(address);
-		storeTemp.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
-		storeTemp.setDescription(s.getDescription());
-		storeTemp.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
-		storeTemp.setStatus(s.getStatus());
-		storeTemp.setName(s.getName());
+		st.setLocation(address);
+		st.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
+		st.setDescription(s.getDescription());
+		st.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
+		st.setStatus(s.getStatus());
+		st.setName(s.getName());
 		
-		return storeRepository.saveAndFlush(storeTemp);
+		return storeRepository.saveAndFlush(st);
 	}
 
 	@Override

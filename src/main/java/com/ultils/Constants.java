@@ -12,7 +12,7 @@ public class Constants {
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/forgotPassword", "/sprs/api/reliefPoint-manage/get",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
-			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user",
+			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user","/sprs/api/users_v2/ownStore",
 			"/sprs/api/users_v2/organizationalUser", "/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp",
 			"/sprs/api/validateOtp", "/sprs/api/store-manage/uploadImg", "/sprs/api/groups-register-mobile", "/sprs/api/groups-register-web"
 			,"/sprs/api/groups-all","/sprs/api/*/common/**"};// ,
@@ -20,7 +20,7 @@ public class Constants {
 	// "/sprs/api/validateOtp"
 	// constants config otp
 	public static final String ACCOUNT_SID = "ACaef9117a42d80b9837a3d4bc0acf8fe0";
-	public static final String AUTH_TOKEN = "373186f659196db7acbd79a06a6a5bac";
+	public static final String AUTH_TOKEN = "cdca95f70ef578d4c4eac7a382195b2c";
 	public static final String FROM_NUMBER = "+14128967877";
 
 	// constants for request status

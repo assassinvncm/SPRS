@@ -12,11 +12,27 @@ public class PermissionDto {
 
 	private String name;
 
+	private String code;
+
 	private String to;
 
 	private String icon;
 
 	private List<PermissionChildrenDto> children = new ArrayList<PermissionChildrenDto>();
+
+	/**
+	 * @return the code
+	 */
+	public String getCode() {
+		return code;
+	}
+
+	/**
+	 * @param code the code to set
+	 */
+	public void setCode(String code) {
+		this.code = code;
+	}
 
 	public long getId() {
 		return id;
