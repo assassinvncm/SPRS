@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.controller.UserController;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.GroupDto;
+import com.api.dto.ImageDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
@@ -28,6 +29,7 @@ import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
+import com.api.entity.Image;
 import com.api.entity.Organization;
 import com.api.entity.Request;
 import com.api.entity.SOS;
@@ -40,6 +42,7 @@ import com.api.repositories.RequestRepository;
 import com.api.repositories.StoreRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+import com.api.service.AmazonClient;
 import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.common.utils.DateUtils;
@@ -90,6 +93,9 @@ public class UserSerivceImpl implements UserService {
 	
 	@Autowired
 	SOSService sosServ;
+	
+	@Autowired
+	private AmazonClient amazonClient;
 
 	@Override
 	public List<User> getAllUser() {
@@ -613,5 +619,20 @@ public class UserSerivceImpl implements UserService {
 		}
 		u.setIsActive(false);
 		return userRepository.saveAndFlush(u);
+	}
+
+	@Override
+	public User uploadStoreImg(ImageDto image) {
+
+		// TODO Auto-generated method stub
+		User u = userRepository.getById(image.getId());
+		if(null == u) {
+			throw new AppException(402,"User is not Found!");
+		}
+		String img_url = amazonClient.uploadFile(image);
+		u.setImages(new Image(img_url));
+//		st.getLstImage().add(new Image(st, img_url));
+		
+		return userRepository.save(u);
 	}
 }

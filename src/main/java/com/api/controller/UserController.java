@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.GrantAccessDto;
+import com.api.dto.ImageDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
+import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
@@ -179,6 +181,13 @@ public class UserController {
 		logger.info("End update password");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update password success!", "", null, null));
 	}
-	
+
+	@RequestMapping(value = "/user/uploadImg", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
+		logger.info("Start uploadImg user");
+		User u = userService.uploadStoreImg(image);
+		logger.info("End uploadImg user");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for user success", "", "", null));
+	}
 	
 }

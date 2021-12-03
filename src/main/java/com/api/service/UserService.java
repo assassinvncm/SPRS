@@ -5,11 +5,13 @@ import java.util.Map;
 
 import com.api.dto.AddressDto;
 import com.api.dto.GrantAccessDto;
+import com.api.dto.ImageDto;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
+import com.api.entity.Store;
 import com.api.entity.User;
 
 public interface UserService {
@@ -194,4 +196,11 @@ public interface UserService {
 	 * @return user
 	 */
 	User unActiveOrganizeUser(Long id);
+	
+	/**
+	 * 
+	 * @param ImageDto
+	 * @return User
+	 */
+	User uploadStoreImg(ImageDto image);
 }
