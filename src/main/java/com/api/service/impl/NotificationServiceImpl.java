@@ -138,8 +138,10 @@ public class NotificationServiceImpl implements NotificationService {
 		// List<TokenDevice> tokenDevices =
 		// tokenDeviceRepository.findByIdIn(pushNotificationRequestModel.getUids());
 		// List<String> tokenDevices = deviceService.getDeviceTokenByCity(null);
-		if (pushNotificationRequest.getTarget().isEmpty())
+		if (pushNotificationRequest.getTarget().isEmpty()) {
+			log.info("Not have target token, Token is empty");
 			return null;
+		}
 		MulticastMessage multicastMessage = MulticastMessage.builder().addAllTokens(pushNotificationRequest.getTarget())
 				.setNotification(new com.google.firebase.messaging.Notification(pushNotificationRequest.getTitle(),
 						pushNotificationRequest.getBody()))
