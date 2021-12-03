@@ -35,8 +35,8 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Query("SELECT u FROM User u WHERE u.username LIKE %:name%")
 	List<User> searchByNameLike(@Param("name") String name);
 
-	@Query("select u from User u where u.organization.id = :orgId and u.id != :uId")
-	Page<User> getOwnOrganizeUser(@Param("orgId") Long orgId, @Param("uId") Long uId, Pageable pageable);//
+	@Query("select u from User u where u.organization.id = :orgId and u.id != :uId and (:name IS NULL OR :name = '' OR u.username LIKE %:name%)")
+	Page<User> getOwnOrganizeUser(@Param("orgId") Long orgId, @Param("uId") Long uId, @Param("name") String name, Pageable pageable);//
 	
 	@Transactional
 	@Procedure(procedureName  = "prc_grant_group")

@@ -92,7 +92,7 @@ public class RefliefPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/reliefPoint", method = RequestMethod.GET)
-	public ResponseEntity<?> getReliefPointById(@RequestHeader("Authorization") String requestTokenHeader,
+	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestParam(name = "id") long rpId) {
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		ReliefPointDto rpDto = reliefPointService.getReliefPointByIdAndUser(rpId, userDto.getId());

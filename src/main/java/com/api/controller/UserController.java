@@ -76,6 +76,14 @@ public class UserController {
 		Map<String, Object> lstRs = userService.getOwnOrganizeUser(userDto, filter);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get own organize user success", "", lstRs, null));
 	}
+
+	@RequestMapping(value = "/org-user-unactive/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> unActiveOrganizeUser(@PathVariable(value = "id") Long id) {
+		logger.info("Start un-Active organize User");
+		User u = userService.unActiveOrganizeUser(id);
+		logger.info("End un-Active organize User");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get own organize user success", "", mapper.userToUserDto(u), null));
+	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){

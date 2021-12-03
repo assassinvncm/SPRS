@@ -9,4 +9,5 @@ import com.api.dto.ReportResultDto;
 
 public interface ReportService {
 	List<ReportResultDto> getReport(ReportDto rpdto);
+	List<ReportResultDto> getReportOverview(ReportDto rpdto);
 }

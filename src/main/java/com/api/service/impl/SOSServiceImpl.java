@@ -14,6 +14,7 @@ import com.api.repositories.SOSRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
 import com.api.service.SOSService;
+import com.common.utils.DateUtils;
 import com.exception.AppException;
 
 @Service
@@ -44,6 +45,7 @@ public class SOSServiceImpl implements SOSService{
 		s.setAddress(address);
 		s.setLevel(sosDto.getLevel());
 		s.setStatus(sosDto.getStatus());
+		s.setCreate_time(DateUtils.getCurrentSqlDate());
 		u.setUser_sos(s);
 		userRepo.save(u);
 		return sosDto;

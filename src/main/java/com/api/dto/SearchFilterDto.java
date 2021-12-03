@@ -31,6 +31,9 @@ public class SearchFilterDto {
 	@JsonProperty("pageIndex")
 	@NotNull
 	private int pageIndex;
+	
+	@JsonProperty("search")
+	private String search;
 
 	
 	
@@ -46,6 +49,20 @@ public class SearchFilterDto {
 		this.sort = sort;
 		this.pageSize = pageSize;
 		this.pageIndex = pageIndex;
+	}
+
+	/**
+	 * @return the search
+	 */
+	public String getSearch() {
+		return search;
+	}
+
+	/**
+	 * @param search the search to set
+	 */
+	public void setSearch(String search) {
+		this.search = search;
 	}
 
 	/**
