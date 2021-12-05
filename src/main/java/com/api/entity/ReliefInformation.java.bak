@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "sprs_relief_information")
+@Table(name = "ReliefInformation")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ReliefInformation extends BaseEntity implements Serializable{
 	

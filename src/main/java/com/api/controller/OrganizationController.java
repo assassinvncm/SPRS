@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +39,7 @@ public class OrganizationController {
 	}
 
 	@RequestMapping(value = "/origanization/update", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_ORGADM_ACEN')")
 	public ResponseEntity<?> updateOrganization(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody OrganizationDto organizationDto) {
 		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
@@ -51,6 +53,7 @@ public class OrganizationController {
 	}
 
 	@RequestMapping(value = "/origanization/get-by-user", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getOrganizationById(@RequestHeader("Authorization") String requestTokenHeader) {
 		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
 		// check access

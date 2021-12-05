@@ -72,6 +72,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/getOwnOrg", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getOwnOrganizeUser(@RequestHeader("Authorization") String requestTokenHeader, @RequestBody SearchFilterDto filter) {
 
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
@@ -80,6 +81,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/org-user-unactive/{id}", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_SYS_VIEW_PROFILE')")
 	public ResponseEntity<?> unActiveOrganizeUser(@PathVariable(value = "id") Long id) {
 		logger.info("Start un-Active organize User");
 		User u = userService.unActiveOrganizeUser(id);
@@ -163,6 +165,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/user/update/infor", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_SYS_UPDATE_PROFILE')")
 	public ResponseEntity<?> updateUser(@RequestHeader ("Authorization") String requestTokenHeader,@Validated @RequestBody UserDto bean){
 		
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
@@ -173,6 +176,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/user/update/password", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_SYS_UPDATE_PASSWORD')")
 	public ResponseEntity<?> updatePassword(@RequestHeader ("Authorization") String requestTokenHeader,
 			@Validated @RequestBody UpdatePasswordDto updatePasswordDto){
 		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
@@ -183,6 +187,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/user/uploadImg", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_NORMU_ACEN')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg user");
 		User u = userService.uploadStoreImg(image);
