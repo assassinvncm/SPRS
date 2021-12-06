@@ -76,7 +76,6 @@ public class MapController {
 //	}
 
 	@RequestMapping(value = "/getPoints", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_SYS_SEARCH')")
 	public ResponseEntity<?> getPoints(@RequestParam("long") double lo, @RequestParam("lat") double lat,
 			@RequestParam("radius") double radius, @RequestParam(value = "filter", required = false, defaultValue = "") String typePoint) {
 
@@ -87,7 +86,6 @@ public class MapController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_SYS_SEARCH')")
 	public ResponseEntity<?> search(@RequestParam("search") String searchStr, @RequestParam("lati") double lati,
 			@RequestParam("long") double longti, @RequestParam("limit") int limit) {
 
