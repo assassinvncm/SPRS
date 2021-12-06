@@ -92,9 +92,9 @@ public class UserController {
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){
 		logger.info("Start get User");
-		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
+		User u = userService.getNativeUserbyToken(requestTokenHeader);
 		logger.info("End get User");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", useDto, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", mapper.userToUserDto(u), null));
 	}
 	
 //	@RequestMapping(value = "/user", method = RequestMethod.POST)

@@ -115,4 +115,14 @@ public class PermissionServiceImpl implements PermissionService{
 		return listPermissions;
 	}
 
+	@Override
+	public List<Permission> getOwnPermission_Mobile(Long user_id) {
+		User u = userRepo.getById(user_id);
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		List<Permission> listPermissions = perRepo.getAllPermissionByLevel(2);
+		return listPermissions;
+	}
+
 }

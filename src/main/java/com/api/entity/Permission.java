@@ -49,6 +49,9 @@ public class Permission extends BaseEntity implements Serializable{
 	
 	@Column(name = "node_to")
 	private int node_to;
+	
+	@Column(name = "level")
+	private int level;
 
 //	private List<PermissionDto> children;
 
@@ -66,6 +69,20 @@ public class Permission extends BaseEntity implements Serializable{
 
 	public int getNode_index() {
 		return node_index;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	public void setNode_index(int node_index) {
