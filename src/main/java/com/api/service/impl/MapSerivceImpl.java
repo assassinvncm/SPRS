@@ -317,10 +317,12 @@ public class MapSerivceImpl implements MapService {
 		for (Object[] obj : mapPoints) {
 			MapPointsDto mp = new MapPointsDto();
 			BigInteger id = (BigInteger) obj[0];
+			BigInteger user_id = (BigInteger) obj[4];
 			mp.setId(id.longValue());
 			mp.setName((String) obj[1]);
 			mp.setPoint(new Point(Double.valueOf(obj[2].toString()), Double.valueOf(obj[3].toString())));
-			mp.setType((String) obj[4]);
+			mp.setType((String) obj[5]);
+			mp.setUser_id(user_id.longValue());
 			lstMapPoints.add(mp);
 		}
 
