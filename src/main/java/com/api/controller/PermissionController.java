@@ -55,7 +55,7 @@ public class PermissionController {
 	public ResponseEntity<?> getOwnPermissionMobile(@RequestHeader ("Authorization") String requestTokenHeader){
 		logger.info("Start get own Permission mobile");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
-		List<Permission> lst = perServ.getOwnPermission(userDto.getId());
+		List<Permission> lst = perServ.getOwnPermission_Mobile(userDto.getId());
 		logger.info("End get own Permission mobile");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All Permission mobile success!", "", null, mapper.lstPermissionToPermissionDto(lst)));
 	}
