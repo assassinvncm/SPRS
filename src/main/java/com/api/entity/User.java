@@ -107,6 +107,24 @@ public class User extends BaseEntity implements Serializable{
 	@Column(columnDefinition = "TIMESTAMP")
 	public Timestamp modified_date;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "image_id")
+	private Image images;
+	
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
+	}
+
 	public List<Store> getLstStore() {
 		return lstStore;
 	}

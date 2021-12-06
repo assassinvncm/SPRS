@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,6 +76,7 @@ public class MapController {
 //	}
 
 	@RequestMapping(value = "/getPoints", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYS_SEARCH')")
 	public ResponseEntity<?> getPoints(@RequestParam("long") double lo, @RequestParam("lat") double lat,
 			@RequestParam("radius") double radius, @RequestParam(value = "filter", required = false, defaultValue = "") String typePoint) {
 
@@ -85,6 +87,7 @@ public class MapController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYS_SEARCH')")
 	public ResponseEntity<?> search(@RequestParam("search") String searchStr, @RequestParam("lati") double lati,
 			@RequestParam("long") double longti, @RequestParam("limit") int limit) {
 

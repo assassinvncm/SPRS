@@ -212,6 +212,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		userDto.setCreate_time(null);
 		userDto.setPassword(user.getPassword());
 		userDto.setIsActive(user.getIsActive());
+
+		if(user.getImages()!=null) {
+			user.getImages().setImg_url(Constants.IMAGE_URL+user.getImages().getImg_url());
+			userDto.setImages(user.getImages());
+		}
 		return userDto;
 	}
 
@@ -389,7 +394,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}).collect(Collectors.toList());
 		reliefPointDto.setReliefInformations(rpDto);
 
-		if(reliefPointDto.getImages()!=null) {
+		if(reliefPoint.getImages()!=null) {
 			reliefPoint.getImages().setImg_url(Constants.IMAGE_URL+reliefPoint.getImages().getImg_url());
 			reliefPointDto.setImages(reliefPoint.getImages());
 		}

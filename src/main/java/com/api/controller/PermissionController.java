@@ -61,6 +61,7 @@ public class PermissionController {
 	}
 	
 	@RequestMapping(value = "/permissions", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> getAllPermission(){
 		logger.info("Start get all Permission");
 		List<Permission> lst = perServ.getAll();

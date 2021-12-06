@@ -3,6 +3,7 @@ package com.api.dto;
 import java.sql.Date;
 import java.util.List;
 
+import com.api.entity.Image;
 import com.api.entity.Organization;
 import com.api.entity.Store;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,6 +46,9 @@ public class UserDto {
 	
 	@JsonIgnore
 	private List<StoreDto> user_store;
+
+	@JsonProperty("images")
+    private Image images;
 	
 
 	public UserDto() {
@@ -70,6 +74,24 @@ public class UserDto {
 		this.groups_user = groups_user;
 		this.request = request;
 	}
+
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
+	}
+
+
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
+	}
+
+
 
 	public List<StoreDto> getUser_store() {
 		return user_store;
