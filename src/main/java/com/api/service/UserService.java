@@ -203,4 +203,26 @@ public interface UserService {
 	 * @return User
 	 */
 	User uploadStoreImg(ImageDto image);
+	
+	/**
+	 * banned user
+	 * @param Long
+	 * @return User
+	 */
+	void banUser(Long user_id);
+	
+	/**
+	 * unbanned user by user id
+	 * @param Long
+	 * @return User
+	 */
+	void unbannedUser(Long user_id);
+	
+	/**
+	 * get banned user
+	 * @param ImageDto
+	 * @return User
+	 */
+	List<UserDto> getBannedUser();
+
 }

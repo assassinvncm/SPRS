@@ -50,6 +50,9 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "dob")
 	private String dob;
 	
+	@Column(name = "status")
+	private String status;
+	
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
@@ -303,4 +306,14 @@ public class User extends BaseEntity implements Serializable{
 		}
 		return rs;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 }

@@ -221,6 +221,7 @@ public class UserSerivceImpl implements UserService {
 		Address address = addressService.mapAddress(userDto.getAddress());
 		user.setAddress(address);
 		user.setIsActive(true);
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setUser_sos(new SOS(1, address));
@@ -256,7 +257,8 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(address);
 		user.getOrganization().setAddress(addressOrg);
 		user.getOrganization().setCreate_time(DateUtils.getCurrentSqlDate());
-		user.setIsActive(false);
+		//user.setIsActive(false);
+		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
@@ -302,6 +304,7 @@ public class UserSerivceImpl implements UserService {
 		user.setOrganization(organization);
 
 		user.setIsActive(true);
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
 		user.setCreate_time(DateUtils.getCurrentSqlDate());
 		//user.create_by(null);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -343,6 +346,7 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(address);
 
 		user.setIsActive(false);
+		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
@@ -618,6 +622,7 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "User is not existed!");
 		}
 		u.setIsActive(false);
+		u.setStatus(Constants.USER_STATUS_UNACTIVE);
 		return userRepository.saveAndFlush(u);
 	}
 
@@ -635,4 +640,32 @@ public class UserSerivceImpl implements UserService {
 		
 		return userRepository.save(u);
 	}
+
+	@Override
+	public void banUser(Long user_id) {
+		// TODO Auto-generated method stub
+		
+		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_ACTIVE).orElseThrow(() -> new AppException(403,"Account is not exist"));
+		user.setStatus(Constants.USER_STATUS_BANNED);
+		userRepository.save(user);
+		
+	}
+	
+	@Override
+	public void unbannedUser(Long user_id) {
+		// TODO Auto-generated method stub
+		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_BANNED).orElseThrow(() -> new AppException(403,"Account is not exist"));
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
+		userRepository.save(user);
+	}
+
+	@Override
+	public List<UserDto> getBannedUser() {
+		// TODO Auto-generated method stub
+		List<User> user = userRepository.getUserByStatus(Constants.USER_STATUS_BANNED);
+		
+		return mapStructMapper.lstBanUserToBanUserDto(user);
+	}
+
+
 }

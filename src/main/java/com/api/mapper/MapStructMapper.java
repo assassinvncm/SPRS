@@ -52,6 +52,8 @@ public interface MapStructMapper {
 	
 	List<UserDto> lstUserToUserDto(List<User> lstUser);
 	
+	List<UserDto> lstBanUserToBanUserDto(List<User> lstUser);
+	
 	OrganizationDto organizationToOrganizationDto(Organization organization);
 	
 	RequestDto requestToRequestDto(Request request);

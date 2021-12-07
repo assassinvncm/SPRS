@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.GrantAccessDto;
@@ -193,6 +194,34 @@ public class UserController {
 		User u = userService.uploadStoreImg(image);
 		logger.info("End uploadImg user");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for user success", "", "", null));
+	}
+	
+	@RequestMapping(value = "/user/ban", method = RequestMethod.GET)
+	public ResponseEntity<?> getBanUser(){
+		logger.info("Start get banned User");
+		List<UserDto> uDto = userService.getBannedUser();
+		logger.info("End get banned User");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list banned user success!", "", uDto, null));
+	}
+	
+	@RequestMapping(value = "/user/ban", method = RequestMethod.PUT)
+	public ResponseEntity<?> banUser(@RequestHeader ("Authorization") String requestTokenHeader, @RequestParam("uId") Long uid){
+		
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		logger.info("Start ban User id: "+user.getId());
+		userService.banUser(uid);
+		
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "ban user success!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/user/unbanned", method = RequestMethod.PUT)
+	public ResponseEntity<?> unbannedUser(@RequestHeader ("Authorization") String requestTokenHeader, @RequestParam("uId") Long uid){
+		
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		logger.info("Start unban User id: "+user.getId());
+		userService.unbannedUser(uid);
+		logger.info("Start unban User id: "+user.getId());
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list unbanned user success!", "", null, null));
 	}
 	
 }
