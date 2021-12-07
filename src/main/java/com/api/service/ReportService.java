@@ -8,6 +8,7 @@ import com.api.dto.ReportDto;
 import com.api.dto.ReportResultDto;
 
 public interface ReportService {
-	List<ReportResultDto> getReport(ReportDto rpdto);
+	List<ReportResultDto> getReportYear(ReportDto rpdto);
+	List<ReportResultDto> getReportMonth(ReportDto rpdto);
 	List<ReportResultDto> getReportOverview(ReportDto rpdto);
 }

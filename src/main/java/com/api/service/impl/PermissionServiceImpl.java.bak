@@ -121,16 +121,7 @@ public class PermissionServiceImpl implements PermissionService{
 		if(u==null) {
 			throw new AppException(403, "User is not existed!");
 		}
-		List<Permission> listPermissions = new ArrayList<Permission>();
-		u.getGroups_user().forEach(r -> {
-			r.getPermissions() .forEach(
-				p -> {
-					if(p.getLevel()==2) {
-						listPermissions.add(p);
-					}
-				}
-			);
-		});
+		List<Permission> listPermissions = perRepo.getAllPermissionByLevel(2);
 		return listPermissions;
 	}
 

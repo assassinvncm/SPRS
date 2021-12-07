@@ -311,7 +311,7 @@ public class MapSerivceImpl implements MapService {
 			typePoint = Constants.MAP_TYPE_RELIEFPOINT + "," + Constants.MAP_TYPE_SOS + "," + Constants.MAP_TYPE_STORE
 					+ "," + Constants.MAP_TYPE_ORGANIZATION;
 		}
-		
+
 		List<MapPointsDto> lstMapPoints = new ArrayList<MapPointsDto>();
 		List<Object[]> mapPoints = mapRepository.getPoints(la, lo, radius, typePoint);
 		for (Object[] obj : mapPoints) {

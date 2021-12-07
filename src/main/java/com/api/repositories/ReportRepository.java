@@ -21,6 +21,6 @@ public interface ReportRepository {
 			, int p_city_id
 			, String p_date_from
 			, String p_date_to
-			, int p_type_point
+			, String p_type_point
 			, String p_group_by);
 }

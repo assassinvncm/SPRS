@@ -129,6 +129,12 @@ public class UserSerivceImpl implements UserService {
 		userDto.setAddress(mapStructMapper.addressToAddressDto(user.getAddress()));
 		userDto.setOrganization(mapStructMapper.organizationToOrganizationDto(user.getOrganization()));
 		userDto.setPassword(user.getPassword());
+
+		userDto.setImages(user.getImages());
+//		if(user.getImages()!=null) {
+//			user.getImages().setImg_url(user.getImages().getImg_url());
+//			userDto.setImages(user.getImages());
+//		}
 		//userDto.setRequest();
 		return userDto;
 	}
@@ -136,14 +142,17 @@ public class UserSerivceImpl implements UserService {
 	@Override
 	public User getNativeUserbyToken(String requestTokenHeader) {
 		// TODO Auto-generated method stub
-		logger.info("Start get User");
+		logger.info("Start get native User");
 
 		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
 		
 		User user = Optional.ofNullable(userRepository.findByUsername(username))
 				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
-		logger.info("End get User");
-		return user;
+		
+		User uRs = userRepository.getById(user.getId());
+		
+		logger.info("End get native User");
+		return uRs;
 	}
 	
 	@Override
@@ -224,7 +233,7 @@ public class UserSerivceImpl implements UserService {
 		user.setStatus(Constants.USER_STATUS_ACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setUser_sos(new SOS(1, address));
+		user.setUser_sos(new SOS(1, address,1));
 		userRepository.save(user);
 //		sosServ.createSOS(user);
 		logger.info("End save User");
@@ -627,7 +636,7 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
-	public User uploadStoreImg(ImageDto image) {
+	public User uploadUserImg(ImageDto image) {
 
 		// TODO Auto-generated method stub
 		User u = userRepository.getById(image.getId());

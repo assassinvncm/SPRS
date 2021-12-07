@@ -37,7 +37,7 @@ public class ReportController {
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getReportMonth(@RequestBody ReportDto rpdto) {
 		logger.info("Start get report");
-		List<ReportResultDto> rs = reportServ.getReportMonth(rpdto);
+		List<ReportResultDto> rs = reportServ.getReport(rpdto);
 		logger.info("End get report");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report success", "", rs, null));
 	}

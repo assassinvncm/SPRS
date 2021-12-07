@@ -95,7 +95,7 @@ public class UserController {
 		logger.info("Start get User");
 		User u = userService.getNativeUserbyToken(requestTokenHeader);
 		logger.info("End get User");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", mapper.userToUserDto_getUController(u), null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", mapper.userToUserDto(u), null));
 	}
 	
 //	@RequestMapping(value = "/user", method = RequestMethod.POST)
@@ -191,7 +191,7 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('PER_NORMU_ACEN')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg user");
-		User u = userService.uploadUserImg(image);
+		User u = userService.uploadStoreImg(image);
 		logger.info("End uploadImg user");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for user success", "", "", null));
 	}
