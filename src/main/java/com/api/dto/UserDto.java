@@ -32,6 +32,8 @@ public class UserDto {
 	private String dob;
 
 	private Date create_time;
+	
+	private String status;
 
 	private Boolean isActive;
 	
@@ -207,6 +209,18 @@ public class UserDto {
 
 	public void setRequest(List<RequestDto> request) {
 		this.request = request;
+	}
+
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

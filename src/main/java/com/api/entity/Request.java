@@ -54,6 +54,11 @@ public class Request extends BaseEntity implements Serializable{
 	@JsonIgnore
 	@JoinColumn(name = "organization_id",referencedColumnName="id")
 	private Organization organization;
+	
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "reliefPoint_id",referencedColumnName="id")
+	private ReliefPoint reliefPoint;
 
 	public Request(String type, String status, String message, Timestamp timestamp, User user, Group group,
 			Organization organization) {
@@ -126,6 +131,16 @@ public class Request extends BaseEntity implements Serializable{
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
 	}
+
+	public ReliefPoint getReliefPoint() {
+		return reliefPoint;
+	}
+
+	public void setReliefPoint(ReliefPoint reliefPoint) {
+		this.reliefPoint = reliefPoint;
+	}
+	
+	
 	
 	
 	

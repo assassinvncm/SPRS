@@ -71,9 +71,11 @@ public class RequestServiceImpl implements RequestService{
 		req.setStatus(request.getStatus());
 		if(req.getStatus().equals("accept")) {
 			req.getUser().setIsActive(true);
+			req.getUser().setStatus(Constants.USER_STATUS_ACTIVE);
 		}
 		if(req.getStatus().equals("reject")) {
 			req.getUser().setIsActive(false);
+			req.getUser().setStatus(Constants.USER_STATUS_REJECT);
 		}
 		
 		//BeanUtils.copyProperties(request, req);
@@ -91,6 +93,7 @@ public class RequestServiceImpl implements RequestService{
 			Request req = reqOpt.get();
 			req.setStatus(Constants.REQUEST_STATUS_ACCEPT);
 			req.getUser().setIsActive(true);
+			req.getUser().setStatus(Constants.USER_STATUS_ACTIVE);
 			requestRepository.save(req);
 		});
 	}
@@ -106,6 +109,7 @@ public class RequestServiceImpl implements RequestService{
 			Request req = reqOpt.get();
 			req.setStatus(Constants.REQUEST_STATUS_REJECT);
 			req.getUser().setIsActive(false);
+			req.getUser().setStatus(Constants.USER_STATUS_REJECT);
 			requestRepository.save(req);
 		});
 	}

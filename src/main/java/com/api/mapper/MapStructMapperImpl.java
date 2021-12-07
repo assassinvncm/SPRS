@@ -758,6 +758,31 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}).collect(Collectors.toList());
 		return lstReliefPointDto;
 	}
+
+	@Override
+	public List<UserDto> lstBanUserToBanUserDto(List<User> lstUser) {
+		// TODO Auto-generated method stub
+		if(lstUser == null) {
+			return null;
+		}
+		List<UserDto>  lstUserDto = new ArrayList<UserDto>();
+		for(User user : lstUser) {
+			UserDto userDto = new UserDto();
+			userDto.setId(user.getId());
+			userDto.setPhone(user.getPhone());
+			userDto.setUsername(user.getUsername());
+			userDto.setFull_name(user.getFull_name());
+			userDto.setDob(user.getDob());
+			userDto.setCreate_time(null);
+			userDto.setPassword(user.getPassword());
+			userDto.setIsActive(user.getIsActive());
+			userDto.setStatus(user.getStatus());
+			userDto.setAddress(addressToAddressDto(user.getAddress()));
+			lstUserDto.add(userDto);
+		}
+		
+		return lstUserDto;
+	}
 	
 //	private List<PermissionDto> addChildrenToParent(Permission p, List<Permission> pl){
 //		List<PermissionDto> lstPerDto = new ArrayList<PermissionDto>();

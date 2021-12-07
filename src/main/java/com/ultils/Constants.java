@@ -27,6 +27,12 @@ public class Constants {
 	public static final String REQUEST_STATUS_ACCEPT = "accept";
 	public static final String REQUEST_STATUS_REJECT = "reject";
 	public static final String REQUEST_STATUS_UNCHECK = "uncheck";
+	//constants for user status
+	public static final String USER_STATUS_BANNED = "Banned";
+	public static final String USER_STATUS_ACTIVE = "Actived";
+	public static final String USER_STATUS_WAIT_REQUEST = "Waiting Request";
+	public static final String USER_STATUS_UNACTIVE = "un Active";
+	public static final String USER_STATUS_REJECT = "Reject";
 	// constants for request status
 	public static final String IMAGE_URL = "https://image-bucket-sprs.s3.ap-southeast-1.amazonaws.com/";
 

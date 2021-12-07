@@ -21,6 +21,7 @@ import com.api.repositories.UserRepository;
 import com.exception.AppException;
 import com.exception.AuthenException;
 import com.jwt.entity.UserDetailsImpl;
+import com.ultils.Constants;
 
 
 @Service
@@ -47,9 +48,19 @@ public class JwtUserDetailsService implements UserDetailsService {
 	
 	public UserDetails loadUserByUsernameByPlatform(String username, int platform) throws UsernameNotFoundException,AuthenException {
 		User user = Optional.ofNullable(userRepository.findByUsername(username)).orElseThrow(() -> new UsernameNotFoundException("User not found with username: "+username));
-		if(user.getIsActive() == false) {//user.getGroups_user().get(0).getPermissions().get(0)
+		
+		if(user.getStatus() != null && user.getStatus().equals(Constants.USER_STATUS_BANNED)) {
+			throw new AuthenException("Account is banned");
+		}
+		
+		if(user.getStatus() != null && user.getStatus().equals(Constants.USER_STATUS_UNACTIVE)) {
 			throw new AuthenException("Account is not active");
 		}
+		
+		if(user.getStatus() != null && user.getStatus().equals(Constants.USER_STATUS_REJECT)) {
+			throw new AuthenException("Account is reject");
+		}
+
 		List<Group> lstGr = user.getGroups_user();
 		boolean check = false;
 		for (Group group : lstGr) {

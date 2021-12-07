@@ -57,4 +57,13 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Query("SELECT u FROM User u INNER JOIN u.user_sos s WHERE s.id = :SOS_id")
 	Optional<User> getUserBySosId(@Param("SOS_id") long id);
 	
+	@Query("SELECT u FROM User u  WHERE u.status = :status")
+	List<User> getUserByStatus(@Param("status") String status);
+	
+	@Query("SELECT u FROM User u  WHERE u.id = :id AND u.status != :status")
+	Optional<User> findUserByIdAndNotStatus(@Param("id") Long id,@Param("status") String status);
+	
+	@Query("SELECT u FROM User u  WHERE u.id = :id AND u.status = :status")
+	Optional<User> findUserByIdAndStatus(@Param("id") Long id,@Param("status") String status);
+	
 }
