@@ -22,6 +22,7 @@ import com.api.controller.UserController;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.GroupDto;
 import com.api.dto.ImageDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
@@ -669,11 +670,35 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getBannedUser() {
+	public PagingResponse<UserDto> getUserByAdmin(List<String> filterGroup,List<String> filterStatus, String searchStr,int pageIndex, int pageSize) {
 		// TODO Auto-generated method stub
-		List<User> user = userRepository.getUserByStatus(Constants.USER_STATUS_BANNED);
+		if(filterGroup == null || filterGroup.isEmpty()) {
+			filterGroup = new ArrayList<String>();
+			filterGroup.add(Constants.ORG_ADMIN_PER_CODE);
+			filterGroup.add(Constants.STORE_PER_CODE);
+			filterGroup.add(Constants.USER_PER_CODE);
+		}
 		
-		return mapStructMapper.lstBanUserToBanUserDto(user);
+		if(filterStatus == null || filterStatus.isEmpty()) {
+			filterStatus = new ArrayList<String>();
+			filterStatus.add(Constants.USER_STATUS_ACTIVE);
+			filterStatus.add(Constants.USER_STATUS_BANNED);
+			filterStatus.add(Constants.USER_STATUS_REJECT);
+			filterStatus.add(Constants.USER_STATUS_UNACTIVE);
+			filterStatus.add(Constants.USER_STATUS_WAIT_REQUEST);
+		}
+		pageIndex = pageIndex - 1;
+		
+		Pageable page = PageRequest.of(pageIndex,pageSize);
+		
+		Page<User> pageUser = userRepository.getUserByGroup(Constants.ORG_USER_PER_CODE,filterGroup,filterStatus, searchStr, page);
+		List<UserDto> userDto = mapStructMapper.lstBanUserToBanUserDto(pageUser.getContent());
+		
+		PagingResponse<UserDto> pagingRes = new PagingResponse<UserDto>();
+		pagingRes.setObject(userDto);
+		pagingRes.setTotalPage(pageUser.getTotalPages());
+		pagingRes.setTotalRecord(pageUser.getTotalElements());
+		return pagingRes;
 	}
 
 

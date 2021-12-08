@@ -31,39 +31,44 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Transactional
 	@Query("update User u set u.password = :newPass where u.id = :uId")
 	void updateUser(@Param("uId") Long id, @Param("newPass") String newPass);
-	
+
 	@Query("SELECT u FROM User u WHERE u.username LIKE %:name%")
 	List<User> searchByNameLike(@Param("name") String name);
 
 	@Query("select u from User u where u.organization.id = :orgId and u.id != :uId and (:name IS NULL OR :name = '' OR u.username LIKE %:name%)")
-	Page<User> getOwnOrganizeUser(@Param("orgId") Long orgId, @Param("uId") Long uId, @Param("name") String name, Pageable pageable);//
-	
+	Page<User> getOwnOrganizeUser(@Param("orgId") Long orgId, @Param("uId") Long uId, @Param("name") String name,
+			Pageable pageable);//
+
 	@Transactional
-	@Procedure(procedureName  = "prc_grant_group")
+	@Procedure(procedureName = "prc_grant_group")
 	String grantGroup(@Param("user_id") long user_id, @Param("group_id") long group_id);
-	
+
 	@Transactional
-	@Procedure(procedureName  = "prc_ungrant_group")
+	@Procedure(procedureName = "prc_ungrant_group")
 	String ungrantGroup(@Param("user_id") long user_id, @Param("group_id") long group_id);
-	
+
 	@Transactional
-	@Procedure(procedureName  = "prc_grant_permission")
+	@Procedure(procedureName = "prc_grant_permission")
 	String grantPermission(@Param("group_id") long group_id, @Param("permission_id") long permission_id);
-	
+
 	@Transactional
-	@Procedure(procedureName  = "prc_ungrant_permission")
+	@Procedure(procedureName = "prc_ungrant_permission")
 	String ungrantPermission(@Param("group_id") long group_id, @Param("permission_id") long permission_id);
-	
+
 	@Query("SELECT u FROM User u INNER JOIN u.user_sos s WHERE s.id = :SOS_id")
 	Optional<User> getUserBySosId(@Param("SOS_id") long id);
-	
+
 	@Query("SELECT u FROM User u  WHERE u.status = :status")
 	List<User> getUserByStatus(@Param("status") String status);
-	
+
+	@Query("SELECT u FROM User u INNER JOIN u.groups_user gr WHERE ('' = :exceptGroup OR gr.code != :exceptGroup) AND gr.code IN :filterGroup AND u.status IN :filterStatus AND ('' = :search OR u.username LIKE %:search% ) ")
+	Page<User> getUserByGroup(@Param("exceptGroup") String exceptGroup, @Param("filterGroup") List<String> filterGroup,
+			@Param("filterStatus") List<String> filterStatus, @Param("search") String search, Pageable pageable);
+
 	@Query("SELECT u FROM User u  WHERE u.id = :id AND u.status != :status")
-	Optional<User> findUserByIdAndNotStatus(@Param("id") Long id,@Param("status") String status);
-	
+	Optional<User> findUserByIdAndNotStatus(@Param("id") Long id, @Param("status") String status);
+
 	@Query("SELECT u FROM User u  WHERE u.id = :id AND u.status = :status")
-	Optional<User> findUserByIdAndStatus(@Param("id") Long id,@Param("status") String status);
-	
+	Optional<User> findUserByIdAndStatus(@Param("id") Long id, @Param("status") String status);
+
 }

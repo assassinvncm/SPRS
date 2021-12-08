@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "SPRS_Relief_Point")
@@ -71,6 +72,11 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
 	@JsonIgnore
     private List<Notification> notifications;	
+	
+	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@JsonProperty("request")
+	private List<Request> request;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "image_id")
@@ -201,4 +207,14 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
 	}
+
+	public List<Request> getRequest() {
+		return request;
+	}
+
+	public void setRequest(List<Request> request) {
+		this.request = request;
+	}
+	
+	
 }

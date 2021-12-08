@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
@@ -196,10 +197,14 @@ public class UserController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for user success", "", "", null));
 	}
 	
-	@RequestMapping(value = "/user/ban", method = RequestMethod.GET)
-	public ResponseEntity<?> getBanUser(){
+	@RequestMapping(value = "users/admin", method = RequestMethod.GET)
+	public ResponseEntity<?> getBanUser(@RequestParam(required = false,value="filterGroup") List<String> filterGroup,
+			@RequestParam(required = false,value="filterStatus") List<String> filterStatus, 
+			@RequestParam( required = false,value="Search", defaultValue = "") String search,
+			@RequestParam(required = false, value="pageIndex") int pageIndex,
+			@RequestParam(required = false, value="pageSize") int pageSize){
 		logger.info("Start get banned User");
-		List<UserDto> uDto = userService.getBannedUser();
+		PagingResponse<UserDto> uDto = userService.getUserByAdmin(filterGroup,filterStatus,search,pageIndex,pageSize);
 		logger.info("End get banned User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list banned user success!", "", uDto, null));
 	}
@@ -223,5 +228,5 @@ public class UserController {
 		logger.info("Start unban User id: "+user.getId());
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list unbanned user success!", "", null, null));
 	}
-	
+
 }
