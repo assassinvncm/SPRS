@@ -683,9 +683,9 @@ public class UserSerivceImpl implements UserService {
 			filterStatus = new ArrayList<String>();
 			filterStatus.add(Constants.USER_STATUS_ACTIVE);
 			filterStatus.add(Constants.USER_STATUS_BANNED);
-			filterStatus.add(Constants.USER_STATUS_REJECT);
-			filterStatus.add(Constants.USER_STATUS_UNACTIVE);
-			filterStatus.add(Constants.USER_STATUS_WAIT_REQUEST);
+//			filterStatus.add(Constants.USER_STATUS_REJECT);
+//			filterStatus.add(Constants.USER_STATUS_UNACTIVE);
+//			filterStatus.add(Constants.USER_STATUS_WAIT_REQUEST);
 		}
 		pageIndex = pageIndex - 1;
 		
