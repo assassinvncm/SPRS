@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
-import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
@@ -96,7 +95,7 @@ public class UserController {
 		logger.info("Start get User");
 		User u = userService.getNativeUserbyToken(requestTokenHeader);
 		logger.info("End get User");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", mapper.userToUserDto_getUController(u), null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", mapper.userToUserDto(u), null));
 	}
 	
 //	@RequestMapping(value = "/user", method = RequestMethod.POST)
@@ -192,19 +191,15 @@ public class UserController {
 	@PreAuthorize("hasAnyAuthority('PER_NORMU_ACEN')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg user");
-		User u = userService.uploadUserImg(image);
+		User u = userService.uploadStoreImg(image);
 		logger.info("End uploadImg user");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for user success", "", "", null));
 	}
 	
-	@RequestMapping(value = "users/admin", method = RequestMethod.GET)
-	public ResponseEntity<?> getBanUser(@RequestParam(required = false,value="filterGroup") List<String> filterGroup,
-			@RequestParam(required = false,value="filterStatus") List<String> filterStatus, 
-			@RequestParam( required = false,value="Search", defaultValue = "") String search,
-			@RequestParam(required = false, value="pageIndex") int pageIndex,
-			@RequestParam(required = false, value="pageSize") int pageSize){
+	@RequestMapping(value = "/user/ban", method = RequestMethod.GET)
+	public ResponseEntity<?> getBanUser(){
 		logger.info("Start get banned User");
-		PagingResponse<UserDto> uDto = userService.getUserByAdmin(filterGroup,filterStatus,search,pageIndex,pageSize);
+		List<UserDto> uDto = userService.getBannedUser();
 		logger.info("End get banned User");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list banned user success!", "", uDto, null));
 	}
@@ -228,5 +223,5 @@ public class UserController {
 		logger.info("Start unban User id: "+user.getId());
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list unbanned user success!", "", null, null));
 	}
-
+	
 }

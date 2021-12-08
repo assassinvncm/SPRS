@@ -26,7 +26,7 @@ public class ReportDto {
 	private int type_chart;
 	
 	@JsonProperty("type_point")
-	private int[] type_point;
+	private int type_point;
 	
 	public ReportDto() {
 		super();
@@ -90,11 +90,11 @@ public class ReportDto {
 		this.city_id = city_id;
 	}
 
-	public int[] getType_point() {
+	public int getType_point() {
 		return type_point;
 	}
 
-	public void setType_point(int[] type_point) {
+	public void setType_point(int type_point) {
 		this.type_point = type_point;
 	}
 }

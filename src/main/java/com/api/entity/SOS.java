@@ -83,10 +83,11 @@ public class SOS extends BaseEntity implements Serializable{
 		this.status = status;
 	}
 
-	public SOS(Integer status, Address address) {
+	public SOS(Integer status, Address address, int level) {
 		super();
 		this.status = status;
 		this.address = address;
+		this.level = level;
 	}
 
 	public Address getAddress() {

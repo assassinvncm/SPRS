@@ -67,9 +67,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 			if(group.getPlatform() == platform) {
 				check = true;
 			}
-		}
-		if(!check) {
-			throw new AuthenException("Account is not ready for this platform!");
+			if(!check) {
+				throw new AuthenException("Account is not ready for this platform!");
+			}
 		}
 //		Set<String> authorities = new HashSet<>();
 //        if (null != user.getGroups_user()) user.getGroups_user().forEach(r -> {

@@ -24,7 +24,7 @@ public class ReportRepositoryImpl implements ReportRepository{
 	
 	@Override
 	public List<Object[]> getReport(int p_district_id, int p_sub_district_id, int p_city_id, String p_date_from, String p_date_to,
-			int p_type_point, String p_group_by) {
+			String p_type_point, String p_group_by) {
 		List<Object[]> rs = new ArrayList<Object[]>();
 		try {
 			StoredProcedureQuery storedProcedure = em.createStoredProcedureQuery("prc_report_get_report");
@@ -33,7 +33,7 @@ public class ReportRepositoryImpl implements ReportRepository{
 			storedProcedure.registerStoredProcedureParameter("p_city_id", Integer.class, ParameterMode.IN);
 			storedProcedure.registerStoredProcedureParameter("p_date_from", String.class, ParameterMode.IN);
 			storedProcedure.registerStoredProcedureParameter("p_date_to", String.class, ParameterMode.IN);
-			storedProcedure.registerStoredProcedureParameter("p_type_point", Integer.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_type_point", String.class, ParameterMode.IN);
 			storedProcedure.registerStoredProcedureParameter("p_group_by", String.class, ParameterMode.IN);
 			storedProcedure.setParameter("p_district_id", p_district_id);
 			storedProcedure.setParameter("p_sub_district_id", p_sub_district_id);

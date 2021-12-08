@@ -212,6 +212,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		userDto.setCreate_time(null);
 		userDto.setPassword(user.getPassword());
 		userDto.setIsActive(user.getIsActive());
+
+		if(user.getImages()!=null) {
+			user.getImages().setImg_url(Constants.IMAGE_URL+user.getImages().getImg_url());
+			userDto.setImages(user.getImages());
+		}
 		return userDto;
 	}
 
@@ -389,7 +394,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		}).collect(Collectors.toList());
 		reliefPointDto.setReliefInformations(rpDto);
 
-		if(reliefPointDto.getImages()!=null) {
+		if(reliefPoint.getImages()!=null) {
 			reliefPoint.getImages().setImg_url(Constants.IMAGE_URL+reliefPoint.getImages().getImg_url());
 			reliefPointDto.setImages(reliefPoint.getImages());
 		}
@@ -657,6 +662,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		PermissionDto perDto = new PermissionDto();
 		perDto.setId(per.getId());
 		perDto.setName(per.getName());
+		perDto.setCode(per.getCode());
 		perDto.setTo(per.getTo_page());
 		perDto.setIcon(per.getIcon_name());
 		return perDto;
@@ -751,6 +757,31 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return  reliefPointToreliefPointDto(rp);
 		}).collect(Collectors.toList());
 		return lstReliefPointDto;
+	}
+
+	@Override
+	public List<UserDto> lstBanUserToBanUserDto(List<User> lstUser) {
+		// TODO Auto-generated method stub
+		if(lstUser == null) {
+			return null;
+		}
+		List<UserDto>  lstUserDto = new ArrayList<UserDto>();
+		for(User user : lstUser) {
+			UserDto userDto = new UserDto();
+			userDto.setId(user.getId());
+			userDto.setPhone(user.getPhone());
+			userDto.setUsername(user.getUsername());
+			userDto.setFull_name(user.getFull_name());
+			userDto.setDob(user.getDob());
+			userDto.setCreate_time(null);
+			userDto.setPassword(user.getPassword());
+			userDto.setIsActive(user.getIsActive());
+			userDto.setStatus(user.getStatus());
+			userDto.setAddress(addressToAddressDto(user.getAddress()));
+			lstUserDto.add(userDto);
+		}
+		
+		return lstUserDto;
 	}
 	
 //	private List<PermissionDto> addChildrenToParent(Permission p, List<Permission> pl){

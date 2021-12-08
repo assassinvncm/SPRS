@@ -203,7 +203,7 @@ public interface UserService {
 	 * @param ImageDto
 	 * @return User
 	 */
-	User uploadStoreImg(ImageDto image);
+	User uploadUserImg(ImageDto image);
 	
 	/**
 	 * banned user
