@@ -1,5 +1,6 @@
 package com.api.service.impl;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
 import com.api.service.AmazonClient;
+import com.api.service.NotificationService;
 import com.api.service.StoreService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
@@ -57,6 +59,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
 	private AmazonClient amazonClient;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -96,6 +101,7 @@ public class StoreServiceImpl implements StoreService{
 			Address address = addressService.mapAddress(s.getAddress());
 			store.setLocation(address);
 			store.setStatus(1); 
+			store.setCreate_time(DateUtils.getCurrentSqlDate());
 			str = storeRepository.save(store);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,10 +162,15 @@ public class StoreServiceImpl implements StoreService{
 	public Store openCloseStore(StoreDto s) {
 		// TODO Auto-generated method stub
 		Store st = storeRepository.getById(s.getId());
+		Time currTime = new Time(System.currentTimeMillis());
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		st.setStatus(s.getStatus());
+		if(s.getStatus() == 0) {
+			st.setOpen_time(currTime);
+		}else if(s.getStatus() == 1) {
+			st.setClose_time(currTime);
+		}
 		
 		return storeRepository.save(st);
 	}
