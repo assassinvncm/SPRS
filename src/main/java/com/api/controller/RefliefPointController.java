@@ -69,7 +69,8 @@ public class RefliefPointController {
 
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		reliefPointDto.setUser_rp(userDto);
-
+		
+		
 		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto);
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));

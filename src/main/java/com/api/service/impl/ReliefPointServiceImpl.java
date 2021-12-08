@@ -23,9 +23,11 @@ import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
+import com.api.entity.Group;
 import com.api.entity.Image;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
+import com.api.entity.Request;
 import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
@@ -110,6 +112,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setStatus(true);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
+		
+		
+		
+//		Request req = createRequestRegister("request to create store", "Create Store", user);
+//		userRepository.save(user);
+		
+		
 		notificationService.sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
 		return rp;
 	}

@@ -283,7 +283,7 @@ public class NotificationServiceImpl implements NotificationService {
 		PagingResponse<NotificationDto> pagingResonpne = new PagingResponse<NotificationDto>();
 		pagingResonpne.setObject(mapStructMapper.lstNotificationToNotificationDto(lstNotification.get()));
 		pagingResonpne.setTotalPage(lstNotification.getTotalPages());
-		pagingResonpne.setTotalRecord(lstNotification.getNumber());
+		pagingResonpne.setTotalRecord(lstNotification.getTotalElements());
 		return pagingResonpne;
 	}
 

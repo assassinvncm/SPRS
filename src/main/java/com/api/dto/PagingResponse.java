@@ -5,7 +5,7 @@ import java.util.List;
 public class PagingResponse<T> {
 
 	private int totalPage;
-	private int totalRecord;
+	private long totalRecord;
 	private List<T> object;
 
 	public int getTotalPage() {
@@ -24,11 +24,11 @@ public class PagingResponse<T> {
 		this.object = object;
 	}
 
-	public int getTotalRecord() {
+	public long getTotalRecord() {
 		return totalRecord;
 	}
 
-	public void setTotalRecord(int totalRecord) {
+	public void setTotalRecord(long totalRecord) {
 		this.totalRecord = totalRecord;
 	}
 	

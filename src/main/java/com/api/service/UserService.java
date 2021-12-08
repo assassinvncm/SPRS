@@ -6,6 +6,7 @@ import java.util.Map;
 import com.api.dto.AddressDto;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
@@ -223,6 +224,6 @@ public interface UserService {
 	 * @param ImageDto
 	 * @return User
 	 */
-	List<UserDto> getBannedUser();
+	PagingResponse<UserDto> getUserByAdmin(List<String> groupCode,List<String> filterStatus ,String searchStr, int pageIndex, int pageSize);
 
 }
