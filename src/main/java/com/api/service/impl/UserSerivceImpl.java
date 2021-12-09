@@ -637,6 +637,17 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
+	public User activeOrganizeUser(Long id) {
+		User u = userRepository.getById(id);
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		u.setIsActive(false);
+		u.setStatus(Constants.USER_STATUS_ACTIVE);
+		return userRepository.saveAndFlush(u);
+	}
+
+	@Override
 	public User uploadUserImg(ImageDto image) {
 
 		// TODO Auto-generated method stub

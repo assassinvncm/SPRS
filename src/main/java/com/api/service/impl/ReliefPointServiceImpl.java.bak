@@ -147,13 +147,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		}).collect(Collectors.toList());
 		
 		Address address = addressService.mapAddress(reliefPointDto.getAddress());
-		rp.setReliefInformations(lstRIfor);
-		rp.setAddress(address);
-		rp.setModified_date(DateUtils.getCurrentSqlDate());
-		rp.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-		rp.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		rp.setDescription(reliefPointDto.getDescription());
-		rp.setName(reliefPointDto.getName());
+		reliefPoint.setReliefInformations(lstRIfor);
+		reliefPoint.setAddress(address);
+		reliefPoint.setStatus(rp.getStatus());
+		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		
 //		List<ReliefInformation> lstReliefInfor = reliefPointDto.getReliefInformations().stream().map(reliefInforDto -> {
 //			ReliefInformation reliefInfor = new ReliefInformation();
 //			reliefInfor.setId(reliefInforDto.getId());
