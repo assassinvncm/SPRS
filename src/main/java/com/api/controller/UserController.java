@@ -215,7 +215,7 @@ public class UserController {
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 		logger.info("Start ban User id: "+user.getId());
 		userService.banUser(uid);
-		
+		logger.info("End ban User id: "+user.getId());
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "ban user success!", "", null, null));
 	}
 	
@@ -226,7 +226,7 @@ public class UserController {
 		logger.info("Start unban User id: "+user.getId());
 		userService.unbannedUser(uid);
 		logger.info("Start unban User id: "+user.getId());
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list unbanned user success!", "", null, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "unbanned user success!", "", null, null));
 	}
 
 }

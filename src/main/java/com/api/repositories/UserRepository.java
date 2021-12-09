@@ -70,5 +70,12 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 
 	@Query("SELECT u FROM User u  WHERE u.id = :id AND u.status = :status")
 	Optional<User> findUserByIdAndStatus(@Param("id") Long id, @Param("status") String status);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE sprs_v1.sprs_users INNER JOIN sprs_v1.sprs_organization ON sprs_users.organization_id = sprs_organization.id\r\n"
+			+ "SET sprs_users.status = :status \r\n"
+			+ "WHERE sprs_organization.id = :org",nativeQuery = true)
+	void updateStatusUserByOrg(@Param("org") Long orgId,@Param("status") String status);
 
 }

@@ -87,6 +87,9 @@ public class AddressSerivceImpl implements AddressService {
 					.findSubDistrict(addressDto.getSubDistrict().getName(), addressDto.getDistrict().getName(),
 							addressDto.getCity().getName())
 					.orElseThrow(() -> new AppException(403, "Address Not Exits In DB"));
+			if(lstSb.size() == 0) {
+				throw new AppException(403, "Address Not Exits In DB");
+			}
 			sb = lstSb.get(0);
 		}
 		// mapper
