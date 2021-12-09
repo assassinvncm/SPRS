@@ -656,17 +656,43 @@ public class UserSerivceImpl implements UserService {
 		// TODO Auto-generated method stub
 		
 		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_ACTIVE).orElseThrow(() -> new AppException(403,"Account is not exist"));
-		user.setStatus(Constants.USER_STATUS_BANNED);
-		userRepository.save(user);
+		List<Group> lstGroup = user.getGroups_user();
 		
+		boolean flag = true;
+		//loop to find user is Admin of Organization
+		for(Group g : lstGroup) {
+			if(g.getCode().equals(Constants.ORG_ADMIN_PER_CODE)) {
+				userRepository.updateStatusUserByOrg(user.getOrganization().getId(),Constants.USER_STATUS_BANNED);
+				flag = false;
+				break;
+			}
+		}
+		if(flag) {
+			user.setStatus(Constants.USER_STATUS_BANNED);
+			userRepository.save(user);
+		}
+
 	}
 	
 	@Override
 	public void unbannedUser(Long user_id) {
 		// TODO Auto-generated method stub
 		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_BANNED).orElseThrow(() -> new AppException(403,"Account is not exist"));
-		user.setStatus(Constants.USER_STATUS_ACTIVE);
-		userRepository.save(user);
+		List<Group> lstGroup = user.getGroups_user();
+		boolean flag = true;
+		//loop to find user is Admin of Organization
+		for(Group g : lstGroup) {
+			if(g.getCode().equals(Constants.ORG_ADMIN_PER_CODE)) {
+				userRepository.updateStatusUserByOrg(user.getOrganization().getId(),Constants.USER_STATUS_ACTIVE);
+				flag = false;
+				break;
+			}
+		}
+		
+		if(flag) {
+			user.setStatus(Constants.USER_STATUS_ACTIVE);
+			userRepository.save(user);
+		}
 	}
 
 	@Override
