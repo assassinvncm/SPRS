@@ -30,21 +30,21 @@ public class StoreCategoryController {
 	StoreCategoryRepository cateRepo;
 	
 	@RequestMapping(value = "/get",method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> getCategory() {
 		List<StoreCategoryDto> lstCateDto = cateServ.getAllCategory();
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get List Store Category Successfull", "", lstCateDto, null));
 	}
 	
 	@RequestMapping(value = "/get{id}",method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> getCategoryById(@PathVariable(value = "id") Long id) {
 		StoreCategory rs = cateRepo.getById(id);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get Store By ID "+id+" success", "", rs, null));
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> createCategory(@Validated @RequestBody StoreCategoryDto cateDto) {
 		try {
 			cateServ.insertCategory(cateDto);
@@ -55,7 +55,7 @@ public class StoreCategoryController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> deleteCategory(@Validated @RequestBody List<StoreCategoryDto> lstItemDto) {
 		cateServ.deleteCategory(lstItemDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Delete list Store Category Successfull", "", lstItemDto, null));

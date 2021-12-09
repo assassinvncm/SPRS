@@ -79,7 +79,6 @@ public class NotificationController {
 //	}
 
 	@GetMapping("/notification/uncheck")
-	@PreAuthorize("hasAnyAuthority('PER_MOB_NORTIFICATION')")
 	public ResponseEntity<?> getNotificationsUncheck(@RequestHeader("Authorization") String requestTokenHeader) {
 
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
@@ -92,7 +91,6 @@ public class NotificationController {
 	}
 
 	@GetMapping("/get-all")
-	@PreAuthorize("hasAnyAuthority('PER_MOB_NORTIFICATION')")
 	public ResponseEntity<?> getNotifications(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestParam("pageIndex") @Min(1) int pageIndex, @RequestParam("pageSize") @Min(1) int pageSize) {
 
@@ -106,7 +104,6 @@ public class NotificationController {
 	}
 
 	@GetMapping("/get/{id}")
-	@PreAuthorize("hasAnyAuthority('PER_MOB_NORTIFICATION')")
 	public ResponseEntity<?> getNotificationbyId(@RequestHeader("Authorization") String requestTokenHeader,
 			@PathVariable("id") Long id) {
 
@@ -118,7 +115,6 @@ public class NotificationController {
 	}
 
 	@PutMapping("/update/{id}")
-	@PreAuthorize("hasAnyAuthority('PER_MOB_NORTIFICATION')")
 	public ResponseEntity<?> updateNotification(@RequestHeader("Authorization") String requestTokenHeader,
 			@PathVariable("id") Long notiId, @RequestParam("status") String status) {
 

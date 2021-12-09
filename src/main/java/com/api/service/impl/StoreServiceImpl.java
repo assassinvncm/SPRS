@@ -168,8 +168,10 @@ public class StoreServiceImpl implements StoreService{
 		}
 		if(s.getStatus() == 0) {
 			st.setOpen_time(currTime);
+			st.setStatus(0);
 		}else if(s.getStatus() == 1) {
 			st.setClose_time(currTime);
+			st.setStatus(1);
 		}
 		
 		return storeRepository.save(st);
@@ -217,9 +219,11 @@ public class StoreServiceImpl implements StoreService{
 		List<StoreDto> lstStoreRs = new ArrayList<StoreDto>();
 		Sort sortable = null;
 	    if (filter.getSort()) {
-	      sortable = Sort.by("name").descending();
+	    	sortable = Sort.by("name").descending();
+	    }else {
+	    	sortable = Sort.by("name").descending();
 	    }
-	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize());
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
 		Page<Store> pageStore = storeRepository.getStoreByStatusOrType(user_id, filter.getStatus_store(),filter.getType(),pageable);
 		lstStoreRs = mapStructMapper.lstStoreToStoreDto(pageStore.getContent());
 	    Map<String, Object> response = new HashMap<>();
