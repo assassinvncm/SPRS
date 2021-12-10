@@ -67,11 +67,11 @@ public class RefliefPointController {
 	public ResponseEntity<?> createReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody ReliefPointDto reliefPointDto) {
 
-		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
-		reliefPointDto.setUser_rp(userDto);
+//		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+//		reliefPointDto.setUser_rp(userDto);
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 		
-		
-		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto);
+		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto, user);
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}

@@ -212,11 +212,40 @@ public class MapStructMapperImpl implements MapStructMapper {
 		userDto.setCreate_time(null);
 		userDto.setPassword(user.getPassword());
 		userDto.setIsActive(user.getIsActive());
+//		userDto.setImages(user.getImages());
 
-		if(user.getImages()!=null) {
-			user.getImages().setImg_url(Constants.IMAGE_URL+user.getImages().getImg_url());
-			userDto.setImages(user.getImages());
+//		if(user.getImages()!=null) {
+//			user.getImages().setImg_url(Constants.IMAGE_URL+user.getImages().getImg_url());
+//			userDto.setImages(user.getImages());
+//		}
+		return userDto;
+	}
+
+	@Override
+	public UserDto userToUserDto_getUController(User user) {
+		// TODO Auto-generated method stub
+		if (user == null) {
+			return null;
 		}
+
+		UserDto userDto = new UserDto();
+		userDto.setId(user.getId());
+		userDto.setPhone(user.getPhone());
+		userDto.setUsername(user.getUsername());
+		userDto.setFull_name(user.getFull_name());
+		userDto.setDob(user.getDob());
+		userDto.setCreate_time(null);
+		userDto.setPassword(user.getPassword());
+		userDto.setIsActive(user.getIsActive());
+		userDto.setOrganization(organizationToOrganizationDto(user.getOrganization()));
+		userDto.setImages(user.getImages());
+		userDto.setGroups_user(lstGroupToGroupDto(user.getGroups_user()));
+		userDto.setAddress(addressToAddressDto(user.getAddress()));
+
+//		if(user.getImages()!=null) {
+//			user.getImages().setImg_url(Constants.IMAGE_URL+user.getImages().getImg_url());
+//			userDto.setImages(user.getImages());
+//		}
 		return userDto;
 	}
 
@@ -393,11 +422,12 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return reliefInforToReliefInforDto(rpInfor);
 		}).collect(Collectors.toList());
 		reliefPointDto.setReliefInformations(rpDto);
+		reliefPointDto.setImages(reliefPoint.getImages());
 
-		if(reliefPoint.getImages()!=null) {
-			reliefPoint.getImages().setImg_url(Constants.IMAGE_URL+reliefPoint.getImages().getImg_url());
-			reliefPointDto.setImages(reliefPoint.getImages());
-		}
+//		if(reliefPoint.getImages()!=null) {
+//			reliefPoint.getImages().setImg_url(Constants.IMAGE_URL+reliefPoint.getImages().getImg_url());
+//			reliefPointDto.setImages(reliefPoint.getImages());
+//		}
 //		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
 
 		return reliefPointDto;
@@ -419,10 +449,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
 		storeDto.setStoreDetail(lstStoreCateToStoreCateDto(store.getStore_category()));
 		storeDto.setUser_st(userToUserDto(store.getUsers()));
-		if(store.getImages()!=null) {
-			store.getImages().setImg_url(Constants.IMAGE_URL+store.getImages().getImg_url());
-			storeDto.setImages(store.getImages());
-		}
+//		if(store.getImages()!=null) {
+//			store.getImages().setImg_url(Constants.IMAGE_URL+store.getImages().getImg_url());
+//			storeDto.setImages(store.getImages());
+//		}
+		storeDto.setImages(store.getImages());
 		return storeDto;
 	}
 

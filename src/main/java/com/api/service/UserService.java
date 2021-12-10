@@ -200,6 +200,13 @@ public interface UserService {
 	
 	/**
 	 * 
+	 * @param id
+	 * @return user
+	 */
+	User activeOrganizeUser(Long id);
+	
+	/**
+	 * 
 	 * @param ImageDto
 	 * @return User
 	 */

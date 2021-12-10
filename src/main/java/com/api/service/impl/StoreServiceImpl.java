@@ -162,17 +162,18 @@ public class StoreServiceImpl implements StoreService{
 	public Store openCloseStore(StoreDto s) {
 		// TODO Auto-generated method stub
 		Store st = storeRepository.getById(s.getId());
-		Time currTime = new Time(System.currentTimeMillis());
+//		Time currTime = new Time(System.currentTimeMillis());
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		if(s.getStatus() == 0) {
-			st.setOpen_time(currTime);
-			st.setStatus(0);
-		}else if(s.getStatus() == 1) {
-			st.setClose_time(currTime);
-			st.setStatus(1);
-		}
+//		if(s.getStatus() == 0) {
+//			st.setOpen_time(currTime);
+//			st.setStatus(0);
+//		}else if(s.getStatus() == 1) {
+//			st.setClose_time(currTime);
+//			st.setStatus(1);
+//		}
+		st.setStatus(s.getStatus());
 		
 		return storeRepository.save(st);
 	}

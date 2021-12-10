@@ -9,6 +9,7 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ultils.Ultilities;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -88,6 +89,7 @@ public class SOS extends BaseEntity implements Serializable{
 		this.status = status;
 		this.address = address;
 		this.level = level;
+		this.create_time = Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy"));
 	}
 
 	public Address getAddress() {
