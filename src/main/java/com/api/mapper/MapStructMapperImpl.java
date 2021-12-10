@@ -118,7 +118,10 @@ public class MapStructMapperImpl implements MapStructMapper {
 		UserDto udto = new UserDto();
 		udto.setId(user.getId());
 		udto.setUsername(user.getUsername());
-
+		udto.setPhone(user.getPhone());
+		udto.setAddress(addressToAddressDto(user.getAddress()));
+		udto.setFull_name(user.getFull_name());
+		udto.setDob(user.getDob());
 		return udto;
 	}
 
@@ -148,7 +151,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<UserDto> lstUserDto = lstUser.stream().map(user -> {
 			return userToUserDto_forGet(user);
 		}).collect(Collectors.toList());
-
+		
 		return lstUserDto;
 	}
 

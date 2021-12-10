@@ -1,6 +1,7 @@
 package com.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,19 +37,28 @@ public class ReportController {
 	@RequestMapping(value = "/getReportMonth", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getReportMonth(@RequestBody ReportDto rpdto) {
-		logger.info("Start get report");
-		List<ReportResultDto> rs = reportServ.getReportMonth(rpdto);
-		logger.info("End get report");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report success", "", rs, null));
+		logger.info("Start get report Month");
+		Map<String, Object> rs = reportServ.getReportMonth(rpdto);
+		logger.info("End get report Month");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Month success", "", rs, null));
 	}
 
 	@RequestMapping(value = "/getReportYear", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getReportYear(@RequestBody ReportDto rpdto) {
-		logger.info("Start get report");
-		List<ReportResultDto> rs = reportServ.getReportYear(rpdto);
-		logger.info("End get report");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report success", "", rs, null));
+		logger.info("Start get report Year");
+		Map<String, Object> rs = reportServ.getReportYear(rpdto);
+		logger.info("End get report Year");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Year success", "", rs, null));
+	}
+
+	@RequestMapping(value = "/getReportProvince", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
+	public ResponseEntity<?> getReportProvince(@RequestBody ReportDto rpdto) {
+		logger.info("Start get report Province");
+		Map<String, Object> rs = reportServ.getReportYear(rpdto);
+		logger.info("End get report Province");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Province success", "", rs, null));
 	}
 
 	@RequestMapping(value = "/getReportOverview", method = RequestMethod.GET)

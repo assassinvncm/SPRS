@@ -1,6 +1,7 @@
 package com.api.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,7 @@ import com.api.dto.ReportDto;
 import com.api.dto.ReportResultDto;
 
 public interface ReportService {
-	List<ReportResultDto> getReportYear(ReportDto rpdto);
-	List<ReportResultDto> getReportMonth(ReportDto rpdto);
+	Map<String, Object> getReportYear(ReportDto rpdto);
+	Map<String, Object> getReportMonth(ReportDto rpdto);
 	List<ReportResultDto> getReportOverview(ReportDto rpdto);
 }
