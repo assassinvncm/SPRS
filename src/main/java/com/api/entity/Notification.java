@@ -42,6 +42,9 @@ public class Notification extends BaseEntity{
 	private String type;
 	
 	@Column
+	private String title;
+	
+	@Column
 	private String message;
 	
 	@Column
@@ -113,6 +116,14 @@ public class Notification extends BaseEntity{
 
 	public void setCreate_time(Timestamp create_time) {
 		this.create_time = create_time;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 	

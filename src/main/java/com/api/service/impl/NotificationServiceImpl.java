@@ -207,6 +207,7 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 		// set notification
 		Notification notification = new Notification();
+		//notification.setTitle(store.getName());
 		notification.setMessage(message);
 		notification.setStore(store);
 		notification.setType(Constants.NOTIFICATION_TYPE_STORE);
@@ -236,6 +237,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		// set notification
 		Notification notification = new Notification();
+		//notification.setTitle(rp.getName());
 		notification.setMessage(message);
 		notification.setReliefPoint(rp);
 		notification.setType(Constants.NOTIFICATION_TYPE_RELIEFPOINT);
@@ -332,6 +334,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		// set notification
 		Notification notification = new Notification();
+		notification.setTitle(admPsn.getTitle());
 		notification.setMessage(admPsn.getMessage());
 		notification.setSender(admin);
 		notification.setType(Constants.NOTIFICATION_TYPE_ADMIN);
@@ -384,5 +387,7 @@ public class NotificationServiceImpl implements NotificationService {
 		// this.sendPnsToDevices(pushNotificationRequest);
 
 	}
+	
+	
 
 }

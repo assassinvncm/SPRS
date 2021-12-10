@@ -1,5 +1,7 @@
 package com.api.service.impl;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +40,7 @@ import com.api.service.NotificationService;
 import com.api.service.ReliefPointService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
+import com.ultils.Constants;
 
 @Service
 public class ReliefPointServiceImpl implements ReliefPointService {
@@ -95,9 +98,28 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 
 		return null;
 	}
+	
+	
+	public boolean checkCreateRp(User user) {
+		boolean rs = true;
+		List<Group> lstGroup = user.getGroups_user();
+		for(Group g: lstGroup) {
+			if(g.getCode().equals(Constants.USER_PER_CODE)) {
+				Timestamp sqlCurrentDate = DateUtils.getCurrentSqlDate();
+				long total = reliefPointRepository.getTotalRpByTime(user.getId(), sqlCurrentDate);
+				if(total == 2) {
+					//throw new AppException(403,"Bạn chỉ được phép tạo tối đa 2 điểm cứu trợ");
+					rs = false;
+				}
+			}
+		}
+		
+		
+		return rs;
+	}
 
 	@Override
-	public ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto) {
+	public ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto, User user) {
 		// TODO Auto-generated method stub
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
 		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
@@ -111,6 +133,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setStatus(true);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
+		reliefPoint.setUser_rp(user);
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
 		
 		
@@ -147,13 +170,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		}).collect(Collectors.toList());
 		
 		Address address = addressService.mapAddress(reliefPointDto.getAddress());
-		rp.setReliefInformations(lstRIfor);
-		rp.setAddress(address);
-		rp.setModified_date(DateUtils.getCurrentSqlDate());
-		rp.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-		rp.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		rp.setDescription(reliefPointDto.getDescription());
-		rp.setName(reliefPointDto.getName());
+		reliefPoint.setReliefInformations(lstRIfor);
+		reliefPoint.setAddress(address);
+		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		reliefPoint.setDescription(reliefPointDto.getDescription());
+		reliefPoint.setName(reliefPointDto.getName());
 //		List<ReliefInformation> lstReliefInfor = reliefPointDto.getReliefInformations().stream().map(reliefInforDto -> {
 //			ReliefInformation reliefInfor = new ReliefInformation();
 //			reliefInfor.setId(reliefInforDto.getId());

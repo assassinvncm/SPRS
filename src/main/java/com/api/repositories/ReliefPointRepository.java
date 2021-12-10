@@ -1,5 +1,6 @@
 package com.api.repositories;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,9 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>,
 
 	@Query("select rp from User u inner join u.reliefPoints rp where u.id = :uId and rp.id = :rpId")
 	Optional<ReliefPoint> findByIdAndUser(@Param("rpId") Long rpId, @Param("uId") Long uId);
+	
+	@Query("select COUNT(rp) from User u inner join u.reliefPoints rp where u.id = :uId and rp.close_time > :currentTime")
+	long getTotalRpByTime(@Param("uId") Long uId, @Param("currentTime") Timestamp currentTime);
 
 //	@Query("select rp from User u inner join u.reliefPoints rp inner join rp.reliefInformations rif inner join rif.item i where u.id = :uId and (rp.status =:status or i.id = :typeId)")
 //	Slice<ReliefPoint> findByTypeOrStatus(@Param("uId") Long uId,@Param("typeId") Long typeId ,@Param("status") Boolean status,Pageable pageRequest);

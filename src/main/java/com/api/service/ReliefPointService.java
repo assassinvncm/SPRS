@@ -74,7 +74,7 @@ public interface ReliefPointService {
 	 * @param reliefPoint
 	 * @return 
 	 */
-	ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto);
+	ReliefPoint createReliefPoint(ReliefPointDto reliefPointDto, User user);
 	
 	/**
 	 * 
