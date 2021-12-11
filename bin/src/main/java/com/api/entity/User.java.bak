@@ -50,9 +50,6 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "dob")
 	private String dob;
 	
-	@Column(name = "status")
-	private String status;
-	
 	@Column(name = "isActive")
 	private Boolean isActive;
 	
@@ -81,7 +78,7 @@ public class User extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy="users")
     private List<Store> lstStore;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_store_subcribe",
 			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="store_id"))
@@ -110,24 +107,6 @@ public class User extends BaseEntity implements Serializable{
 	@Column(columnDefinition = "TIMESTAMP")
 	public Timestamp modified_date;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "image_id")
-	private Image images;
-	
-	/**
-	 * @return the images
-	 */
-	public Image getImages() {
-		return images;
-	}
-
-	/**
-	 * @param images the images to set
-	 */
-	public void setImages(Image images) {
-		this.images = images;
-	}
-
 	public List<Store> getLstStore() {
 		return lstStore;
 	}
@@ -306,14 +285,4 @@ public class User extends BaseEntity implements Serializable{
 		}
 		return rs;
 	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-	
 }

@@ -162,18 +162,15 @@ public class StoreServiceImpl implements StoreService{
 	public Store openCloseStore(StoreDto s) {
 		// TODO Auto-generated method stub
 		Store st = storeRepository.getById(s.getId());
-//		Time currTime = new Time(System.currentTimeMillis());
+		Time currTime = new Time(System.currentTimeMillis());
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-//		if(s.getStatus() == 0) {
-//			st.setOpen_time(currTime);
-//			st.setStatus(0);
-//		}else if(s.getStatus() == 1) {
-//			st.setClose_time(currTime);
-//			st.setStatus(1);
-//		}
-		st.setStatus(s.getStatus());
+		if(s.getStatus() == 0) {
+			st.setOpen_time(currTime);
+		}else if(s.getStatus() == 1) {
+			st.setClose_time(currTime);
+		}
 		
 		return storeRepository.save(st);
 	}
@@ -205,7 +202,7 @@ public class StoreServiceImpl implements StoreService{
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		storeRepository.deleteStore(st.getId());
+		storeRepository.delete(st);
 		return st;
 	}
 
@@ -220,11 +217,9 @@ public class StoreServiceImpl implements StoreService{
 		List<StoreDto> lstStoreRs = new ArrayList<StoreDto>();
 		Sort sortable = null;
 	    if (filter.getSort()) {
-	    	sortable = Sort.by("name").descending();
-	    }else {
-	    	sortable = Sort.by("name").descending();
+	      sortable = Sort.by("name").descending();
 	    }
-	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize());
 		Page<Store> pageStore = storeRepository.getStoreByStatusOrType(user_id, filter.getStatus_store(),filter.getType(),pageable);
 		lstStoreRs = mapStructMapper.lstStoreToStoreDto(pageStore.getContent());
 	    Map<String, Object> response = new HashMap<>();
