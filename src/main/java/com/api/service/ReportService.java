@@ -11,5 +11,6 @@ import com.api.dto.ReportResultDto;
 public interface ReportService {
 	Map<String, Object> getReportYear(ReportDto rpdto);
 	Map<String, Object> getReportMonth(ReportDto rpdto);
+	Map<String, Object> getReportProvince(ReportDto rpdto);
 	List<ReportResultDto> getReportOverview(ReportDto rpdto);
 }

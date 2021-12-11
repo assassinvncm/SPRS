@@ -56,7 +56,7 @@ public class ReportController {
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getReportProvince(@RequestBody ReportDto rpdto) {
 		logger.info("Start get report Province");
-		Map<String, Object> rs = reportServ.getReportYear(rpdto);
+		Map<String, Object> rs = reportServ.getReportProvince(rpdto);
 		logger.info("End get report Province");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Province success", "", rs, null));
 	}
