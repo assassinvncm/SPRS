@@ -13,9 +13,11 @@ import com.api.mapper.MapStructMapper;
 import com.api.repositories.SOSRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+import com.api.service.NotificationService;
 import com.api.service.SOSService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
+import com.ultils.Constants;
 
 @Service
 public class SOSServiceImpl implements SOSService{
@@ -31,6 +33,9 @@ public class SOSServiceImpl implements SOSService{
 	
 	@Autowired
 	AddressService addressService;
+	
+	@Autowired
+	NotificationService notificationService;
 
 	@Override
 	public SOSDto updateStatusSOS(SOSDto sosDto, UserDto udto) {
@@ -38,7 +43,9 @@ public class SOSServiceImpl implements SOSService{
 		if(null == u) {
 			throw new AppException(402,"User is not Found!");
 		}
-
+		
+		int statusSOSBF = u.getUser_sos().getStatus();
+		
 		Address address = addressService.mapAddress(sosDto.getAddress());
 		SOS s = u.getUser_sos();
 		s.setDescription(sosDto.getDescription());
@@ -48,6 +55,10 @@ public class SOSServiceImpl implements SOSService{
 		s.setCreate_time(DateUtils.getCurrentSqlDate());
 		u.setUser_sos(s);
 		userRepo.save(u);
+		
+		if(statusSOSBF != sosDto.getStatus() && sosDto.getStatus() == Constants.SOS_STATUS_TURNON) {
+			notificationService.sendPnsToDeviceWhenOpenSOS(u, "Có một địa điểm SOS được tạo gần bạn");
+		}	
 		return sosDto;
 	}
 
