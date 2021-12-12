@@ -181,7 +181,8 @@ public class NotificationServiceImpl implements NotificationService {
 	@Override
 	public void sendPnsToDeviceSubcribeStore(Store store, String message) {
 		// TODO Auto-generated method stub
-
+		
+		log.info("START save notification to user that subcribe STORE ");
 		List<Device> lstDevice = deviceService.getDeviceTokenByStoreId(store.getId());
 		List<Notification> notifications = new ArrayList<Notification>();
 		List<String> lstToken = new ArrayList<String>();
@@ -206,7 +207,8 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setReceiver(user);
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
-
+		log.info("END save notification to user that subcribe STORE ");
+		log.info("START send notification to user that subcribe STORE ");
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
@@ -217,11 +219,15 @@ public class NotificationServiceImpl implements NotificationService {
 		data.put("type", notificationRes.getType());
 		data.put("sender", String.valueOf(store.getId()));
 		pushNotificationRequest.setData(data);
+
 		this.sendPnsToDevices(pushNotificationRequest);
+		log.info("end send notification to user that subcribe STORE ");
 	}
 
 	@Override
 	public void sendPnsToDeviceWhenCreateReliefPoint(ReliefPoint rp, String message) {
+		
+		log.info("START save notification to user that subcribe RELIEFPOINT ");
 		List<Device> lstDevice = deviceService.getDeviceTokenByCity(rp.getUsers().getId(),
 				rp.getAddress().getSubDistrict().getDistrict().getCity().getId());
 
@@ -247,7 +253,8 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setReceiver(user);
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
-
+		log.info("END save notification to user that subcribe RELIEFPOINT ");
+		log.info("START send notification to user that subcribe RELIEFPOINT ");
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
@@ -258,15 +265,16 @@ public class NotificationServiceImpl implements NotificationService {
 		data.put("type", notificationRes.getType());
 		data.put("sender", String.valueOf(rp.getId()));
 		pushNotificationRequest.setData(data);
-
+		
 		// send push notification to device
 		this.sendPnsToDevices(pushNotificationRequest);
+		log.info("END send notification to user that subcribe RELIEFPOINT ");
 	}
 	
 	@Override
 	public void sendPnsToDeviceWhenOpenSOS(User user, String message) {
 		SOS sos = user.getUser_sos();
-
+		log.info("START save notification to user that subcribe RELIEFPOINT ");
 		List<Device> lstDevice = deviceService.getDeviceTokenByCity(user.getId(),
 				sos.getAddress().getSubDistrict().getDistrict().getCity().getId());
 
@@ -292,7 +300,8 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setReceiver(lstUser);
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
-
+		log.info("END save notification to user that subcribe RELIEFPOINT ");
+		log.info("START sent notification to user that subcribe RELIEFPOINT ");
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
@@ -306,6 +315,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		// send push notification to device
 		this.sendPnsToDevices(pushNotificationRequest);
+		log.info("END sent notification to user that subcribe RELIEFPOINT ");
 	}
 
 	@Override

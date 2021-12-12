@@ -126,7 +126,7 @@ public class StoreServiceImpl implements StoreService{
 //		
 //		return storeRepository.save(st);
 		Store st = storeRepository.getById(s.getId());
-		int stBf = st.getStatus();
+
 		if (null == st) {
 			throw new AppException(402, "Store is not Found!");
 		}
@@ -159,11 +159,6 @@ public class StoreServiceImpl implements StoreService{
 		
 		Store storeRsp = storeRepository.saveAndFlush(st);
 		
-		//check open store to send notification
-		if(s.getStatus() != stBf && s.getStatus() == Constants.STORE_STATUS_OPEN) {
-			notificationService.sendPnsToDeviceSubcribeStore(storeRsp, "Cửa hàng đã mở cửa trở lại");
-		}
-		
 		return storeRsp;
 	}
 
@@ -175,6 +170,7 @@ public class StoreServiceImpl implements StoreService{
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
+		int stBf = st.getStatus();
 //		if(s.getStatus() == 0) {
 //			st.setOpen_time(currTime);
 //			st.setStatus(0);
@@ -183,6 +179,11 @@ public class StoreServiceImpl implements StoreService{
 //			st.setStatus(1);
 //		}
 		st.setStatus(s.getStatus());
+		
+		//check open store to send notification
+		if(s.getStatus() != stBf && s.getStatus() == Constants.STORE_STATUS_OPEN) {
+			notificationService.sendPnsToDeviceSubcribeStore(st, "Cửa hàng đã mở cửa trở lại");
+		}
 		
 		return storeRepository.save(st);
 	}
