@@ -2,6 +2,8 @@ package com.api.repositories;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +27,12 @@ public interface StoreRepository extends JpaRepository<Store, Long>{
 	
 //	@Query("select s from Store s JOIN s.store_category sc where s.store_user.id = :p_user_id AND (s.status = :p_status) AND (sc.id = :p_type)")//select s from User u JOIN u.user_store s JOIN s.store_category sc where u.id = :p_user_id and (s.status = :p_status) AND (sc.id = :p_type)
 //	Page<Store> getStoreByStatusOrType(@Param("p_user_id") Long p_user_id,@Param("p_status") int p_status,@Param("p_type") Long p_type, Pageable pageable);
+	
+//	@Transactional
+//	@Query(value = "CALL prc_store_delete(:p_id);", nativeQuery = true)
+//	Object[] deleteStore(@Param("p_id") Long p_id);
+	
+	@Transactional
+	@Procedure(procedureName = "prc_store_delete")
+	String deleteStore(@Param("p_id") long p_id);
 }

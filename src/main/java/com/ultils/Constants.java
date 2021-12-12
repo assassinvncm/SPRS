@@ -20,8 +20,8 @@ public class Constants {
 	// "/sprs/api/validateOtp"
 	// constants config otp
 	public static final String ACCOUNT_SID = "ACaef9117a42d80b9837a3d4bc0acf8fe0";
-	public static final String AUTH_TOKEN = "cdca95f70ef578d4c4eac7a382195b2c";
-	public static final String FROM_NUMBER = "+14128967877";
+	public static final String AUTH_TOKEN = "12db558d2d6b409a1b4878361bd1aed0";
+	public static final String FROM_NUMBER = "4128967877";
 
 	// constants for request status
 	public static final String REQUEST_STATUS_ACCEPT = "accept";

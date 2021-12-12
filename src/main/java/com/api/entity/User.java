@@ -81,7 +81,7 @@ public class User extends BaseEntity implements Serializable{
 	@OneToMany(mappedBy="users")
     private List<Store> lstStore;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	@JoinTable(name = "SPRS_store_subcribe",
 			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="store_id"))

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,12 +25,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.SPRSResponse;
+import com.api.dto.UserDto;
 import com.api.entity.SmsPojo;
 import com.api.entity.User;
 import com.api.repositories.UserRepository;
 import com.api.service.OtpService;
 import com.api.service.SmsService;
 import com.api.service.UserService;
+import com.exception.AppException;
 import com.ultils.Constants;
 
 @RestController
@@ -54,19 +57,65 @@ public class OTPController {
 	PasswordEncoder passwordEncoder;
 
 	@RequestMapping(value = "/generateOtp", method = RequestMethod.POST)
-	public ResponseEntity<?> generateOtp(@Validated @RequestBody SmsPojo pojo) {
+	public ResponseEntity<?> generateOtp(@RequestHeader ("Authorization") String requestTokenHeader,@Validated @RequestBody SmsPojo pojo) {
 		logger.info("Start generate OTP and send to: "+pojo.getTo());
 //
 //		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //		String username = auth.getName();
-		
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		String username = userService.getUsernameByPhone(pojo.getTo());
+		if(userDto.getUsername().equals(username)) {
+			int otp = otpService.generateOTP(username);
+			logger.info("OTP : " + otp +" of user: "+username);
+			pojo.setMessage(Constants.OTP_MESSAGE+otp);
+			smsService.send(pojo);
+		}else {
+			throw new AppException(403, "Số điện thoại không khớp tài khoản");
+		}
+
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Send OTP Success!", "", null, null));
+	}
+
+	@RequestMapping(value = "/generateOtp-verify", method = RequestMethod.POST)
+	public ResponseEntity<?> generateOtpVerify(@Validated @RequestBody SmsPojo pojo) {
+		logger.info("Start generate OTP and send to: "+pojo.getTo());
+		
+		String username = pojo.getUsername();
 		int otp = otpService.generateOTP(username);
 		logger.info("OTP : " + otp +" of user: "+username);
 		pojo.setMessage(Constants.OTP_MESSAGE+otp);
 		smsService.send(pojo);
 
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Send OTP Success!", "", null, null));
+	}
+
+	@RequestMapping(value = "/validateOtp-verify", method = RequestMethod.POST)
+	public ResponseEntity<?> validateOtpVerify(@Validated @RequestBody SmsPojo pojo) {
+
+		final String SUCCESS = "Entered Otp is valid";
+
+		final String FAIL = "Entered Otp is NOT valid. Please Retry!";
+		int otpnum = pojo.getOtp();
+		String username = pojo.getUsername();
+		logger.info("Otp Number : " + otpnum +" of user: "+username);
+
+		//Validate the Otp 
+		if (otpnum >= 0) {
+			int serverOtp = otpService.getOtp(username);
+
+			if (serverOtp > 0) {
+				if (otpnum == serverOtp) {
+					otpService.clearOTP(username);
+					return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, SUCCESS, "", null, null));
+				} else {
+					return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
+				}
+			} else {
+				return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
+			}
+		} else {
+			return ResponseEntity.ok(new SPRSResponse(Constants.FAILED, FAIL, "", null, null));
+		}
 	}
 
 	@RequestMapping(value = "/validateOtp", method = RequestMethod.POST)

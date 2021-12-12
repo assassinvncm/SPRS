@@ -23,4 +23,13 @@ public interface ReportRepository {
 			, String p_date_to
 			, String p_type_point
 			, String p_group_by);
+	
+	List<Object[]> getReportCity(
+			int p_district_id
+			, int p_sub_district_id
+			, int p_city_id
+			, String p_date_from
+			, String p_date_to
+			, String p_type_point
+			, String p_group_by);
 }

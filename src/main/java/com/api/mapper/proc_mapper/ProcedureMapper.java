@@ -62,4 +62,16 @@ public class ProcedureMapper {
 		}
 		return rs;
 	}
+	
+	public List<ReportResultDto> reportMappingProvince(List<Object[]> lstObj) {
+		List<ReportResultDto> rs = new ArrayList<ReportResultDto>();
+		for(Object[] obj : lstObj) {
+			ReportResultDto rpRs = new ReportResultDto();
+			rpRs.setName((String) obj[0]);
+			rpRs.setType_point((Integer) obj[1]);
+			rpRs.setTotal(((BigInteger) obj[2]).doubleValue());
+			rs.add(rpRs);
+		}
+		return rs;
+	}
 }

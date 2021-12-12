@@ -71,7 +71,7 @@ public class Store extends BaseEntity implements Serializable{
 			inverseJoinColumns = @JoinColumn(name ="category_id"))
 	private List<StoreCategory> store_category;
 
-	@ManyToMany(mappedBy = "user_store")
+	@ManyToMany(mappedBy = "user_store", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<User> store_user = new ArrayList<User>();
 	

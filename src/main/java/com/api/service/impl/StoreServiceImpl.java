@@ -214,7 +214,7 @@ public class StoreServiceImpl implements StoreService{
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		storeRepository.delete(st);
+		storeRepository.deleteStore(st.getId());
 		return st;
 	}
 
