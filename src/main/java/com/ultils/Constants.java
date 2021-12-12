@@ -59,4 +59,12 @@ public class Constants {
 	public static final String ORG_ADMIN_PER_CODE = "PER_ORGADM_ACEN";
 	public static final String STORE_PER_CODE = "PER_STR_ACEN";
 	public static final String SYSTEM_ADMIN_PER_CODE = "PER_SYSADM_ACEN";
+	
+	//Constant for status store
+	public static final int STORE_STATUS_OPEN = 0;
+	public static final int STORE_STATUS_CLOSED = 1;
+	public static final int STORE_STATUS_TEM_ClOSED = 2;
+	//Constant for status SOS
+	public static final int SOS_STATUS_TURNON = 0;
+	public static final int SOS_STATUS_TURNOF = 1;
 }

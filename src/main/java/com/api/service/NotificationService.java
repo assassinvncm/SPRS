@@ -16,14 +16,6 @@ import com.google.firebase.messaging.BatchResponse;
 public interface NotificationService {
 
 	/**
-	 * send push notification for device in a city
-	 * 
-	 * @param city_id
-	 */
-	void sendPnsToDeviceInCity(Long city_id);
-
-	
-	/**
 	 * get quantity of notification that un check
 	 * @param user_id
 	 * @return
@@ -78,6 +70,13 @@ public interface NotificationService {
 	void sendPnsToDeviceWhenCreateReliefPoint(ReliefPoint rp, String message);
 	
 	/**
+	 * push notification to device when SOS be open 
+	 * @param user
+	 * @param message
+	 */
+	void sendPnsToDeviceWhenOpenSOS(User user, String message);
+	
+	/**
 	 * push notification to device that user subscribe store
 	 * @param store
 	 * @param message
@@ -87,6 +86,7 @@ public interface NotificationService {
 	/**
 	 * admin system send notification 
 	 * @param admPsn
+	 * @param admin
 	 */
 	void adminSendNotification(AdminPushNotifcationRequest admPsn, User admin);
 }

@@ -59,6 +59,9 @@ public class SOS extends BaseEntity implements Serializable{
 	@Column(updatable = false,columnDefinition = "TIMESTAMP")
 	public Timestamp create_time;
 	
+	@OneToMany(mappedBy = "sos", fetch = FetchType.LAZY)
+    private List<Notification> notifications;
+	
 	public SOS() {
 		super();
 	}
@@ -123,5 +126,15 @@ public class SOS extends BaseEntity implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+	
+	
 	
 }
