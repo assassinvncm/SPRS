@@ -58,10 +58,10 @@ public interface UserRepository extends JpaRepository<User, Long>, UserRepositor
 	@Query("SELECT u FROM User u INNER JOIN u.user_sos s WHERE s.id = :SOS_id")
 	Optional<User> getUserBySosId(@Param("SOS_id") long id);
 
-	@Query("SELECT u FROM User u  WHERE u.status = :status")
+	@Query("SELECT u FROM User u  WHERE u.status = :status") 
 	List<User> getUserByStatus(@Param("status") String status);
 
-	@Query("SELECT u FROM User u INNER JOIN u.groups_user gr WHERE ('' = :exceptGroup OR gr.code != :exceptGroup) AND gr.code IN :filterGroup AND u.status IN :filterStatus AND ('' = :search OR u.username LIKE %:search% ) ")
+	@Query("SELECT DISTINCT u FROM User u INNER JOIN u.groups_user gr WHERE ('' = :exceptGroup OR gr.code != :exceptGroup) AND gr.code IN :filterGroup AND u.status IN :filterStatus AND ('' = :search OR u.username LIKE %:search% ) ")
 	Page<User> getUserByGroup(@Param("exceptGroup") String exceptGroup, @Param("filterGroup") List<String> filterGroup,
 			@Param("filterStatus") List<String> filterStatus, @Param("search") String search, Pageable pageable);
 

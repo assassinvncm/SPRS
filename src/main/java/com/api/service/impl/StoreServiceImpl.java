@@ -39,6 +39,7 @@ import com.api.service.NotificationService;
 import com.api.service.StoreService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
+import com.ultils.Constants;
 
 @Service
 public class StoreServiceImpl implements StoreService{
@@ -125,6 +126,7 @@ public class StoreServiceImpl implements StoreService{
 //		
 //		return storeRepository.save(st);
 		Store st = storeRepository.getById(s.getId());
+
 		if (null == st) {
 			throw new AppException(402, "Store is not Found!");
 		}
@@ -155,7 +157,9 @@ public class StoreServiceImpl implements StoreService{
 		st.setStatus(s.getStatus());
 		st.setName(s.getName());
 		
-		return storeRepository.saveAndFlush(st);
+		Store storeRsp = storeRepository.saveAndFlush(st);
+		
+		return storeRsp;
 	}
 
 	@Override
@@ -166,6 +170,7 @@ public class StoreServiceImpl implements StoreService{
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
+		int stBf = st.getStatus();
 //		if(s.getStatus() == 0) {
 //			st.setOpen_time(currTime);
 //			st.setStatus(0);
@@ -174,6 +179,11 @@ public class StoreServiceImpl implements StoreService{
 //			st.setStatus(1);
 //		}
 		st.setStatus(s.getStatus());
+		
+		//check open store to send notification
+		if(s.getStatus() != stBf && s.getStatus() == Constants.STORE_STATUS_OPEN) {
+			notificationService.sendPnsToDeviceSubcribeStore(st, "Cửa hàng đã mở cửa trở lại");
+		}
 		
 		return storeRepository.save(st);
 	}

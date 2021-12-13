@@ -21,16 +21,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Notification extends BaseEntity{
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sender_id",referencedColumnName="id",insertable = true)
-	private User sender;
+	@JoinColumn(name = "sender_user_id",referencedColumnName="id",insertable = true)
+	private User sender_user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "store_id",referencedColumnName="id",insertable = true)
+	@JoinColumn(name = "sender_store_id",referencedColumnName="id",insertable = true)
 	private Store store;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "reliefpoint_id",referencedColumnName="id",insertable = true)
+	@JoinColumn(name = "sender_reliefpoint_id",referencedColumnName="id",insertable = true)
 	private ReliefPoint reliefPoint;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sender_sos_id",referencedColumnName="id",insertable = true)
+	private SOS sos;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "SPRS_user_receiver_notification",
@@ -55,11 +59,11 @@ public class Notification extends BaseEntity{
 
 
 	public User getSender() {
-		return sender;
+		return sender_user;
 	}
 
-	public void setSender(User sender) {
-		this.sender = sender;
+	public void setSender(User sender_user) {
+		this.sender_user = sender_user;
 	}
 
 	public Store getStore() {
@@ -124,6 +128,14 @@ public class Notification extends BaseEntity{
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public SOS getSos() {
+		return sos;
+	}
+
+	public void setSos(SOS sos) {
+		this.sos = sos;
 	}
 	
 	
