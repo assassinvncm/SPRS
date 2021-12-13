@@ -29,8 +29,12 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>,
 	@Query("select COUNT(rp) from User u inner join u.reliefPoints rp where u.id = :uId and rp.close_time > :currentTime")
 	long getTotalRpByTime(@Param("uId") Long uId, @Param("currentTime") Timestamp currentTime);
 
-	@Query("select DISTINCT rp from Organization o inner join o.reliefs rp where o.id = :oId and (:p_status = 2 OR rp.status = :p_status)")
-	Page<ReliefPoint> getOwnOrgReliefPoint(@Param("oId") Long oId,@Param("p_status") int p_status, Pageable pageable);
+	@Query("select DISTINCT rp from Organization o inner join o.reliefs rp where o.id = :oId and (:p_status = 2 OR rp.status = :p_status)"
+			+ " and (:name IS NULL OR :name = '' OR rp.name LIKE %:name%)")
+	Page<ReliefPoint> getOwnOrgReliefPoint(@Param("oId") Long oId,@Param("p_status") int p_status, @Param("name") String name, Pageable pageable);
+
+	@Query("select u from ReliefPoint rp inner join rp.relief_user u where rp.id = :rp_id")
+	List<User> getUByRpId(@Param("rp_id") Long rp_id);
 
 	@Transactional
 	@Procedure(procedureName = "prc_assign_event")

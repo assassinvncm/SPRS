@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -40,6 +41,7 @@ import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.ReliefPointRepository;
+import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
 import com.api.service.AmazonClient;
 import com.api.service.NotificationService;
@@ -60,6 +62,9 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 
 	@Autowired
 	AddressService addressService;
+	
+	@Autowired
+	UserRepository userRepo;
 	
 	@Autowired
 	NotificationService notificationService;
@@ -179,6 +184,40 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
+	public ReliefPoint updateReliefPointAdmin(ReliefPointDto reliefPointDto) {
+		// TODO Auto-generated method stub
+		ReliefPoint rp = reliefPointRepository.getById(reliefPointDto.getId());
+		if (null == rp) {
+			throw new AppException(402, "Relief point is not Found!");
+		}
+		if (reliefPointDto.getAddress().getId() == 0) {
+			throw new AppException(402, "Id of Address is not Found!");
+		}
+		reliefPointDto.getReliefInformations().forEach((rpIf) -> {
+			if(rpIf.getItem().getId() == 0) {
+				throw new AppException(402, "Id of Item is not Found!");
+			}
+		});
+		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
+		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
+			rf.setReliefPoint(reliefPoint);
+			return rf;
+		}).collect(Collectors.toList());
+		
+		Address address = addressService.mapAddress(reliefPointDto.getAddress());
+		reliefPoint.setReliefInformations(lstRIfor);
+		reliefPoint.setAddress(address);
+		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		reliefPoint.setDescription(reliefPointDto.getDescription());
+		reliefPoint.setName(reliefPointDto.getName());
+		reliefPoint.setImages(rp.getImages());
+		
+		return reliefPointRepository.saveAndFlush(reliefPoint);
+	}
+
+	@Override
 	public ReliefPoint updateReliefPoint(ReliefPointDto reliefPointDto) {
 		// TODO Auto-generated method stub
 		ReliefPoint rp = reliefPointRepository.getById(reliefPointDto.getId());
@@ -209,6 +248,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
+		reliefPoint.setImages(rp.getImages());
 //		List<ReliefInformation> lstReliefInfor = reliefPointDto.getReliefInformations().stream().map(reliefInforDto -> {
 //			ReliefInformation reliefInfor = new ReliefInformation();
 //			reliefInfor.setId(reliefInforDto.getId());
@@ -263,7 +303,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	    	sortable = Sort.by("name").descending();
 	    }
 	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
-		Page<ReliefPoint> pageStore = reliefPointRepository.getOwnOrgReliefPoint(oId, filter.getStatus_store(), pageable);
+		Page<ReliefPoint> pageStore = reliefPointRepository.getOwnOrgReliefPoint(oId, filter.getStatus_store(), filter.getSearch(), pageable);
 		lstRs = mapStructMapper.lstReliefPointToreliefPointDto(pageStore.getContent());
 	    Map<String, Object> response = new HashMap<>();
         response.put("reliefs", lstRs);
@@ -349,6 +389,59 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 			break;
 		}
 		return gdto;
+	}
+
+	@Override
+	public List<User> getAllAssignUser(Long rp_id, String search) {
+		Optional<ReliefPoint> rp = reliefPointRepository.findById(rp_id);
+		if (rp == null) {
+			throw new AppException(403, "Relief point is not existed!");
+		}
+		List<User> lsRs = new ArrayList<User>();
+		List<User> lsTemp = rp.get().getRelief_user();
+		if(search != "") {
+			lsTemp.forEach(u -> {
+				if(u.getUsername().contains(search)) {
+					lsRs.add(u);
+				}
+			});
+			return lsRs;
+		}else {
+			return lsTemp;
+		}
+	}
+
+	@Override
+	public List<User> getAllUnassignUser(Long rp_id, String search) {
+		List<User> lstRs = new ArrayList<User>();
+		List<User> lsTemp = new ArrayList<User>();
+		ReliefPoint rp = reliefPointRepository.getById(rp_id);
+		if (rp == null) {
+			throw new AppException(403, "Relief point is not existed!");
+		}
+		List<User> lstAssign = rp.getRelief_user();
+		List<User> lstAll = userRepo.getUserInOrg(rp.getOrganization().getId());
+		for (User u : lstAll) {
+			int check = 1;
+			for (User u2 : lstAssign) {
+				if(u2.getId() == u.getId()) {
+					check = 0;
+				}
+			}
+			if(check == 1) {
+				lsTemp.add(u);
+			}
+		}
+		if(search != "") {
+			lsTemp.forEach(u -> {
+				if(u.getUsername().contains(search)) {
+					lstRs.add(u);
+				}
+			});
+			return lstRs;
+		}else {
+			return lsTemp;
+		}
 	}
 
 }

@@ -114,10 +114,8 @@ public class User extends BaseEntity implements Serializable{
 	@JoinColumn(name = "image_id")
 	private Image images;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "SPRS_user_relief",
-			joinColumns = @JoinColumn(name = "u_id",insertable = true, updatable = false),
-			inverseJoinColumns = @JoinColumn(name ="relief_id"))
+	@ManyToMany(mappedBy = "relief_user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
 	private List<ReliefPoint> user_relief;
 	
 	/**

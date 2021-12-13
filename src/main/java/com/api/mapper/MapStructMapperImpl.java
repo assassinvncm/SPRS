@@ -424,6 +424,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);
 		}).collect(Collectors.toList());
+
+		List<UserDto> lstURP = reliefPoint.getRelief_user().stream().map(
+			u -> {return userToUserDto(u);}
+		).collect(Collectors.toList());
+		reliefPointDto.setLstUser_rp(lstURP);
 		reliefPointDto.setReliefInformations(rpDto);
 		reliefPointDto.setImages(reliefPoint.getImages());
 

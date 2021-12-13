@@ -40,6 +40,9 @@ public class ReliefPointDto {
 	@JsonProperty("reliefInformations")
 	private List<ReliefInformationDto> reliefInformations;
 
+	@JsonProperty("lstUser_rp")
+	private List<UserDto> lstUser_rp;
+
 	@JsonProperty("address")
 	@NotNull
 	private AddressDto address;
@@ -75,6 +78,20 @@ public class ReliefPointDto {
 		this.user_rp = user_rp;
 		this.reliefInformations = reliefInformations;
 		this.address = address;
+	}
+
+	/**
+	 * @return the lstUser_rp
+	 */
+	public List<UserDto> getLstUser_rp() {
+		return lstUser_rp;
+	}
+
+	/**
+	 * @param lstUser_rp the lstUser_rp to set
+	 */
+	public void setLstUser_rp(List<UserDto> lstUser_rp) {
+		this.lstUser_rp = lstUser_rp;
 	}
 
 	/**

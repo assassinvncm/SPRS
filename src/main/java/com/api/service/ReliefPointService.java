@@ -14,6 +14,7 @@ import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
 import com.api.dto.SearchFilterDto;
 import com.api.entity.Address;
+import com.api.entity.Group;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
 import com.api.entity.User;
@@ -104,6 +105,13 @@ public interface ReliefPointService {
 	 * @param reliefPoint
 	 * @return
 	 */
+	ReliefPoint updateReliefPointAdmin(ReliefPointDto reliefPoint);
+	
+	/**
+	 * 
+	 * @param reliefPoint
+	 * @return
+	 */
 	ReliefPoint updateStatusReliefPoint(Long rId, Boolean status);
 	
 	/**
@@ -133,4 +141,18 @@ public interface ReliefPointService {
 	 * @return GrantAccessDto
 	 */
 	GrantAccessDto unAssignRef(GrantAccessDto gdto);
+	
+	/**
+	 * unassign relief for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	List<User> getAllAssignUser(Long rp_id, String search);
+	
+	/**
+	 * unassign relief for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	List<User> getAllUnassignUser(Long rp_id, String search);
 }

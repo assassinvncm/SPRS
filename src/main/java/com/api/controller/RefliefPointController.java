@@ -59,7 +59,6 @@ public class RefliefPointController {
 	UserService userService;
 
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg Relief");
 		ReliefPoint rp = reliefPointService.uploadReliefImg(image);
@@ -125,6 +124,34 @@ public class RefliefPointController {
 		logger.info("End Un-assign relief suscess!");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Un-assign relief suscess!", "", null, null));
 	}
+	
+	@RequestMapping(value = "/get-assign", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> getAllAssignUser(@RequestParam("rp_id") Long rp_id, @RequestParam("search") String search) {
+		logger.info("Start getAllAssignUser suscess!");
+		List<User> lsRs = reliefPointService.getAllAssignUser(rp_id, search);
+		logger.info("End getAllAssignUser suscess!");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All Assign User suscess!", "", mapStruct.lstUserToUserDto(lsRs), null));
+	}
+	
+	@RequestMapping(value = "/get-unassign", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> getAllUnAssignUser(@RequestParam("rp_id") Long rp_id, @RequestParam("search") String search) {
+		logger.info("Start getAllUnAssignUser suscess!");
+		List<User> lsRs = reliefPointService.getAllUnassignUser(rp_id, search);
+		logger.info("End getAllUnAssignUser suscess!");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get All un-Assign User suscess!", "", mapStruct.lstUserToUserDto(lsRs), null));
+	}
+	@RequestMapping(value = "/update-admin", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> updateReliefPointAdmin(@RequestBody ReliefPointDto reliefPointDto) {
+		logger.info("Start updateReliefPointAdmin suscess!");
+		ReliefPoint rp = reliefPointService.updateReliefPointAdmin(reliefPointDto);
+		logger.info("End updateReliefPointAdmin suscess!");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
+				"Update event By ID " + rp.getId() + " success", "", rp, null));
+	}
+	
 
 	@RequestMapping(value = "/get", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")

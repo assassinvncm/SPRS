@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -88,8 +89,10 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true, updatable = false)
 	private Organization organization;
 
-	@ManyToMany(mappedBy = "user_relief", cascade = CascadeType.REMOVE)
-	@JsonIgnore
+	@ManyToMany(cascade = CascadeType.REMOVE)
+	@JoinTable(name = "SPRS_user_relief",
+		joinColumns = @JoinColumn(name = "relief_id",insertable = true, updatable = false),
+		inverseJoinColumns = @JoinColumn(name ="u_id"))
 	private List<User> relief_user = new ArrayList<User>();
 
 	/**
