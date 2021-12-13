@@ -213,6 +213,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
 		reliefPoint.setImages(rp.getImages());
+		reliefPoint.setStatus(rp.getStatus());
 		
 		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
@@ -248,6 +249,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
+		reliefPoint.setStatus(rp.getStatus());
 		reliefPoint.setImages(rp.getImages());
 //		List<ReliefInformation> lstReliefInfor = reliefPointDto.getReliefInformations().stream().map(reliefInforDto -> {
 //			ReliefInformation reliefInfor = new ReliefInformation();
@@ -401,7 +403,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		List<User> lsTemp = rp.get().getRelief_user();
 		if(search != "") {
 			lsTemp.forEach(u -> {
-				if(u.getUsername().contains(search)) {
+				if(u.getUsername().toLowerCase().contains(search.toLowerCase())) {
 					lsRs.add(u);
 				}
 			});
@@ -434,7 +436,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		}
 		if(search != "") {
 			lsTemp.forEach(u -> {
-				if(u.getUsername().contains(search)) {
+				if(u.getUsername().toLowerCase().contains(search.toLowerCase())) {
 					lstRs.add(u);
 				}
 			});

@@ -10,7 +10,7 @@ public class Constants {
 	public static final String[] NONE_AUTH = { "/utilities/**", "/swagger-ui.html", "/swagger-ui/**",
 			"/sprs/api/address/**", "/v3/**", "/sprs/api/item", "/authenticate-web", "/authenticate-mobile",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
-			"/sprs/api/forgotPassword", "/sprs/api/reliefPoint-manage/get",
+			"/sprs/api/forgotPassword", //"/sprs/api/reliefPoint-manage/get",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user","/sprs/api/users_v2/ownStore",
 			"/sprs/api/users_v2/organizationalUser", "/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp",
