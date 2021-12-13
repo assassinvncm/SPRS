@@ -2,7 +2,10 @@ package com.api.service.impl;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -18,11 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.AddressDto;
+import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
 import com.api.dto.NotificationDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
+import com.api.dto.SearchFilterDto;
+import com.api.dto.StoreDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
@@ -40,6 +46,7 @@ import com.api.service.NotificationService;
 import com.api.service.ReliefPointService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
+import com.exception.ProcException;
 import com.ultils.Constants;
 
 @Service
@@ -116,6 +123,31 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		
 		
 		return rs;
+	}
+
+	@Override
+	public ReliefPoint createReliefPointAdmin(ReliefPointDto reliefPointDto, User user) {
+		// TODO Auto-generated method stub
+		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
+		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
+			rf.setReliefPoint(reliefPoint);
+			return rf;
+		}).collect(Collectors.toList());
+//		if(DateUtils.isDatePast((Date) reliefPointDto.getOpen_time(), "yyyy-MM-dd HH:mm")) {
+//			throw new AppException(403,"Không được tạo sự kiện trong quá khứ");
+//		}
+		reliefPoint.setReliefInformations(lstRIfor);
+		Address address = addressService.mapAddress(reliefPointDto.getAddress());
+		reliefPoint.setAddress(address);
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		reliefPoint.setStatus(true);
+		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOrganization(user.getOrganization());
+		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
+		
+//		notificationService.sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
+		return rp;
 	}
 
 	@Override
@@ -219,6 +251,27 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		
 		return mapStructMapper.lstReliefPointToreliefPointDto(reliefPoints);
 	}
+
+	@Override
+	public Map<String, Object> getReliefPointsAdmin(Long oId, SearchFilterDto filter) {
+		// TODO Auto-generated method stub
+		List<ReliefPointDto> lstRs = new ArrayList<ReliefPointDto>();
+		Sort sortable = null;
+	    if (filter.getSort()) {
+	    	sortable = Sort.by("name").descending();
+	    }else {
+	    	sortable = Sort.by("name").descending();
+	    }
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
+		Page<ReliefPoint> pageStore = reliefPointRepository.getOwnOrgReliefPoint(oId, filter.getStatus_store(), pageable);
+		lstRs = mapStructMapper.lstReliefPointToreliefPointDto(pageStore.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("reliefs", lstRs);
+        response.put("currentPage", pageStore.getNumber());
+        response.put("totalItems", pageStore.getTotalElements());
+        response.put("totalPages", pageStore.getTotalPages());
+		return response;
+	}
 	
 //	@Override
 //	public PagingResponse<ReliefPointDto> getReliefPoints_v2(Long uId, ReliefPointFilterDto reliefPointFilterDto) {
@@ -268,6 +321,34 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 //		st.getLstImage().add(new Image(st, img_url));
 		
 		return reliefPointRepository.save(rp);
+	}
+
+	@Override
+	public GrantAccessDto assignRef(GrantAccessDto gdto) {
+		String native_rs = reliefPointRepository.assignRef(gdto.getSource_id(), gdto.getTarget_id());
+		ProcException pErr = new ProcException(native_rs);
+		String status = pErr.getStatus();
+		switch (status) {
+		case "FAIL":
+			throw new AppException(402,pErr.getErr_message());
+		default:
+			break;
+		}
+		return gdto;
+	}
+
+	@Override
+	public GrantAccessDto unAssignRef(GrantAccessDto gdto) {
+		String native_rs = reliefPointRepository.unAssignRef(gdto.getSource_id(), gdto.getTarget_id());
+		ProcException pErr = new ProcException(native_rs);
+		String status = pErr.getStatus();
+		switch (status) {
+		case "FAIL":
+			throw new AppException(402,pErr.getErr_message());
+		default:
+			break;
+		}
+		return gdto;
 	}
 
 }

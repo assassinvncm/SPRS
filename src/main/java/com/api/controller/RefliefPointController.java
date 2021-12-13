@@ -2,6 +2,7 @@ package com.api.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
 import com.api.dto.SPRSResponse;
+import com.api.dto.SearchFilterDto;
 import com.api.dto.UserDto;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
@@ -57,13 +61,14 @@ public class RefliefPointController {
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
-		logger.info("Start uploadImg Store");
+		logger.info("Start uploadImg Relief");
 		ReliefPoint rp = reliefPointService.uploadReliefImg(image);
-		logger.info("End uploadImg Store");
+		logger.info("End uploadImg Relief");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for relief point success", "", "", null));
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> createReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody ReliefPointDto reliefPointDto) {
 
@@ -76,7 +81,53 @@ public class RefliefPointController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}
 
+	@RequestMapping(value = "/create-admin", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> createReliefPointAdmin(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody ReliefPointDto reliefPointDto) {
+		logger.info("Start create Relief organize admin!");
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		
+		ReliefPoint rp = reliefPointService.createReliefPointAdmin(reliefPointDto, user);
+		logger.info("End create Relief organize admin!");
+		
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Create Event success!", "", rp, null));
+	}
+
+	@RequestMapping(value = "/get-admin", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> getOwnReliefPointAdmin(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody SearchFilterDto sft) {
+		logger.info("Start get own Relief organize admin!");
+
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		Map<String, Object> lstReliefPoint = reliefPointService.getReliefPointsAdmin(userDto.getOrganization().getId(), sft);
+
+		logger.info("End get own Relief organize admin!");
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get Event of an organize!", "", lstReliefPoint, null));
+	}
+	
+	@RequestMapping(value = "/assign", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> assignRef(@Validated @RequestBody GrantAccessDto gtdo) {
+		logger.info("Start Assign relief suscess");
+		reliefPointService.assignRef(gtdo);
+		logger.info("End Assign relief suscess");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Assign relief suscess!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/unassign", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_ADMRLP_ACEN')")
+	public ResponseEntity<?> unGrantGroup(@Validated @RequestBody GrantAccessDto gtdo) {
+		logger.info("Start Un-assign relief suscess!");
+		reliefPointService.unAssignRef(gtdo);
+		logger.info("End Un-assign relief suscess!");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Un-assign relief suscess!", "", null, null));
+	}
+
 	@RequestMapping(value = "/get", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody ReliefPointFilterDto rpf) {
 
@@ -93,6 +144,7 @@ public class RefliefPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/reliefPoint", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestParam(name = "id") long rpId) {
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
@@ -127,6 +179,7 @@ public class RefliefPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> updateReliefPoint(@RequestBody ReliefPointDto reliefPointDto) {
 		ReliefPoint rp = reliefPointService.updateReliefPoint(reliefPointDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
@@ -134,6 +187,7 @@ public class RefliefPointController {
 	}
 
 	@RequestMapping(value = "/update-status", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> hideReliefPoint(@RequestParam("id") Long id, @RequestParam("status") Boolean status) {
 		ReliefPoint ReliefPoint = reliefPointService.updateStatusReliefPoint(id, status);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
@@ -141,6 +195,7 @@ public class RefliefPointController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> deleteReliefPoint(@RequestParam("id") Long id) {
 
 		reliefPointService.deleteReliefPointById(id);

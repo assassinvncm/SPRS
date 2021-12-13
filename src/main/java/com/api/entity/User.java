@@ -114,6 +114,26 @@ public class User extends BaseEntity implements Serializable{
 	@JoinColumn(name = "image_id")
 	private Image images;
 	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "SPRS_user_relief",
+			joinColumns = @JoinColumn(name = "u_id",insertable = true, updatable = false),
+			inverseJoinColumns = @JoinColumn(name ="relief_id"))
+	private List<ReliefPoint> user_relief;
+	
+	/**
+	 * @return the user_relief
+	 */
+	public List<ReliefPoint> getUser_relief() {
+		return user_relief;
+	}
+
+	/**
+	 * @param user_relief the user_relief to set
+	 */
+	public void setUser_relief(List<ReliefPoint> user_relief) {
+		this.user_relief = user_relief;
+	}
+
 	/**
 	 * @return the images
 	 */

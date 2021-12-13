@@ -3,6 +3,7 @@ package com.api.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -81,6 +83,42 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "image_id")
 	private Image images;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true, updatable = false)
+	private Organization organization;
+
+	@ManyToMany(mappedBy = "user_relief", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private List<User> relief_user = new ArrayList<User>();
+
+	/**
+	 * @return the relief_user
+	 */
+	public List<User> getRelief_user() {
+		return relief_user;
+	}
+
+	/**
+	 * @param relief_user the relief_user to set
+	 */
+	public void setRelief_user(List<User> relief_user) {
+		this.relief_user = relief_user;
+	}
+
+	/**
+	 * @return the organization
+	 */
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	/**
+	 * @param organization the organization to set
+	 */
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
 
 	/**
 	 * @return the images

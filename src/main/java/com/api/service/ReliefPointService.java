@@ -1,15 +1,18 @@
 package com.api.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.api.dto.AddressDto;
+import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
+import com.api.dto.SearchFilterDto;
 import com.api.entity.Address;
 import com.api.entity.ReliefPoint;
 import com.api.entity.Store;
@@ -28,6 +31,12 @@ public interface ReliefPointService {
 	 * @return
 	 */
 	List<ReliefPointDto> getReliefPoints(Long uId,ReliefPointFilterDto reliefPointFilterDto);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	Map<String, Object> getReliefPointsAdmin(Long oId, SearchFilterDto filter);
 	
 	/**
 	 * 
@@ -79,6 +88,13 @@ public interface ReliefPointService {
 	/**
 	 * 
 	 * @param reliefPoint
+	 * @return 
+	 */
+	ReliefPoint createReliefPointAdmin(ReliefPointDto reliefPointDto, User user);
+	
+	/**
+	 * 
+	 * @param reliefPoint
 	 * @return
 	 */
 	ReliefPoint updateReliefPoint(ReliefPointDto reliefPoint);
@@ -103,4 +119,18 @@ public interface ReliefPointService {
 	 * @return
 	 */
 	ReliefPoint uploadReliefImg(ImageDto image);
+	
+	/**
+	 * assign relief for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto assignRef(GrantAccessDto gdto);
+	
+	/**
+	 * unassign relief for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto unAssignRef(GrantAccessDto gdto);
 }

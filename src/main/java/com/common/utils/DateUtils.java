@@ -3,9 +3,13 @@ package com.common.utils;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -168,5 +172,15 @@ public class DateUtils {
 		return null;
 
 	}
+	
+	public static boolean isDatePast(final Date date, final String dateFormat) {
+		DateFormat df = new SimpleDateFormat(dateFormat);  
+		String strDate = df.format(date);  
+		LocalDate localDate = LocalDate.now(ZoneId.systemDefault());
 
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateFormat);
+		LocalDate inputDate = LocalDate.parse(strDate, dtf);
+
+		return inputDate.isBefore(localDate);
+	}
 }
