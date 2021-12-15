@@ -91,6 +91,14 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
+	public ReliefPointDto getReliefPointByIdORG(Long id) {
+		// TODO Auto-generated method stub
+		ReliefPoint rp = reliefPointRepository.getById(id);
+		ReliefPointDto rpDto = mapStructMapper.reliefPointToreliefPointDto(rp);
+		return rpDto;
+	}
+
+	@Override
 	public ReliefPoint getReliefPointByUser(User user) {
 		// TODO Auto-generated method stub
 
@@ -205,17 +213,16 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		}).collect(Collectors.toList());
 		
 		Address address = addressService.mapAddress(reliefPointDto.getAddress());
-		reliefPoint.setReliefInformations(lstRIfor);
-		reliefPoint.setAddress(address);
-		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
-		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		reliefPoint.setDescription(reliefPointDto.getDescription());
-		reliefPoint.setName(reliefPointDto.getName());
-		reliefPoint.setImages(rp.getImages());
-		reliefPoint.setStatus(rp.getStatus());
+		rp.setReliefInformations(lstRIfor);
+		rp.setAddress(address);
+		rp.setModified_date(DateUtils.getCurrentSqlDate());
+		rp.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		rp.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		rp.setDescription(reliefPointDto.getDescription());
+		rp.setName(reliefPointDto.getName());
+		rp.setImages(rp.getImages());
 		
-		return reliefPointRepository.saveAndFlush(reliefPoint);
+		return reliefPointRepository.saveAndFlush(rp);
 	}
 
 	@Override
@@ -273,6 +280,31 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 //		rp.setModified_date(DateUtils.getCurrentSqlDate());
 		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
+	@Override
+	public ReliefPoint updateReliefPointORG(ReliefPointDto reliefPointDto) {
+		// TODO Auto-generated method stub
+		ReliefPoint rp = reliefPointRepository.getById(reliefPointDto.getId());
+		if (null == rp) {
+			throw new AppException(402, "Relief point is not Found!");
+		}
+		if (reliefPointDto.getAddress().getId() == 0) {
+			throw new AppException(402, "Id of Address is not Found!");
+		}
+		reliefPointDto.getReliefInformations().forEach((rpIf) -> {
+			if(rpIf.getItem().getId() == 0) {
+				throw new AppException(402, "Id of Item is not Found!");
+			}
+		});
+
+		//BeanUtils.copyProperties(rp, reliefPoint);
+		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
+		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
+			rf.setReliefPoint(reliefPoint);
+			return rf;
+		}).collect(Collectors.toList());
+		rp.setReliefInformations(lstRIfor);
+		return reliefPointRepository.save(rp);
+	}
 
 	@Override
 	public List<ReliefPointDto> getAllReliefPoint() {
@@ -295,6 +327,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		// TODO Auto-generated method stub
 		List<ReliefPoint> reliefPoints = reliefPointRepository.findByTypeOrStatus(uId, reliefPointFilterDto);
 		
+		return mapStructMapper.lstReliefPointToreliefPointDto(reliefPoints);
+	}
+
+	@Override
+	public List<ReliefPointDto> getEvent(Long uId,ReliefPointFilterDto reliefPointFilterDto) {
+		// TODO Auto-generated method stub
+		List<ReliefPoint> reliefPoints = reliefPointRepository.findByTypeOrStatusEv(uId, reliefPointFilterDto);
 		return mapStructMapper.lstReliefPointToreliefPointDto(reliefPoints);
 	}
 

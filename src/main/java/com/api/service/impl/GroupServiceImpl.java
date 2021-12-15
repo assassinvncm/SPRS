@@ -15,6 +15,7 @@ import com.api.repositories.GroupRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.GroupService;
 import com.exception.AppException;
+import com.ultils.Constants;
 
 @Service
 public class GroupServiceImpl implements GroupService{
@@ -52,6 +53,9 @@ public class GroupServiceImpl implements GroupService{
 			int check = 1;
 			for (Group group2 : lstAuthoried) {
 				if(group2.getId() == group.getId()) {
+					check = 0;
+				}
+				if(group.getCode().equals(Constants.SYSTEM_ADMIN_PER_CODE) || group.getCode().equals(Constants.ORG_ADMIN_PER_CODE)) {
 					check = 0;
 				}
 			}
@@ -109,7 +113,13 @@ public class GroupServiceImpl implements GroupService{
 
 	@Override
 	public List<Group> getAll() {
-		List<Group> lstRs = groupRepo.findAll();
+		List<Group> lstRs = new ArrayList<Group>();
+		List<Group> lstTemp = groupRepo.findAll();
+		lstTemp.forEach(g ->{
+			if(!g.getCode().equals(Constants.SYSTEM_ADMIN_PER_CODE) && !g.getCode().equals(Constants.ORG_USER_PER_CODE)&& !g.getCode().equals(Constants.ORG_ADMIN_PER_CODE)) {
+				lstRs.add(g);
+			}
+		});
 		return lstRs;
 	}
 	

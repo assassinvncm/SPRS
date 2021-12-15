@@ -122,6 +122,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		udto.setAddress(addressToAddressDto(user.getAddress()));
 		udto.setFull_name(user.getFull_name());
 		udto.setDob(user.getDob());
+		udto.setStatus(user.getStatus());
 		return udto;
 	}
 

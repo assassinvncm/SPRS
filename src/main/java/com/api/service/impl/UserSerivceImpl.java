@@ -25,6 +25,7 @@ import com.api.dto.ImageDto;
 import com.api.dto.PagingResponse;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
+import com.api.dto.StoreDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
@@ -359,6 +360,7 @@ public class UserSerivceImpl implements UserService {
 		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setUser_sos(new SOS(1, address,1));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to create store", "Create Store", user);
 		userRepository.save(user);
@@ -428,22 +430,49 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
+	public User getUserByPhone(String phone) {
+		User uRs = new User();
+		if(phone !=null || !phone.equals("")) {
+			phone = "0"+phone.substring(3);
+			Optional<User> u = userRepository.findByPhone(phone);
+			if(!u.isEmpty()) {
+				uRs = u.get();
+			}else {
+				throw new AppException(404, "Số điện thoại không tồn tại trong hệ thống");
+			}
+		}else {
+			throw new AppException(404, "Số điện thoại không được để trống");
+		}
+		return uRs;
+	}
+
+	@Override
+	public boolean checkRegisUser(String phone, String username) {
+		if(phone !=null || !phone.equals("")) {
+			phone = "0"+phone.substring(3);
+			Optional<User> u = userRepository.findByPhone(phone);
+			User ucheck = userRepository.findByUsername(username);
+			if(!u.isEmpty()||ucheck!=null) {
+				return true;
+			}else {
+				return false;
+			}
+		}else {
+			throw new AppException(404, "Số điện thoại không được để trống");
+		}
+	}
+
+	@Override
 	public void updatePassword(UserDto userDto, UpdatePasswordDto updatePasswordDto) {
 		// TODO Auto-generated method stub
 		String encNewPass = passwordEncoder.encode(updatePasswordDto.getNewPassword());
 		if(!passwordEncoder.matches(updatePasswordDto.getOldPassword(), userDto.getPassword())) {
-			throw new AppException(402,"Old Password not correct");
+			throw new AppException(402,"Mật khẩu không chính xác");
 		}
 		if(encNewPass.equals(userDto.getPassword())) {
-			throw new AppException(402,"Password must not the same old passs");
+			throw new AppException(402,"Mật khẩu không được giống mật khẩu cũ");
 		}
 		userRepository.updateUser(userDto.getId(), encNewPass);
-//		User user = mapStructMapper.userDtoToUser(userDto);
-//		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
-//		user.setPassword(encNewPass);
-//		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
-//		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
-//		userRepository.save(user);
 	}
 
 	@Override
@@ -600,9 +629,23 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> getUsernameLike(String name) {
-		List<User> rs = userRepository.searchByNameLike(name);
-		return rs;
+	public Map<String, Object> getUsernameLike(SearchFilterDto sft) {
+		List<UserDto> lstUserRs = new ArrayList<UserDto>();
+		Sort sortable = null;
+	    if (sft.getSort()) {
+	    	sortable = Sort.by("username").descending();
+	    }else {
+	    	sortable = Sort.by("username").descending();
+	    }
+	    Pageable pageable = PageRequest.of(sft.getPageIndex(), sft.getPageSize(), sortable);
+	    Page<User> pageUser = userRepository.searchByNameLike(sft.getSearch(), pageable);
+	    lstUserRs = mapStructMapper.lstUserToUserDto(pageUser.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("users", lstUserRs);
+        response.put("currentPage", pageUser.getNumber());
+        response.put("totalItems", pageUser.getTotalElements());
+        response.put("totalPages", pageUser.getTotalPages());
+		return response;
 	}
 
 	@Override

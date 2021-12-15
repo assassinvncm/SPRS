@@ -154,6 +154,7 @@ public class StoreController {
 //	}
 
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg Store");
 		Store st = storeService.uploadStoreImg(image);

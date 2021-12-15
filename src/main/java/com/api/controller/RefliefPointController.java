@@ -59,6 +59,7 @@ public class RefliefPointController {
 	UserService userService;
 
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF', 'PER_ADMRLP_ACEN')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg Relief");
 		ReliefPoint rp = reliefPointService.uploadReliefImg(image);
@@ -157,12 +158,24 @@ public class RefliefPointController {
 	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody ReliefPointFilterDto rpf) {
-
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		List<ReliefPointDto> lstReliefPoint = reliefPointService.getReliefPoints(userDto.getId(), rpf);
 		//PagingResponse<ReliefPointDto> lstReliefPoint = reliefPointService.get(userDto.getId(), rpf)
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", lstReliefPoint, null));
+	}
+	
+
+	@RequestMapping(value = "/get-event", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_EVENT')")
+	public ResponseEntity<?> getEvent(@RequestHeader("Authorization") String requestTokenHeader,
+			@RequestBody ReliefPointFilterDto rpf) {
+		logger.info("Start get event");
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		List<ReliefPointDto> lstReliefPoint = reliefPointService.getEvent(userDto.getId(),rpf);
+		logger.info("End get event");
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get Event for org user success", "", lstReliefPoint, null));
 	}
 
 	/**
@@ -185,6 +198,16 @@ public class RefliefPointController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping(value = "/get-org", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_EVENT')")
+	public ResponseEntity<?> getReliefPointByIdORG(@RequestParam(name = "id") long rpId) {
+		logger.info("Start get event org detail");
+		ReliefPointDto rpDto = reliefPointService.getReliefPointByIdORG(rpId);
+		logger.info("End get event org detail");
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Get event org detail suscess", "", rpDto, null));
+	}
+	
 	@RequestMapping(value = "/common/reliefPoint", method = RequestMethod.GET)
 	public ResponseEntity<?> getReliefPointById(@RequestParam(name = "id") long rpId) {
 		ReliefPointDto rpDto = reliefPointService.getReliefPointById(rpId);
@@ -206,9 +229,22 @@ public class RefliefPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF','PER_MOB_EVENT')")
 	public ResponseEntity<?> updateReliefPoint(@RequestBody ReliefPointDto reliefPointDto) {
 		ReliefPoint rp = reliefPointService.updateReliefPoint(reliefPointDto);
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
+				"Update reliefpoint By ID " + rp.getId() + " success", "", rp, null));
+	}
+
+	/**
+	 * 
+	 * @param reliefPoint
+	 * @return
+	 */
+	@RequestMapping(value = "/update-event", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF','PER_MOB_EVENT')")
+	public ResponseEntity<?> updateEventORG(@RequestBody ReliefPointDto reliefPointDto) {
+		ReliefPoint rp = reliefPointService.updateReliefPointORG(reliefPointDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
 				"Update reliefpoint By ID " + rp.getId() + " success", "", rp, null));
 	}

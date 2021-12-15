@@ -9,7 +9,6 @@ import com.api.dto.ReliefPointFilterDto;
 import com.api.entity.ReliefPoint;
 
 public interface ReliefPointRepositoryCustom {
-
 	List<ReliefPoint> findByTypeOrStatus(Long uId, ReliefPointFilterDto reliefPointFilterDto);
-
+	List<ReliefPoint> findByTypeOrStatusEv(Long uId, ReliefPointFilterDto reliefPointFilterDto);
 }
