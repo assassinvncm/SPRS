@@ -60,6 +60,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 		if(user.getStatus() != null && user.getStatus().equals(Constants.USER_STATUS_REJECT)) {
 			throw new AuthenException("Account is reject");
 		}
+		
+		if(user.getIsActive() != null && user.getIsActive() == false) {
+			throw new AuthenException("Account is not active");
+		}
 
 		List<Group> lstGr = user.getGroups_user();
 		boolean check = false;

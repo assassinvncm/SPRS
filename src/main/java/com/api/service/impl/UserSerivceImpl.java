@@ -632,7 +632,7 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "User is not existed!");
 		}
 		u.setIsActive(false);
-		u.setStatus(Constants.USER_STATUS_UNACTIVE);
+		//u.setStatus(Constants.USER_STATUS_UNACTIVE);
 		return userRepository.saveAndFlush(u);
 	}
 
@@ -642,8 +642,8 @@ public class UserSerivceImpl implements UserService {
 		if(u==null) {
 			throw new AppException(403, "User is not existed!");
 		}
-		u.setIsActive(false);
-		u.setStatus(Constants.USER_STATUS_ACTIVE);
+		u.setIsActive(true);
+		//u.setStatus(Constants.USER_STATUS_ACTIVE);
 		return userRepository.saveAndFlush(u);
 	}
 
