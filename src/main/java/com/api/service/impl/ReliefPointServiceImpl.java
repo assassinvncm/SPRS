@@ -251,6 +251,10 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setName(reliefPointDto.getName());
 		reliefPoint.setStatus(rp.getStatus());
 		reliefPoint.setImages(rp.getImages());
+		reliefPoint.setUsers(rp.getUsers());
+		reliefPoint.setOrganization(rp.getOrganization());
+		//reliefPoint.setCreate_by();
+		
 //		List<ReliefInformation> lstReliefInfor = reliefPointDto.getReliefInformations().stream().map(reliefInforDto -> {
 //			ReliefInformation reliefInfor = new ReliefInformation();
 //			reliefInfor.setId(reliefInforDto.getId());
