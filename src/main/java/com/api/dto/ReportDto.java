@@ -28,10 +28,27 @@ public class ReportDto {
 	@JsonProperty("type_point")
 	private int[] type_point;
 	
+	@JsonProperty("org_id")
+	private Long org_id;
+	
 	public ReportDto() {
 		super();
 		date_from = "";
 		date_to = "";
+	}
+
+	/**
+	 * @return the org_id
+	 */
+	public Long getOrg_id() {
+		return org_id;
+	}
+
+	/**
+	 * @param org_id the org_id to set
+	 */
+	public void setOrg_id(Long org_id) {
+		this.org_id = org_id;
 	}
 
 	public String getDate_from() {

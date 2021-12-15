@@ -3,6 +3,8 @@ package com.api.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.api.dto.AddressDto;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
@@ -30,6 +32,20 @@ public interface UserService {
 	 * @return username
 	 */
 	String getUsernameByPhone(String phone);
+	
+	/**
+	 * 
+	 * @param phone number
+	 * @return username
+	 */
+	User getUserByPhone(String phone);
+	
+	/**
+	 * 
+	 * @param phone number
+	 * @return username
+	 */
+	boolean checkRegisUser(String phone, String username);
 	
 	/**
 	 * 
@@ -126,7 +142,7 @@ public interface UserService {
 	 * @param name
 	 * @return List<User>
 	 */
-	List<User> getUsernameLike(String name);
+	Map<String, Object> getUsernameLike(SearchFilterDto sft);
 	
 	/**
 	 * 

@@ -55,13 +55,13 @@ public class UserController {
 	@Autowired
 	MapStructMapper mapper;
 	
-	@RequestMapping(value = "/users/search/{name}", method = RequestMethod.GET)
+	@RequestMapping(value = "/users/search", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
-	public ResponseEntity<?> getSearch(@PathVariable(value = "name") String name) {
+	public ResponseEntity<?> getSearch(@RequestBody SearchFilterDto sft) {
 		logger.info("Start get search User like");
-		List<User> lst = userService.getUsernameLike(name);
+		Map<String, Object> rs = userService.getUsernameLike(sft);
 		logger.info("End get search User like");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Search like User success!", "", null, mapper.lstUserToUserDto(lst)));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Search like User success!", "", rs, null));
 	}
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)

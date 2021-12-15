@@ -15,7 +15,7 @@ import com.google.common.cache.CacheLoader;
 public class OtpService {
 
 //cache based on username and OPT MAX 8 
-	private static final Integer EXPIRE_MINS = 5;
+	private static final Integer EXPIRE_MINS = 1;
 
 	private LoadingCache<String, Integer> otpCache;
 

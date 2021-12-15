@@ -86,7 +86,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	private Image images;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true, updatable = false)
+	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true)
 	private Organization organization;
 
 	@ManyToMany(cascade = CascadeType.REMOVE)
@@ -98,6 +98,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	/**
 	 * @return the relief_user
 	 */
+	
 	public List<User> getRelief_user() {
 		return relief_user;
 	}

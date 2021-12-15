@@ -14,13 +14,13 @@ public class Constants {
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
 			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user","/sprs/api/users_v2/ownStore",
 			"/sprs/api/users_v2/organizationalUser", "/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp",
-			"/sprs/api/validateOtp", "/sprs/api/store-manage/uploadImg", "/sprs/api/groups-register-mobile", "/sprs/api/groups-register-web"
-			,"/sprs/api/groups-all","/sprs/api/*/common/**"};// ,
+			"/sprs/api/validateOtp", "/sprs/api/groups-register-mobile", "/sprs/api/groups-register-web"
+			,"/sprs/api/groups-all","/sprs/api/*/common/**", "/sprs/api/generateOtp-verify", "/sprs/api/validateOtp-verify"};// ,
 	public static final String RESET_PASSWORD_MESSAGE = "Mật khẩu mới của bạn là "; // "/sprs/api/generateOtp",
 	// "/sprs/api/validateOtp"
 	// constants config otp
 	public static final String ACCOUNT_SID = "ACaef9117a42d80b9837a3d4bc0acf8fe0";
-	public static final String AUTH_TOKEN = "12db558d2d6b409a1b4878361bd1aed0";
+	public static final String AUTH_TOKEN = "c6e87bd6445ab2f230c3d053f1174be5";
 	public static final String FROM_NUMBER = "4128967877";
 
 	// constants for request status

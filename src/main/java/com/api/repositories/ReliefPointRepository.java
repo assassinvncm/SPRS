@@ -23,6 +23,9 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>,
 	@Query("select rp from ReliefPoint rp inner join rp.address address inner join address.subDistrict sd inner join sd.district d inner join d.city  where d.city.id = :cId")
 	List<ReliefPoint> findReliefPointByArea(@Param("cId") long id);
 
+//	@Query("SELECT rp FROM User u inner join u.user_relief rp WHERE :name IS NULL OR :name = '' OR u.username LIKE %:name%")
+//	Page<ReliefPoint> getEvent(@Param("name") String name, Pageable pageable);
+
 	@Query("select rp from User u inner join u.reliefPoints rp where u.id = :uId and rp.id = :rpId")
 	Optional<ReliefPoint> findByIdAndUser(@Param("rpId") Long rpId, @Param("uId") Long uId);
 	
