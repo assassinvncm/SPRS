@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -59,6 +61,10 @@ public class Organization extends BaseEntity implements Serializable{
 	
 	@Column(updatable = false,columnDefinition = "TIMESTAMP")
 	public Timestamp create_time;
+	
+	@OneToMany(mappedBy = "organization", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<ReliefPoint> reliefs;
 
 	public Organization() {
 		super();
@@ -73,6 +79,20 @@ public class Organization extends BaseEntity implements Serializable{
 		this.address = address;
 		this.user = user;
 		this.request = request;
+	}
+
+	/**
+	 * @return the reliefs
+	 */
+	public List<ReliefPoint> getReliefs() {
+		return reliefs;
+	}
+
+	/**
+	 * @param reliefs the reliefs to set
+	 */
+	public void setReliefs(List<ReliefPoint> reliefs) {
+		this.reliefs = reliefs;
 	}
 
 	/**
