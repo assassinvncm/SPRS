@@ -244,9 +244,21 @@ public class RefliefPointController {
 	@RequestMapping(value = "/update-event", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF','PER_MOB_EVENT')")
 	public ResponseEntity<?> updateEventORG(@RequestBody ReliefPointDto reliefPointDto) {
+		logger.info("Start updateEventORG");
 		ReliefPoint rp = reliefPointService.updateReliefPointORG(reliefPointDto);
+		logger.info("End updateEventORG");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
-				"Update reliefpoint By ID " + rp.getId() + " success", "", rp, null));
+				"Update event By ID " + rp.getId() + " success", "", rp, null));
+	}
+
+	@RequestMapping(value = "/delete-event", method = RequestMethod.DELETE)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
+	public ResponseEntity<?> deleteReliefPointEvent(@RequestParam("id") Long id) {
+		logger.info("Start deleteReliefPointEvent");
+		reliefPointService.deleteReliefPointById(id);
+		logger.info("End deleteReliefPointEvent");
+		return ResponseEntity
+				.ok(new SPRSResponse(Constants.SUCCESS, "Delete event point By ID " + " success", "", null, null));
 	}
 
 	@RequestMapping(value = "/update-status", method = RequestMethod.PUT)

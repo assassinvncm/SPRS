@@ -140,6 +140,13 @@ public interface ReliefPointService {
 	
 	/**
 	 * 
+	 * @param rId
+	 * 
+	 */
+	void deleteReliefPointEvent(Long rId);
+	
+	/**
+	 * 
 	 * @param MultipartFile, store_id
 	 * @return
 	 */

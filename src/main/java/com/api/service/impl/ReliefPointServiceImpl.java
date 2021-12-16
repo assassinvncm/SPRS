@@ -206,6 +206,8 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 				throw new AppException(402, "Id of Item is not Found!");
 			}
 		});
+
+		//BeanUtils.copyProperties(rp, reliefPoint);
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
 		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
 			rf.setReliefPoint(reliefPoint);
@@ -213,16 +215,20 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		}).collect(Collectors.toList());
 		
 		Address address = addressService.mapAddress(reliefPointDto.getAddress());
-		rp.setReliefInformations(lstRIfor);
-		rp.setAddress(address);
-		rp.setModified_date(DateUtils.getCurrentSqlDate());
-		rp.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
-		rp.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		rp.setDescription(reliefPointDto.getDescription());
-		rp.setName(reliefPointDto.getName());
-		rp.setImages(rp.getImages());
+		reliefPoint.setReliefInformations(lstRIfor);
+		reliefPoint.setAddress(address);
+		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		reliefPoint.setDescription(reliefPointDto.getDescription());
+		reliefPoint.setName(reliefPointDto.getName());
+		reliefPoint.setStatus(rp.getStatus());
+		reliefPoint.setImages(rp.getImages());
+		reliefPoint.setUsers(rp.getUsers());
+		reliefPoint.setOrganization(rp.getOrganization());
+		reliefPoint.setRelief_user(rp.getRelief_user());
 		
-		return reliefPointRepository.saveAndFlush(rp);
+		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
 
 	@Override
@@ -302,8 +308,21 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 			rf.setReliefPoint(reliefPoint);
 			return rf;
 		}).collect(Collectors.toList());
-		rp.setReliefInformations(lstRIfor);
-		return reliefPointRepository.save(rp);
+		
+		Address address = addressService.mapAddress(reliefPointDto.getAddress());
+		reliefPoint.setReliefInformations(lstRIfor);
+		reliefPoint.setAddress(address);
+		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		reliefPoint.setDescription(reliefPointDto.getDescription());
+		reliefPoint.setName(reliefPointDto.getName());
+		reliefPoint.setStatus(rp.getStatus());
+		reliefPoint.setImages(rp.getImages());
+		reliefPoint.setUsers(rp.getUsers());
+		reliefPoint.setOrganization(rp.getOrganization());
+		reliefPoint.setRelief_user(rp.getRelief_user());
+		return reliefPointRepository.save(reliefPoint);
 	}
 
 	@Override
@@ -393,6 +412,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	public void deleteReliefPointById(Long rId) {
 		// TODO Auto-generated method stub
 		reliefPointRepository.deleteById(rId);
+	}
+
+	@Override
+	@Transactional
+	public void deleteReliefPointEvent(Long rId) {
+		// TODO Auto-generated method stub
+		reliefPointRepository.deleteEvent(rId);
 	}
 
 	@Override
