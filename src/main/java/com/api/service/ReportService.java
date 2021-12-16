@@ -15,5 +15,7 @@ public interface ReportService {
 	Map<String, Object> getReportMonthORG(ReportDto rpdto);
 	Map<String, Object> getReportProvince(ReportDto rpdto);
 	Map<String, Object> getReportProvinceORG(ReportDto rpdto);
-	List<ReportResultDto> getReportOverview(ReportDto rpdto);
+	Map<String, Object> getReportTopUserORG(Long o_id);
+	List<ReportResultDto> getReportOverview();
+	List<ReportResultDto> getReportUserORGOverview();
 }

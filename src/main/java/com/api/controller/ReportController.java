@@ -100,11 +100,32 @@ public class ReportController {
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Province ORG success", "", rs, null));
 	}
 
+	@RequestMapping(value = "/getReportTopUserORG", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_ORGADM_ACEN')")
+	public ResponseEntity<?> getReportTopUserORG(@RequestHeader ("Authorization") String requestTokenHeader) {
+		logger.info("Start getReportTopUserORG");
+		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
+		ReportDto rpdto = new ReportDto();
+		rpdto.setOrg_id(userDto.getOrganization().getId());
+		Map<String, Object> rs = reportServ.getReportTopUserORG(userDto.getOrganization().getId());
+		logger.info("End getReportTopUserORG");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Top User ORG success", "", rs, null));
+	}
+
 	@RequestMapping(value = "/getReportOverview", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getReportOverview() {
 		logger.info("Start get report Overview");
 		List<ReportResultDto> rs = reportServ.getReportOverview(new ReportDto());
+		logger.info("End get report Overview");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
+	}
+
+	@RequestMapping(value = "/getReportUserORGOverview", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
+	public ResponseEntity<?> getReportUserORGOverview() {
+		logger.info("Start get report Overview");
+		List<ReportResultDto> rs = reportServ.getReportUserORGOverview();
 		logger.info("End get report Overview");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
 	}

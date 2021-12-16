@@ -229,7 +229,7 @@ public class RefliefPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF','PER_MOB_EVENT')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> updateReliefPoint(@RequestBody ReliefPointDto reliefPointDto) {
 		ReliefPoint rp = reliefPointService.updateReliefPoint(reliefPointDto);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
@@ -242,7 +242,7 @@ public class RefliefPointController {
 	 * @return
 	 */
 	@RequestMapping(value = "/update-event", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF','PER_MOB_EVENT')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_EVENT')")
 	public ResponseEntity<?> updateEventORG(@RequestBody ReliefPointDto reliefPointDto) {
 		logger.info("Start updateEventORG");
 		ReliefPoint rp = reliefPointService.updateReliefPointORG(reliefPointDto);
@@ -252,7 +252,7 @@ public class RefliefPointController {
 	}
 
 	@RequestMapping(value = "/delete-event", method = RequestMethod.DELETE)
-	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_EVENT')")
 	public ResponseEntity<?> deleteReliefPointEvent(@RequestParam("id") Long id) {
 		logger.info("Start deleteReliefPointEvent");
 		reliefPointService.deleteReliefPointById(id);

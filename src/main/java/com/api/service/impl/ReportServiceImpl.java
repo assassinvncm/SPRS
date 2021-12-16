@@ -275,14 +275,40 @@ public class ReportServiceImpl implements ReportService{
 	}
 
 	@Override
-	public List<ReportResultDto> getReportOverview(ReportDto rpdto) {
+	public List<ReportResultDto> getReportOverview() {
 		String group_by = "1=1";
 		String type_point = "1,2,3,4";
-		List<Object[]> lstObj = rpRepo.getReport(rpdto.getDistrict_id()
-				, rpdto.getSub_district_id()
-				, rpdto.getCity_id()
-				, rpdto.getDate_from()
-				, rpdto.getDate_to()
+		List<Object[]> lstObj = rpRepo.getReport(0
+				, 0
+				, 0
+				, ""
+				, ""
+				, type_point
+				, group_by);
+		
+		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
+		int total = 0;
+		for (ReportResultDto reportResultDto : lstRs) {
+			total += reportResultDto.getTotal();
+		}
+
+		for (ReportResultDto reportResultDto : lstRs) {
+			double percent = reportResultDto.getTotal()*100/total;
+			reportResultDto.setTotal(percent);
+		}
+		
+		return lstRs;
+	}
+
+	@Override
+	public List<ReportResultDto> getReportUserORGOverview() {
+		String group_by = "1=1";
+		String type_point = "1,2,3,4";
+		List<Object[]> lstObj = rpRepo.getReport(0
+				, 0
+				, 0
+				, ""
+				, ""
 				, type_point
 				, group_by);
 		
@@ -412,6 +438,23 @@ public class ReportServiceImpl implements ReportService{
         response.put("data", data);
         response.put("label", labels);
 		return response;
+	}
+
+
+	@Override
+	public Map<String, Object> getReportTopUserORG(Long o_id) {
+		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
+		String dayAgo = DateUtils.getDateAgo("yyyy-MM-dd", 30);
+		List<Object[]> lstObj = rpRepo.getReportTopUserORG(
+				  dayAgo
+				, currDate
+				, o_id);
+		
+		List<ReportResultDto> lstRs = mapper.reportMappingTopUser(lstObj);
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("data", lstRs);
+		return data;
 	}
 
 }

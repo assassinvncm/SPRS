@@ -142,4 +142,24 @@ public class ReportRepositoryImpl implements ReportRepository{
 		return rs;
 	}
 
+	@Override
+	public List<Object[]> getReportTopUserORG(String p_date_from, String p_date_to, long p_org_id) {
+		List<Object[]> rs = new ArrayList<Object[]>();
+		try {
+			StoredProcedureQuery storedProcedure = em.createStoredProcedureQuery("prc_report_getReportTopUserOrg");
+			storedProcedure.registerStoredProcedureParameter("p_date_from", String.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_date_to", String.class, ParameterMode.IN);
+			storedProcedure.registerStoredProcedureParameter("p_org_id", Long.class, ParameterMode.IN);
+			storedProcedure.setParameter("p_date_from", p_date_from);
+			storedProcedure.setParameter("p_date_to", p_date_to);
+			storedProcedure.setParameter("p_org_id", p_org_id);
+			storedProcedure.execute();
+			rs = storedProcedure.getResultList();
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("Get Report -> ", e.getMessage());
+		}
+		return rs;
+	}
+
 }
