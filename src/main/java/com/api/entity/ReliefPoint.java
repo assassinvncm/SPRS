@@ -45,7 +45,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	private Timestamp close_time;
 	
 	@Column(name = "status")
-	private Boolean status;
+	private int status;
 	
 	@Column(updatable = false)
 	public String create_by;
@@ -170,11 +170,11 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 		this.close_time = close_time;
 	}
 
-	public Boolean getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	

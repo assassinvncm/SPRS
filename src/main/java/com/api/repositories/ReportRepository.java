@@ -17,9 +17,6 @@ public interface ReportRepository {
 			, String p_type_point
 			, String p_group_by);
 	
-	List<Object[]> getReportUserPie(
-			long p_org_id);
-	
 	List<Object[]> getReportORG(
 			int p_district_id
 			, int p_sub_district_id

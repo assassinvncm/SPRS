@@ -116,16 +116,7 @@ public class ReportController {
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getReportOverview() {
 		logger.info("Start get report Overview");
-		List<ReportResultDto> rs = reportServ.getReportOverview(new ReportDto());
-		logger.info("End get report Overview");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
-	}
-
-	@RequestMapping(value = "/getReportUserORGOverview", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN','PER_ORGADM_ACEN')")
-	public ResponseEntity<?> getReportUserORGOverview() {
-		logger.info("Start get report Overview");
-		List<ReportResultDto> rs = reportServ.getReportUserORGOverview();
+		List<ReportResultDto> rs = reportServ.getReportOverview();
 		logger.info("End get report Overview");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get report Overview success", "", rs, null));
 	}

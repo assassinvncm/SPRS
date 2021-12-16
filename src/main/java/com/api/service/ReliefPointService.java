@@ -129,7 +129,7 @@ public interface ReliefPointService {
 	 * @param reliefPoint
 	 * @return
 	 */
-	ReliefPoint updateStatusReliefPoint(Long rId, Boolean status);
+	ReliefPoint updateStatusReliefPoint(Long rId, int status);
 	
 	/**
 	 * 

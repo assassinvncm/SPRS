@@ -71,12 +71,14 @@ public class RefliefPointController {
 	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> createReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody ReliefPointDto reliefPointDto) {
+		logger.info("Start createReliefPoint");
 
 //		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 //		reliefPointDto.setUser_rp(userDto);
 		User user = userService.getUserbyTokenAuth(requestTokenHeader);
 		
 		ReliefPoint rp = reliefPointService.createReliefPoint(reliefPointDto, user);
+		logger.info("End createReliefPoint");
 		
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", null, null));
 	}
@@ -187,8 +189,10 @@ public class RefliefPointController {
 	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> getReliefPoint(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestParam(name = "id") long rpId) {
+		logger.info("Start getReliefPoint");
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		ReliefPointDto rpDto = reliefPointService.getReliefPointByIdAndUser(rpId, userDto.getId());
+		logger.info("End getReliefPoint");
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "Get Relief Point by area success", "", rpDto, null));
 	}
@@ -231,7 +235,9 @@ public class RefliefPointController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT)
 	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> updateReliefPoint(@RequestBody ReliefPointDto reliefPointDto) {
+		logger.info("Start updateReliefPoint");
 		ReliefPoint rp = reliefPointService.updateReliefPoint(reliefPointDto);
+		logger.info("End updateReliefPoint");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
 				"Update reliefpoint By ID " + rp.getId() + " success", "", rp, null));
 	}
@@ -262,9 +268,11 @@ public class RefliefPointController {
 	}
 
 	@RequestMapping(value = "/update-status", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
-	public ResponseEntity<?> hideReliefPoint(@RequestParam("id") Long id, @RequestParam("status") Boolean status) {
+	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF', 'PER_MOB_EVENT')")
+	public ResponseEntity<?> updateStatus(@RequestParam("id") Long id, @RequestParam("status") int status) {
+		logger.info("Start updateStatus");
 		ReliefPoint ReliefPoint = reliefPointService.updateStatusReliefPoint(id, status);
+		logger.info("End updateStatus");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS,
 				"Update status relief point By ID " + ReliefPoint.getId() + " success", "", ReliefPoint, null));
 	}
@@ -272,8 +280,9 @@ public class RefliefPointController {
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	@PreAuthorize("hasAnyAuthority('PER_MOB_RELIEF')")
 	public ResponseEntity<?> deleteReliefPoint(@RequestParam("id") Long id) {
-
+		logger.info("Start deleteReliefPoint");
 		reliefPointService.deleteReliefPointById(id);
+		logger.info("End deleteReliefPoint");
 		return ResponseEntity
 				.ok(new SPRSResponse(Constants.SUCCESS, "delete relief point By ID " + " success", "", null, null));
 	}

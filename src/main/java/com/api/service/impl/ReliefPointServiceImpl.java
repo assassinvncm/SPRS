@@ -154,7 +154,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setAddress(address);
 		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		reliefPoint.setStatus(true);
+		reliefPoint.setStatus(1);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		reliefPoint.setOrganization(user.getOrganization());
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
@@ -176,7 +176,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setAddress(address);
 		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		reliefPoint.setStatus(true);
+		reliefPoint.setStatus(1);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		reliefPoint.setUser_rp(user);
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
@@ -399,7 +399,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 
 	@Override
 	@Transactional
-	public ReliefPoint updateStatusReliefPoint(Long rId, Boolean status) {
+	public ReliefPoint updateStatusReliefPoint(Long rId, int status) {
 		// TODO Auto-generated method stub
 		ReliefPoint rp = reliefPointRepository.findById(rId)
 				.orElseThrow(() -> new AppException(402, "ReliefPoint not exist"));
