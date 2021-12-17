@@ -157,6 +157,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setStatus(1);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		reliefPoint.setOrganization(user.getOrganization());
+		reliefPoint.setUsers(user);
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
 		
 //		notificationService.sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
@@ -364,7 +365,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	    if (filter.getSort()) {
 	    	sortable = Sort.by("name").descending();
 	    }else {
-	    	sortable = Sort.by("name").descending();
+	    	sortable = Sort.by("name").ascending();
 	    }
 	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
 		Page<ReliefPoint> pageStore = reliefPointRepository.getOwnOrgReliefPoint(oId, filter.getStatus_store(), filter.getSearch(), pageable);
