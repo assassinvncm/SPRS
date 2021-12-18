@@ -8,6 +8,9 @@ import com.api.entity.*;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.OrganizationRepository;
 import com.api.repositories.RequestRepository;
+import com.exception.AppException;
+import com.ultils.Constants;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -136,125 +138,27 @@ class RequestServiceImplTest {
 	}
 
 	@Test
-	void testFilterRequestSysAdmin_RequestRepositoryReturnsNoItems() {
+	void testFilterRequestSysAdmin_UTCID02() {
 		// Setup
+		
+		List<RequestDto> requestDtos = new ArrayList<RequestDto>();
+		RequestDto reqDto1 = new RequestDto();
+		reqDto1.setId(1L);
+		requestDtos.add(reqDto1);
+		requestDtos.add(reqDto1);
+		
+		List<Request> requests = new ArrayList<Request>();
+		Request req1 = new Request();
+		req1.setId(1L);
+		Group group1 = new Group();
+		group1.setId(3L);
+		group1.setName("Admin");
+		req1.setGroup(group1);
+		
 		when(requestServiceImplUnderTest.requestRepository.filterRequestOfAdmin(0L, "status", "search"))
 				.thenReturn(Collections.emptyList());
-
-		// Configure MapStructMapper.lstRequestToRequestDto(...).
-		final PermissionDto permissionDto = new PermissionDto();
-		permissionDto.setCode("code");
-		permissionDto.setId(0L);
-		permissionDto.setTo("to");
-		permissionDto.setIcon("icon");
-		permissionDto.setChildren(Arrays.asList(new PermissionChildrenDto("name", "to", "icon")));
-		permissionDto.setName("name");
-		final PermissionDto permissionDto1 = new PermissionDto();
-		permissionDto1.setCode("code");
-		permissionDto1.setId(0L);
-		permissionDto1.setTo("to");
-		permissionDto1.setIcon("icon");
-		permissionDto1.setChildren(Arrays.asList(new PermissionChildrenDto("name", "to", "icon")));
-		permissionDto1.setName("name");
-		final List<RequestDto> requestDtos = Arrays.asList(new RequestDto(0L, "type", "status", "message",
-				new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime(),
-				new UserDto(0L, "username", "phone", "password", "full_name", "dob",
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false,
-						new AddressDto(new CityDto(0L, "code", "name"),
-								new DistrictDto(
-										0L, "code", "name", new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-								new SubDistrictDto(0L, "code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList(new SubDistrict("code", "name", null,
-														Arrays.asList(new Address("city", "province", "district", null,
-																"addressLine", "gPS_Long", "gPS_Lati"))))),
-										Arrays.asList()),
-								"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-						new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-								new AddressDto(new CityDto(0L, "code", "name"), new DistrictDto(0L, "code", "name",
-										new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-										new SubDistrictDto(0L, "code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList(new SubDistrict("code", "name", null,
-																Arrays.asList()))),
-												Arrays.asList()),
-										"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-								Arrays.asList()),
-						Arrays.asList(new GroupDto(0L, "name", 0, Arrays.asList(permissionDto), Arrays.asList(),
-								Arrays.asList())),
-						Arrays.asList()),
-				new GroupDto(0L, "name", 0, Arrays.asList(permissionDto1), Arrays.asList(new UserDto(0L, "username",
-						"phone", "password", "full_name", "dob", Date.valueOf(LocalDate.of(2020, 1, 1)), false,
-						new AddressDto(new CityDto(0L, "code", "name"),
-								new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", null, Arrays.asList()), Arrays.asList()))),
-								new SubDistrictDto(0L, "code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList()))),
-										Arrays.asList()),
-								"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-						new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-								new AddressDto(new CityDto(0L, "code", "name"),
-										new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-												Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList()))),
-										new SubDistrictDto(0L, "code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-								Arrays.asList()),
-						Arrays.asList(), Arrays.asList())), Arrays.asList()),
-				new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description", new AddressDto(
-						new CityDto(0L, "code", "name"),
-						new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-								Arrays.asList(new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList(new Address("city", "province", "district", null, "addressLine",
-												"gPS_Long", "gPS_Lati"))))),
-						new SubDistrictDto(0L, "code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList(new SubDistrict("code", "name", null,
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-								Arrays.asList()),
-						"addressLine1", "addressLine2", "gPS_long", "gPS_lati"), Arrays.asList())));
-		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(Arrays.asList(new Request("type",
-				"status", "message", Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group())),
-				new Group(),
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))),
-						Arrays.asList()))))).thenReturn(requestDtos);
+		
+		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(requests)).thenReturn(Collections.emptyList());
 
 		// Run the test
 		final List<RequestDto> result = requestServiceImplUnderTest.filterRequestSysAdmin(0L, "status", "search");
@@ -264,623 +168,73 @@ class RequestServiceImplTest {
 	}
 
 	@Test
-	void testFilterRequestSysAdmin_MapStructMapperReturnsNoItems() {
-		// Setup
-		// Configure RequestRepository.filterRequestOfAdmin(...).
-		final Group group = new Group();
-		group.setPlatform(0);
-		group.setName("name");
-		group.setLevel(0);
-		group.setCode("code");
-		final Permission permission = new Permission();
-		permission.setLevel(0);
-		permission.setNode_index(0);
-		permission.setNode_from(0);
-		permission.setNode_to(0);
-		permission.setTo_page("to_page");
-		permission.setIcon_name("icon_name");
-		permission.setCode("code");
-		permission.setName("name");
-		group.setGroup_permission(Arrays.asList(permission));
-		group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final Group group1 = new Group();
-		group1.setPlatform(0);
-		group1.setName("name");
-		group1.setLevel(0);
-		group1.setCode("code");
-		final Permission permission1 = new Permission();
-		permission1.setLevel(0);
-		permission1.setNode_index(0);
-		permission1.setNode_from(0);
-		permission1.setNode_to(0);
-		permission1.setTo_page("to_page");
-		permission1.setIcon_name("icon_name");
-		permission1.setCode("code");
-		permission1.setName("name");
-		group1.setGroup_permission(Arrays.asList(permission1));
-		group1.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final Group group2 = new Group();
-		group2.setPlatform(0);
-		group2.setName("name");
-		group2.setLevel(0);
-		group2.setCode("code");
-		final Permission permission2 = new Permission();
-		permission2.setLevel(0);
-		permission2.setNode_index(0);
-		permission2.setNode_from(0);
-		permission2.setNode_to(0);
-		permission2.setTo_page("to_page");
-		permission2.setIcon_name("icon_name");
-		permission2.setCode("code");
-		permission2.setName("name");
-		group2.setGroup_permission(Arrays.asList(permission2));
-		group2.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final List<Request> requests = Arrays.asList(new Request("type", "status", "message",
-				Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)),
-				group1,
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group2))),
-						Arrays.asList())));
-		when(requestServiceImplUnderTest.requestRepository.filterRequestOfAdmin(0L, "status", "search"))
-				.thenReturn(requests);
-
-		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(Arrays.asList(new Request("type",
-				"status", "message", Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group())),
-				new Group(),
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))),
-						Arrays.asList()))))).thenReturn(Collections.emptyList());
-
-		// Run the test
-		final List<RequestDto> result = requestServiceImplUnderTest.filterRequestSysAdmin(0L, "status", "search");
-
-		// Verify the results
-		assertEquals(Collections.emptyList(), result);
-	}
-
-	@Test
-	void testFilterRequestOrgAdmin() {
+	void testFilterRequestOrgAdmin_UTCID01() {
 		// Setup
 		// Configure RequestRepository.filterRequestOfOrgAdmin(...).
-		final Group group = new Group();
-		group.setPlatform(0);
-		group.setName("name");
-		group.setLevel(0);
-		group.setCode("code");
-		final Permission permission = new Permission();
-		permission.setLevel(0);
-		permission.setNode_index(0);
-		permission.setNode_from(0);
-		permission.setNode_to(0);
-		permission.setTo_page("to_page");
-		permission.setIcon_name("icon_name");
-		permission.setCode("code");
-		permission.setName("name");
-		group.setGroup_permission(Arrays.asList(permission));
-		group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final Group group1 = new Group();
-		group1.setPlatform(0);
-		group1.setName("name");
-		group1.setLevel(0);
-		group1.setCode("code");
-		final Permission permission1 = new Permission();
-		permission1.setLevel(0);
-		permission1.setNode_index(0);
-		permission1.setNode_from(0);
-		permission1.setNode_to(0);
-		permission1.setTo_page("to_page");
-		permission1.setIcon_name("icon_name");
-		permission1.setCode("code");
-		permission1.setName("name");
-		group1.setGroup_permission(Arrays.asList(permission1));
-		group1.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final Group group2 = new Group();
-		group2.setPlatform(0);
-		group2.setName("name");
-		group2.setLevel(0);
-		group2.setCode("code");
-		final Permission permission2 = new Permission();
-		permission2.setLevel(0);
-		permission2.setNode_index(0);
-		permission2.setNode_from(0);
-		permission2.setNode_to(0);
-		permission2.setTo_page("to_page");
-		permission2.setIcon_name("icon_name");
-		permission2.setCode("code");
-		permission2.setName("name");
-		group2.setGroup_permission(Arrays.asList(permission2));
-		group2.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final List<Request> requests = Arrays.asList(new Request("type", "status", "message",
-				Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)),
-				group1,
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group2))),
-						Arrays.asList())));
-		when(requestServiceImplUnderTest.requestRepository.filterRequestOfOrgAdmin(0L, "status")).thenReturn(requests);
+		List<RequestDto> requestDtos = new ArrayList<RequestDto>();
+		RequestDto reqDto1 = new RequestDto();
+		reqDto1.setId(1L);
+		requestDtos.add(reqDto1);
+		requestDtos.add(reqDto1);
+		
+		List<Request> requests = new ArrayList<Request>();
+		Request req1 = new Request();
+		req1.setId(1L);
+		Group group1 = new Group();
+		group1.setId(3L);
+		group1.setName("Admin");
+		req1.setGroup(group1);
+		
+		//data input
+		Long orgId = 2L;
+		String status = "active";
 
-		// Configure MapStructMapper.lstRequestToRequestDto(...).
-		final PermissionDto permissionDto = new PermissionDto();
-		permissionDto.setCode("code");
-		permissionDto.setId(0L);
-		permissionDto.setTo("to");
-		permissionDto.setIcon("icon");
-		permissionDto.setChildren(Arrays.asList(new PermissionChildrenDto("name", "to", "icon")));
-		permissionDto.setName("name");
-		final PermissionDto permissionDto1 = new PermissionDto();
-		permissionDto1.setCode("code");
-		permissionDto1.setId(0L);
-		permissionDto1.setTo("to");
-		permissionDto1.setIcon("icon");
-		permissionDto1.setChildren(Arrays.asList(new PermissionChildrenDto("name", "to", "icon")));
-		permissionDto1.setName("name");
-		final List<RequestDto> requestDtos = Arrays.asList(new RequestDto(0L, "type", "status", "message",
-				new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime(),
-				new UserDto(0L, "username", "phone", "password", "full_name", "dob",
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false,
-						new AddressDto(new CityDto(0L, "code", "name"),
-								new DistrictDto(
-										0L, "code", "name", new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-								new SubDistrictDto(0L, "code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList(new SubDistrict("code", "name", null,
-														Arrays.asList(new Address("city", "province", "district", null,
-																"addressLine", "gPS_Long", "gPS_Lati"))))),
-										Arrays.asList()),
-								"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-						new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-								new AddressDto(new CityDto(0L, "code", "name"), new DistrictDto(0L, "code", "name",
-										new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-										new SubDistrictDto(0L, "code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList(new SubDistrict("code", "name", null,
-																Arrays.asList()))),
-												Arrays.asList()),
-										"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-								Arrays.asList()),
-						Arrays.asList(new GroupDto(0L, "name", 0, Arrays.asList(permissionDto), Arrays.asList(),
-								Arrays.asList())),
-						Arrays.asList()),
-				new GroupDto(0L, "name", 0, Arrays.asList(permissionDto1), Arrays.asList(new UserDto(0L, "username",
-						"phone", "password", "full_name", "dob", Date.valueOf(LocalDate.of(2020, 1, 1)), false,
-						new AddressDto(new CityDto(0L, "code", "name"),
-								new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", null, Arrays.asList()), Arrays.asList()))),
-								new SubDistrictDto(0L, "code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList()))),
-										Arrays.asList()),
-								"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-						new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-								new AddressDto(new CityDto(0L, "code", "name"),
-										new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-												Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList()))),
-										new SubDistrictDto(0L, "code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-								Arrays.asList()),
-						Arrays.asList(), Arrays.asList())), Arrays.asList()),
-				new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description", new AddressDto(
-						new CityDto(0L, "code", "name"),
-						new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-								Arrays.asList(new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList(new Address("city", "province", "district", null, "addressLine",
-												"gPS_Long", "gPS_Lati"))))),
-						new SubDistrictDto(0L, "code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList(new SubDistrict("code", "name", null,
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-								Arrays.asList()),
-						"addressLine1", "addressLine2", "gPS_long", "gPS_lati"), Arrays.asList())));
-		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(Arrays.asList(new Request("type",
-				"status", "message", Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group())),
-				new Group(),
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))),
-						Arrays.asList()))))).thenReturn(requestDtos);
+		when(requestServiceImplUnderTest.requestRepository.filterRequestOfOrgAdmin(orgId,status))
+				.thenReturn(requests);
+		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(requests)).thenReturn(requestDtos);
+
 
 		// Run the test
-		final List<RequestDto> result = requestServiceImplUnderTest.filterRequestOrgAdmin(0L, "status");
+		final List<RequestDto> result = requestServiceImplUnderTest.filterRequestOrgAdmin(orgId, status);
 
 		// Verify the results
+		assertEquals(requestDtos.get(0).getId(), result.get(0).getId());
 	}
 
 	@Test
-	void testFilterRequestOrgAdmin_RequestRepositoryReturnsNoItems() {
+	void testFilterRequestOrgAdmin_UTCID02() {
 		// Setup
+		List<RequestDto> requestDtos = new ArrayList<RequestDto>();
+		RequestDto reqDto1 = new RequestDto();
+		reqDto1.setId(1L);
+		requestDtos.add(reqDto1);
+		requestDtos.add(reqDto1);
+		
+		List<Request> requests = new ArrayList<Request>();
+		Request req1 = new Request();
+		req1.setId(1L);
+		Group group1 = new Group();
+		group1.setId(3L);
+		group1.setName("Admin");
+		req1.setGroup(group1);
+		
+		Long orgId = 2L;
+		String status = "active";
+		
 		when(requestServiceImplUnderTest.requestRepository.filterRequestOfOrgAdmin(0L, "status"))
 				.thenReturn(Collections.emptyList());
-
-		// Configure MapStructMapper.lstRequestToRequestDto(...).
-		final PermissionDto permissionDto = new PermissionDto();
-		permissionDto.setCode("code");
-		permissionDto.setId(0L);
-		permissionDto.setTo("to");
-		permissionDto.setIcon("icon");
-		permissionDto.setChildren(Arrays.asList(new PermissionChildrenDto("name", "to", "icon")));
-		permissionDto.setName("name");
-		final PermissionDto permissionDto1 = new PermissionDto();
-		permissionDto1.setCode("code");
-		permissionDto1.setId(0L);
-		permissionDto1.setTo("to");
-		permissionDto1.setIcon("icon");
-		permissionDto1.setChildren(Arrays.asList(new PermissionChildrenDto("name", "to", "icon")));
-		permissionDto1.setName("name");
-		final List<RequestDto> requestDtos = Arrays.asList(new RequestDto(0L, "type", "status", "message",
-				new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime(),
-				new UserDto(0L, "username", "phone", "password", "full_name", "dob",
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false,
-						new AddressDto(new CityDto(0L, "code", "name"),
-								new DistrictDto(
-										0L, "code", "name", new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-								new SubDistrictDto(0L, "code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList(new SubDistrict("code", "name", null,
-														Arrays.asList(new Address("city", "province", "district", null,
-																"addressLine", "gPS_Long", "gPS_Lati"))))),
-										Arrays.asList()),
-								"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-						new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-								new AddressDto(new CityDto(0L, "code", "name"), new DistrictDto(0L, "code", "name",
-										new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-										new SubDistrictDto(0L, "code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList(new SubDistrict("code", "name", null,
-																Arrays.asList()))),
-												Arrays.asList()),
-										"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-								Arrays.asList()),
-						Arrays.asList(new GroupDto(0L, "name", 0, Arrays.asList(permissionDto), Arrays.asList(),
-								Arrays.asList())),
-						Arrays.asList()),
-				new GroupDto(0L, "name", 0, Arrays.asList(permissionDto1), Arrays.asList(new UserDto(0L, "username",
-						"phone", "password", "full_name", "dob", Date.valueOf(LocalDate.of(2020, 1, 1)), false,
-						new AddressDto(new CityDto(0L, "code", "name"),
-								new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-										Arrays.asList(new SubDistrict("code", "name",
-												new District("code", "name", null, Arrays.asList()), Arrays.asList()))),
-								new SubDistrictDto(0L, "code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList()))),
-										Arrays.asList()),
-								"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-						new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-								new AddressDto(new CityDto(0L, "code", "name"),
-										new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-												Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList()))),
-										new SubDistrictDto(0L, "code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine1", "addressLine2", "gPS_long", "gPS_lati"),
-								Arrays.asList()),
-						Arrays.asList(), Arrays.asList())), Arrays.asList()),
-				new OrganizationDto(0L, "name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description", new AddressDto(
-						new CityDto(0L, "code", "name"),
-						new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"),
-								Arrays.asList(new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList(new Address("city", "province", "district", null, "addressLine",
-												"gPS_Long", "gPS_Lati"))))),
-						new SubDistrictDto(0L, "code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList(new SubDistrict("code", "name", null,
-												Arrays.asList(new Address("city", "province", "district", null,
-														"addressLine", "gPS_Long", "gPS_Lati"))))),
-								Arrays.asList()),
-						"addressLine1", "addressLine2", "gPS_long", "gPS_lati"), Arrays.asList())));
-		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(Arrays.asList(new Request("type",
-				"status", "message", Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group())),
-				new Group(),
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))),
-						Arrays.asList()))))).thenReturn(requestDtos);
-
+		
+		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(requests)).thenReturn(Collections.emptyList());
+		
 		// Run the test
-		final List<RequestDto> result = requestServiceImplUnderTest.filterRequestOrgAdmin(0L, "status");
+		final List<RequestDto> result = requestServiceImplUnderTest.filterRequestOrgAdmin(orgId, status);
 
 		// Verify the results
 		assertEquals(Collections.emptyList(), result);
 	}
 
 	@Test
-	void testFilterRequestOrgAdmin_MapStructMapperReturnsNoItems() {
-		// Setup
-		// Configure RequestRepository.filterRequestOfOrgAdmin(...).
-		final Group group = new Group();
-		group.setPlatform(0);
-		group.setName("name");
-		group.setLevel(0);
-		group.setCode("code");
-		final Permission permission = new Permission();
-		permission.setLevel(0);
-		permission.setNode_index(0);
-		permission.setNode_from(0);
-		permission.setNode_to(0);
-		permission.setTo_page("to_page");
-		permission.setIcon_name("icon_name");
-		permission.setCode("code");
-		permission.setName("name");
-		group.setGroup_permission(Arrays.asList(permission));
-		group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final Group group1 = new Group();
-		group1.setPlatform(0);
-		group1.setName("name");
-		group1.setLevel(0);
-		group1.setCode("code");
-		final Permission permission1 = new Permission();
-		permission1.setLevel(0);
-		permission1.setNode_index(0);
-		permission1.setNode_from(0);
-		permission1.setNode_to(0);
-		permission1.setTo_page("to_page");
-		permission1.setIcon_name("icon_name");
-		permission1.setCode("code");
-		permission1.setName("name");
-		group1.setGroup_permission(Arrays.asList(permission1));
-		group1.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final Group group2 = new Group();
-		group2.setPlatform(0);
-		group2.setName("name");
-		group2.setLevel(0);
-		group2.setCode("code");
-		final Permission permission2 = new Permission();
-		permission2.setLevel(0);
-		permission2.setNode_index(0);
-		permission2.setNode_from(0);
-		permission2.setNode_to(0);
-		permission2.setTo_page("to_page");
-		permission2.setIcon_name("icon_name");
-		permission2.setCode("code");
-		permission2.setName("name");
-		group2.setGroup_permission(Arrays.asList(permission2));
-		group2.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-				new Address("city", "province", "district",
-						new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()),
-						"addressLine", "gPS_Long", "gPS_Lati"),
-				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final List<Request> requests = Arrays.asList(new Request("type", "status", "message",
-				Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)),
-				group1,
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group2))),
-						Arrays.asList())));
-		when(requestServiceImplUnderTest.requestRepository.filterRequestOfOrgAdmin(0L, "status")).thenReturn(requests);
-
-		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(Arrays.asList(new Request("type",
-				"status", "message", Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
-				new User("username", "phone", "password", "full_name", "dob",
-						new Address("city", "province", "district",
-								new SubDistrict("code", "name",
-										new District("code", "name", new City("code", "name", Arrays.asList()),
-												Arrays.asList()),
-										Arrays.asList()),
-								"addressLine", "gPS_Long", "gPS_Lati"),
-						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group())),
-				new Group(),
-				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
-						new Address("city", "province", "district", new SubDistrict("code", "name",
-								new District("code", "name", new City("code", "name", Arrays.asList()),
-										Arrays.asList()),
-								Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"),
-						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
-								new Address("city", "province", "district",
-										new SubDistrict("code", "name",
-												new District("code", "name", new City("code", "name", Arrays.asList()),
-														Arrays.asList()),
-												Arrays.asList()),
-										"addressLine", "gPS_Long", "gPS_Lati"),
-								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))),
-						Arrays.asList()))))).thenReturn(Collections.emptyList());
-
-		// Run the test
-		final List<RequestDto> result = requestServiceImplUnderTest.filterRequestOrgAdmin(0L, "status");
-
-		// Verify the results
-		assertEquals(Collections.emptyList(), result);
-	}
-
-	@Test
-	void testHandleRequest() {
+	void testHandleRequest_UTCID01() {
 		// Setup
 		final Group group = new Group();
 		group.setPlatform(0);
@@ -951,7 +305,7 @@ class RequestServiceImplTest {
 								Arrays.asList()),
 						"addressLine", "gPS_Long", "gPS_Lati"),
 				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
-		final Request request = new Request("type", "status", "message",
+		final Request request = new Request("type", "accept", "message",
 				Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
 				new User("username", "phone", "password", "full_name", "dob",
 						new Address("city", "province", "district",
@@ -978,29 +332,438 @@ class RequestServiceImplTest {
 										"addressLine", "gPS_Long", "gPS_Lati"),
 								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group2))),
 						Arrays.asList()));
-
+		Optional<Request> reqOtp = Optional.of(request);
+		//Input data
+		//Long reqId = 1L;
+		
+		when(requestServiceImplUnderTest.requestRepository.findById(request.getId())).thenReturn(reqOtp);
+		when(requestServiceImplUnderTest.requestRepository.save(request)).thenReturn(request);
+		
 		// Run the test
 		final Request result = requestServiceImplUnderTest.handleRequest(request);
 
 		// Verify the results
+		assertEquals(request.getStatus(), result.getStatus());
+		assertTrue(result.getUser().getIsActive());
+		assertEquals(Constants.USER_STATUS_ACTIVE,result.getUser().getStatus());
+		
+	}
+	
+	@Test
+	void testHandleRequest_UTCID02() {
+		// Setup
+		final Group group = new Group();
+		group.setPlatform(0);
+		group.setName("name");
+		group.setLevel(0);
+		group.setCode("code");
+		final Permission permission = new Permission();
+		permission.setLevel(0);
+		permission.setNode_index(0);
+		permission.setNode_from(0);
+		permission.setNode_to(0);
+		permission.setTo_page("to_page");
+		permission.setIcon_name("icon_name");
+		permission.setCode("code");
+		permission.setName("name");
+		group.setGroup_permission(Arrays.asList(permission));
+		group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Group group1 = new Group();
+		group1.setPlatform(0);
+		group1.setName("name");
+		group1.setLevel(0);
+		group1.setCode("code");
+		final Permission permission1 = new Permission();
+		permission1.setLevel(0);
+		permission1.setNode_index(0);
+		permission1.setNode_from(0);
+		permission1.setNode_to(0);
+		permission1.setTo_page("to_page");
+		permission1.setIcon_name("icon_name");
+		permission1.setCode("code");
+		permission1.setName("name");
+		group1.setGroup_permission(Arrays.asList(permission1));
+		group1.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Group group2 = new Group();
+		group2.setPlatform(0);
+		group2.setName("name");
+		group2.setLevel(0);
+		group2.setCode("code");
+		final Permission permission2 = new Permission();
+		permission2.setLevel(0);
+		permission2.setNode_index(0);
+		permission2.setNode_from(0);
+		permission2.setNode_to(0);
+		permission2.setTo_page("to_page");
+		permission2.setIcon_name("icon_name");
+		permission2.setCode("code");
+		permission2.setName("name");
+		group2.setGroup_permission(Arrays.asList(permission2));
+		group2.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Request request = new Request("type", "reject", "message",
+				Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
+				new User("username", "phone", "password", "full_name", "dob",
+						new Address("city", "province", "district",
+								new SubDistrict("code", "name",
+										new District("code", "name", new City("code", "name", Arrays.asList()),
+												Arrays.asList()),
+										Arrays.asList()),
+								"addressLine", "gPS_Long", "gPS_Lati"),
+						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)),
+				group1,
+				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
+						new Address("city", "province", "district",
+								new SubDistrict("code", "name",
+										new District("code", "name", new City("code", "name", Arrays.asList()),
+												Arrays.asList()),
+										Arrays.asList()),
+								"addressLine", "gPS_Long", "gPS_Lati"),
+						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+								new Address("city", "province", "district",
+										new SubDistrict("code", "name",
+												new District("code", "name", new City("code", "name", Arrays.asList()),
+														Arrays.asList()),
+												Arrays.asList()),
+										"addressLine", "gPS_Long", "gPS_Lati"),
+								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group2))),
+						Arrays.asList()));
+		Optional<Request> reqOtp = Optional.of(request);
+		//Input data
+		//Long reqId = 1L;
+		
+		when(requestServiceImplUnderTest.requestRepository.findById(request.getId())).thenReturn(reqOtp);
+		when(requestServiceImplUnderTest.requestRepository.save(request)).thenReturn(request);
+		
+		// Run the test
+		final Request result = requestServiceImplUnderTest.handleRequest(request);
+
+		// Verify the results
+		assertEquals(request.getStatus(), result.getStatus());
+		assertFalse(result.getUser().getIsActive());
+		assertEquals(Constants.USER_STATUS_REJECT,result.getUser().getStatus());
+		
+	}
+	
+	@Test
+	void testHandleRequest_UTCID03() {
+		// Setup
+		Request req = new Request();
+		req.setId(1L);
+		req.setMessage("Send Notification");
+		
+		when(requestServiceImplUnderTest.requestRepository.findById(any())).thenReturn(Optional.empty());
+		
+		
+		AppException appException = assertThrows(AppException.class, () -> {
+			// Run the test
+			final Request result = requestServiceImplUnderTest.handleRequest(req);
+	    });
+		
+		final String expectedMessage = "Request not exist!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Verify the results
+	    assertEquals(expectedMessage,actualMessage);
 	}
 
 	@Test
-	void testAcceptRequest() {
+	void testAcceptRequest_UTCID01() {
 		// Setup
+		final Group group = new Group();
+		group.setPlatform(0);
+		group.setName("name");
+		group.setLevel(0);
+		group.setCode("code");
+		final Permission permission = new Permission();
+		permission.setLevel(0);
+		permission.setNode_index(0);
+		permission.setNode_from(0);
+		permission.setNode_to(0);
+		permission.setTo_page("to_page");
+		permission.setIcon_name("icon_name");
+		permission.setCode("code");
+		permission.setName("name");
+		group.setGroup_permission(Arrays.asList(permission));
+		group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Group group1 = new Group();
+		group1.setPlatform(0);
+		group1.setName("name");
+		group1.setLevel(0);
+		group1.setCode("code");
+		final Permission permission1 = new Permission();
+		permission1.setLevel(0);
+		permission1.setNode_index(0);
+		permission1.setNode_from(0);
+		permission1.setNode_to(0);
+		permission1.setTo_page("to_page");
+		permission1.setIcon_name("icon_name");
+		permission1.setCode("code");
+		permission1.setName("name");
+		group1.setGroup_permission(Arrays.asList(permission1));
+		group1.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Group group2 = new Group();
+		group2.setPlatform(0);
+		group2.setName("name");
+		group2.setLevel(0);
+		group2.setCode("code");
+		final Permission permission2 = new Permission();
+		permission2.setLevel(0);
+		permission2.setNode_index(0);
+		permission2.setNode_from(0);
+		permission2.setNode_to(0);
+		permission2.setTo_page("to_page");
+		permission2.setIcon_name("icon_name");
+		permission2.setCode("code");
+		permission2.setName("name");
+		group2.setGroup_permission(Arrays.asList(permission2));
+		group2.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Request request = new Request("type", "reject", "message",
+				Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
+				new User("username", "phone", "password", "full_name", "dob",
+						new Address("city", "province", "district",
+								new SubDistrict("code", "name",
+										new District("code", "name", new City("code", "name", Arrays.asList()),
+												Arrays.asList()),
+										Arrays.asList()),
+								"addressLine", "gPS_Long", "gPS_Lati"),
+						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)),
+				group1,
+				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
+						new Address("city", "province", "district",
+								new SubDistrict("code", "name",
+										new District("code", "name", new City("code", "name", Arrays.asList()),
+												Arrays.asList()),
+										Arrays.asList()),
+								"addressLine", "gPS_Long", "gPS_Lati"),
+						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+								new Address("city", "province", "district",
+										new SubDistrict("code", "name",
+												new District("code", "name", new City("code", "name", Arrays.asList()),
+														Arrays.asList()),
+												Arrays.asList()),
+										"addressLine", "gPS_Long", "gPS_Lati"),
+								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group2))),
+						Arrays.asList()));
+		Optional<Request> reqOtp = Optional.of(request);
+		when(requestServiceImplUnderTest.requestRepository.findById(request.getId())).thenReturn(reqOtp);
+		when(requestServiceImplUnderTest.requestRepository.save(request)).thenReturn(request);
+		
+		Long uid = 2L;
 		// Run the test
-		requestServiceImplUnderTest.acceptRequest(Arrays.asList(0L), 0L);
+		 requestServiceImplUnderTest.acceptRequest(Arrays.asList(0L), uid);
 
 		// Verify the results
+		assertTrue(true);
+		
+	}
+	
+	@Test
+	void testAcceptRequest_UTCID02() {
+		// Setup
+		when(requestServiceImplUnderTest.requestRepository.findById(any())).thenReturn(Optional.empty());
+		
+		//input
+		Long uid = 2L;
+		List<Long> lstReqId = new ArrayList<Long>();
+		lstReqId.add(3L);
+		lstReqId.add(2L);
+		
+		 AppException appException = assertThrows(AppException.class, () -> {
+			// Run the test
+			 requestServiceImplUnderTest.acceptRequest(lstReqId, uid);
+		    });
+			
+		final String expectedMessage = "request ID not exist";
+		String actualMessage = appException.getMessage();
+			
+		    // Verify the results
+		assertEquals(expectedMessage,actualMessage);
+		
 	}
 
 	@Test
-	void testRejectRequest() {
+	void testRejectRequest_UTCID01() {
 		// Setup
 		// Run the test
-		requestServiceImplUnderTest.RejectRequest(Arrays.asList(0L), 0L);
+		final Group group = new Group();
+		group.setPlatform(0);
+		group.setName("name");
+		group.setLevel(0);
+		group.setCode("code");
+		final Permission permission = new Permission();
+		permission.setLevel(0);
+		permission.setNode_index(0);
+		permission.setNode_from(0);
+		permission.setNode_to(0);
+		permission.setTo_page("to_page");
+		permission.setIcon_name("icon_name");
+		permission.setCode("code");
+		permission.setName("name");
+		group.setGroup_permission(Arrays.asList(permission));
+		group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Group group1 = new Group();
+		group1.setPlatform(0);
+		group1.setName("name");
+		group1.setLevel(0);
+		group1.setCode("code");
+		final Permission permission1 = new Permission();
+		permission1.setLevel(0);
+		permission1.setNode_index(0);
+		permission1.setNode_from(0);
+		permission1.setNode_to(0);
+		permission1.setTo_page("to_page");
+		permission1.setIcon_name("icon_name");
+		permission1.setCode("code");
+		permission1.setName("name");
+		group1.setGroup_permission(Arrays.asList(permission1));
+		group1.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Group group2 = new Group();
+		group2.setPlatform(0);
+		group2.setName("name");
+		group2.setLevel(0);
+		group2.setCode("code");
+		final Permission permission2 = new Permission();
+		permission2.setLevel(0);
+		permission2.setNode_index(0);
+		permission2.setNode_from(0);
+		permission2.setNode_to(0);
+		permission2.setTo_page("to_page");
+		permission2.setIcon_name("icon_name");
+		permission2.setCode("code");
+		permission2.setName("name");
+		group2.setGroup_permission(Arrays.asList(permission2));
+		group2.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+				new Address("city", "province", "district",
+						new SubDistrict("code", "name",
+								new District("code", "name", new City("code", "name", Arrays.asList()),
+										Arrays.asList()),
+								Arrays.asList()),
+						"addressLine", "gPS_Long", "gPS_Lati"),
+				Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+		final Request request = new Request("type", "reject", "message",
+				Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)),
+				new User("username", "phone", "password", "full_name", "dob",
+						new Address("city", "province", "district",
+								new SubDistrict("code", "name",
+										new District("code", "name", new City("code", "name", Arrays.asList()),
+												Arrays.asList()),
+										Arrays.asList()),
+								"addressLine", "gPS_Long", "gPS_Lati"),
+						Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)),
+				group1,
+				new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description",
+						new Address("city", "province", "district",
+								new SubDistrict("code", "name",
+										new District("code", "name", new City("code", "name", Arrays.asList()),
+												Arrays.asList()),
+										Arrays.asList()),
+								"addressLine", "gPS_Long", "gPS_Lati"),
+						Arrays.asList(new User("username", "phone", "password", "full_name", "dob",
+								new Address("city", "province", "district",
+										new SubDistrict("code", "name",
+												new District("code", "name", new City("code", "name", Arrays.asList()),
+														Arrays.asList()),
+												Arrays.asList()),
+										"addressLine", "gPS_Long", "gPS_Lati"),
+								Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group2))),
+						Arrays.asList()));
+		Optional<Request> reqOtp = Optional.of(request);
+		when(requestServiceImplUnderTest.requestRepository.findById(request.getId())).thenReturn(reqOtp);
+		when(requestServiceImplUnderTest.requestRepository.save(request)).thenReturn(request);
+		
+		//input
+		Long uid = 2L;
+//		List<Long> lstReqId = new ArrayList<Long>();
+//		lstReqId.add(3L);
+//		lstReqId.add(2L);
+		
+		// Run the test
+		requestServiceImplUnderTest.RejectRequest(Arrays.asList(0L), uid);
+		// Verify the results
+		assertTrue(true);
+
 
 		// Verify the results
+	}
+	
+	@Test
+	void testRejectRequest_UTCID02() {
+		// Setup
+		when(requestServiceImplUnderTest.requestRepository.findById(any())).thenReturn(Optional.empty());
+		
+		//input
+		Long uid = 2L;
+		List<Long> lstReqId = new ArrayList<Long>();
+		lstReqId.add(3L);
+		lstReqId.add(2L);
+		
+		 AppException appException = assertThrows(AppException.class, () -> {
+			// Run the test
+			 requestServiceImplUnderTest.RejectRequest(lstReqId, uid);
+		    });
+			
+		final String expectedMessage = "request ID not exist";
+		String actualMessage = appException.getMessage();
+			
+		    // Verify the results
+		assertEquals(expectedMessage,actualMessage);
+		
 	}
 
 }
