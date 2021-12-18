@@ -21,6 +21,7 @@ import com.api.dto.AddressDto;
 import com.api.dto.GroupDto;
 import com.api.dto.OrganizationDto;
 import com.api.dto.StoreDto;
+import com.api.dto.SubcribeDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.City;
@@ -42,6 +43,7 @@ import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.exception.AppException;
 import com.jwt.config.JwtTokenUtil;
+import com.ultils.Constants;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -258,7 +260,7 @@ public class UserServiceImplTest {
 			//call method
 			userServ.registerUser(u);
 	    }); 
-		String expectedMessage = "Phone is exsit!";
+		String expectedMessage = "Group is not exist!";
 	    String actualMessage = appException.getMessage();
 		
 	    // Compare
@@ -398,6 +400,762 @@ public class UserServiceImplTest {
 			userServ.registerOrganization_v2(udto);
 	    }); 
 		String expectedMessage = "Username is existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerOrganization_v2_UTCID03() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGrDto.add(gdto);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(null);
+		Mockito.when(userRepository.findByPhone(u.getPhone())).thenReturn(Optional.empty());
+		Mockito.when(groupRepository.findById(gid)).thenReturn(Optional.empty());
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerOrganization_v2(udto);
+	    }); 
+		String expectedMessage = "Group is not exist!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerUser_v2_UTCID01() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGr.add(g);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(null);
+		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.of(u));
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerUser_v2(udto);
+	    }); 
+		String expectedMessage = "Phone is exsit!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerUser_v2_UTCID02() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGr.add(g);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(u);
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerUser_v2(udto);
+	    }); 
+		String expectedMessage = "Username is existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerUser_v2_UTCID03() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGrDto.add(gdto);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(null);
+		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.empty());
+		Mockito.when(groupRepository.findById(gdto.getId())).thenReturn(Optional.empty());
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerUser_v2(udto);
+	    }); 
+		String expectedMessage = "Group is not exist!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerOrganizationUser_v2_UTCID01() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGr.add(g);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(null);
+		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.of(u));
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerOrganizationUser_v2(udto, u);
+	    }); 
+		String expectedMessage = "Phone is exsit!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerOrganizationUser_v2_UTCID02() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGr.add(g);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(u);
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerOrganizationUser_v2(udto, u);
+	    }); 
+		String expectedMessage = "Username is existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerOrganizationUser_v2_UTCID03() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		Organization org = new Organization();
+		org.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		u.setOrganization(org);
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGr.add(g);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername("duongpt")).thenReturn(null);
+		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.empty());
+		Mockito.when(organizationRepository.findById(org.getId())).thenReturn(Optional.empty());
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerOrganizationUser_v2(udto, u);
+	    }); 
+		String expectedMessage = "organization is not exist!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerStoreUser_v2_UTCID01() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGr.add(g);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(null);
+		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.of(u));
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerStoreUser_v2(udto);
+	    }); 
+		String expectedMessage = "Phone is exsit!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerStoreUser_v2_UTCID02() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGr.add(g);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(u);
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerStoreUser_v2(udto);
+	    }); 
+		String expectedMessage = "Username is existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void registerStoreUser_v2_UTCID03() {
+		
+		// Set data test
+		long gid = 1;
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		Organization org = new Organization();
+		org.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		u.setOrganization(org);
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		gdto.setLevel(1);
+		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
+		lstGrDto.add(gdto);
+		UserDto udto = new UserDto();
+		udto.setUsername("check");
+		udto.setPhone("0912572299");
+		udto.setUsername("duongpt");
+		udto.setGroups_user(lstGrDto);
+		// Mock
+		Mockito.when(userRepository.findByUsername("duongpt")).thenReturn(null);
+		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.empty());
+		Mockito.when(organizationRepository.findById(org.getId())).thenReturn(Optional.empty());
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.registerStoreUser_v2(udto);
+	    }); 
+		String expectedMessage = "Group is not exist!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void getUsernameByPhone_UTCID01() {
+		
+		// Set data test
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		Organization org = new Organization();
+		org.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		u.setOrganization(org);
+		u.setGroups_user(lstGr);
+		String phone ="+84966048002";
+		// Mock
+		Mockito.when(userRepository.findByPhone("0966048002")).thenReturn(Optional.of(u));
+		
+		// Call method
+		String scheck = userServ.getUsernameByPhone(phone);
+		
+	    // Compare
+	    assertEquals("duongpt",scheck);
+	}
+	
+	@Test
+	public void getUsernameByPhone_UTCID02() {
+		
+		// Set data test
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		Organization org = new Organization();
+		org.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		u.setOrganization(org);
+		u.setGroups_user(lstGr);
+		String phone ="+84966048002";
+		// Mock
+		Mockito.when(userRepository.findByPhone(phone)).thenReturn(Optional.empty());
+
+	    // Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.getUsernameByPhone(phone);
+	    }); 
+		String expectedMessage = "Phone number not Found";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void getUserByPhone_UTCID01() {
+		
+		// Set data test
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		Organization org = new Organization();
+		org.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		u.setOrganization(org);
+		u.setGroups_user(lstGr);
+		String phone ="+84966048002";
+		// Mock
+		Mockito.when(userRepository.findByPhone("0966048002")).thenReturn(Optional.of(u));
+		
+		// Call method
+		User ucheck = userServ.getUserByPhone(phone);
+		
+	    // Compare
+	    assertEquals(1,ucheck.getId());
+	}
+	
+	@Test
+	public void getUserByPhone_UTCID02() {
+		
+		// Set data test
+		Group g = new Group();
+		g.setId(1);
+		g.setLevel(1);
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		Organization org = new Organization();
+		org.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setGroups_user(lstGr);
+		u.setPhone("0912572299");
+		u.setOrganization(org);
+		u.setGroups_user(lstGr);
+		String phone ="+84966048002";
+		// Mock
+		Mockito.when(userRepository.findByPhone(phone)).thenReturn(Optional.empty());
+
+	    // Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.getUserByPhone(phone);
+	    }); 
+		String expectedMessage = "Số điện thoại không tồn tại trong hệ thống";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void subcribeStore_UTCID01() {
+		
+		// Set data test
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(u);
+		Mockito.when(storeRepo.getById(sdto.getStore_id())).thenReturn(str);
+		Mockito.when(userRepository.save(u)).thenReturn(u);
+		
+		// Call method
+		SubcribeDto scheck = userServ.subcribeStore(sdto);
+		
+	    // Compare
+	    assertEquals(1,scheck.getStore_id());
+	}
+	
+	@Test
+	public void subcribeStore_UTCID02() {
+		
+		// Set data test
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(u);
+		Mockito.when(storeRepo.getById(sdto.getStore_id())).thenReturn(null);
+
+	    // Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.subcribeStore(sdto);
+	    }); 
+		String expectedMessage = "Store is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void subcribeStore_UTCID03() {
+		
+		// Set data test
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(null);
+
+	    // Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.subcribeStore(sdto);
+	    }); 
+		String expectedMessage = "User is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void unSubcribeStore_UTCID01() {
+		
+		// Set data test
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(u);
+		Mockito.when(storeRepo.getById(sdto.getStore_id())).thenReturn(str);
+		Mockito.when(userRepository.save(u)).thenReturn(u);
+		
+		// Call method
+		SubcribeDto scheck = userServ.subcribeStore(sdto);
+		
+	    // Compare
+	    assertEquals(1,scheck.getStore_id());
+	}
+	
+	@Test
+	public void unSubcribeStore_UTCID02() {
+		
+		// Set data test
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(u);
+		Mockito.when(storeRepo.getById(sdto.getStore_id())).thenReturn(null);
+
+	    // Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.subcribeStore(sdto);
+	    }); 
+		String expectedMessage = "Store is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void unSubcribeStore_UTCID03() {
+		
+		// Set data test
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(null);
+
+	    // Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.subcribeStore(sdto);
+	    }); 
+		String expectedMessage = "User is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void getListSubcribe_UTCID01() {
+		
+		// Set data test
+		Long id = (long) 1;
+		StoreDto ssdto = new StoreDto();
+		ssdto.setId(1);
+		List<StoreDto> lstsdto = new ArrayList<StoreDto>();
+		lstsdto.add(ssdto);
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(u);
+		Mockito.when(mapStructMapper.lstStoreToStoreDto(u.getUser_store())).thenReturn(lstsdto);
+		
+		// Call method
+		
+		SubcribeDto scheck = userServ.getListSubcribe(id);
+		
+	    // Compare
+	    assertEquals(1,scheck.getStoreSubcribe().get(0).getId());
+	}
+	
+	@Test
+	public void getListSubcribe_UTCID02() {
+		
+		// Set data test
+		Long id = (long) 1;
+		Store str = new Store();
+		str.setId(1);
+		User u = new User();
+		u.setId(1);
+		u.setUsername("duongpt");
+		u.setUser_store(new ArrayList<Store>());
+		SubcribeDto sdto = new SubcribeDto();
+		sdto.setStore_id((long) 1);
+		sdto.setUser_id((long) 1);
+		// Mock
+		Mockito.when(userRepository.getById(sdto.getUser_id())).thenReturn(null);
+
+	    // Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			userServ.getListSubcribe(id);
+	    }); 
+		String expectedMessage = "User is not existed!";
 	    String actualMessage = appException.getMessage();
 		
 	    // Compare

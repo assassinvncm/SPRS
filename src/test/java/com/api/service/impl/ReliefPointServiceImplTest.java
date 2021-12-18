@@ -363,7 +363,7 @@ class ReliefPointServiceImplTest {
 	@Test
 	void testUpdateStatusReliefPoint_UTCID02() {
 		Long r_id = new Long(1);
-		Boolean status = true;
+		int status = 1;
 		ReliefPoint rp = new ReliefPoint();
 		Optional<ReliefPoint> reliefPoint = Optional.empty();
 		Mockito.<Optional<ReliefPoint>>when(reliefPointRepository.findById(r_id)).thenReturn(reliefPoint);

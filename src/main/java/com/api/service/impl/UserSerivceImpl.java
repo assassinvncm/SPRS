@@ -387,7 +387,8 @@ public class UserSerivceImpl implements UserService {
 		req.setStatus(Constants.REQUEST_STATUS_UNCHECK);
 		req.setTimestamp(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		// đang hardcode (nên xem, check quyền tạo)
-		if (u.getGroups_user().get(0).getId() == 3) {
+		Group gOrg = groupRepository.findByCode(Constants.ORG_ADMIN_PER_CODE);
+		if (u.getGroups_user().get(0).getId() == gOrg.getId()) {
 			req.setOrganization(u.getOrganization());
 		} else {
 			Group g = groupRepository.findByCode(Constants.SYSTEM_ADMIN_PER_CODE);
@@ -422,11 +423,12 @@ public class UserSerivceImpl implements UserService {
 			Optional<User> u = userRepository.findByPhone(phone);
 			if(!u.isEmpty()) {
 				return u.get().getUsername();
+			}else {
+				throw new AppException(404, "Phone number not Found");
 			}
 		}else {
-			throw new AppException(404, "Phone number not Found");
+			throw new AppException(404, "Phone number is undefined");
 		}
-		return null;
 	}
 
 	@Override
@@ -544,6 +546,9 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "User is not existed!");
 		}
 		Store store = storeRepo.getById(s.getStore_id());
+		if(store==null) {
+			throw new AppException(403, "Store is not existed!");
+		}
 		u.getUser_store().add(store);
 		userRepository.save(u);
 		return s;
@@ -556,6 +561,9 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "User is not existed!");
 		}
 		Store store = storeRepo.getById(s.getStore_id());
+		if(store==null) {
+			throw new AppException(403, "Store is not existed!");
+		}
 		u.getUser_store().remove(store);
 		userRepository.save(u);
 		return s;
