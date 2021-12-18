@@ -125,7 +125,7 @@ public class UserSerivceImpl implements UserService {
 				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
 		logger.info("End get User");
 		
-		//mapper
+		// Mapper
 		UserDto userDto= mapStructMapper.userToUserDto(user);
 		userDto.setGroups_user(mapStructMapper.lstGroupToGroupDto(user.getGroups_user()));
 		userDto.setAddress(mapStructMapper.addressToAddressDto(user.getAddress()));
