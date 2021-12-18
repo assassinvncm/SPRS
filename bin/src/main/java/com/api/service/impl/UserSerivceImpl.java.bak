@@ -1,6 +1,13 @@
 package com.api.service.impl;
 
+<<<<<<< HEAD
 import java.util.List;
+=======
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+>>>>>>> origin/develop
 import java.util.Optional;
 import java.util.Random;
 
@@ -18,12 +25,22 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.controller.UserController;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.GroupDto;
+<<<<<<< HEAD
 import com.api.dto.SPRSResponse;
+=======
+import com.api.dto.ImageDto;
+import com.api.dto.SPRSResponse;
+import com.api.dto.SearchFilterDto;
+>>>>>>> origin/develop
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
+<<<<<<< HEAD
+=======
+import com.api.entity.Image;
+>>>>>>> origin/develop
 import com.api.entity.Organization;
 import com.api.entity.Request;
 import com.api.entity.SOS;
@@ -36,6 +53,7 @@ import com.api.repositories.RequestRepository;
 import com.api.repositories.StoreRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+<<<<<<< HEAD
 import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.exception.AppException;
@@ -43,6 +61,21 @@ import com.exception.ProcException;
 import com.jwt.config.JwtTokenUtil;
 import com.ultils.Constants;
 import com.ultils.Ultilities;
+=======
+import com.api.service.AmazonClient;
+import com.api.service.SOSService;
+import com.api.service.UserService;
+import com.common.utils.DateUtils;
+import com.exception.AppException;
+import com.exception.ProcException;
+import com.jwt.config.JwtTokenUtil;
+import org.springframework.data.domain.Sort;
+import com.ultils.Constants;
+import com.ultils.Ultilities;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+>>>>>>> origin/develop
 
 @Service
 public class UserSerivceImpl implements UserService {
@@ -81,6 +114,12 @@ public class UserSerivceImpl implements UserService {
 	
 	@Autowired
 	SOSService sosServ;
+<<<<<<< HEAD
+=======
+	
+	@Autowired
+	private AmazonClient amazonClient;
+>>>>>>> origin/develop
 
 	@Override
 	public List<User> getAllUser() {
@@ -117,6 +156,22 @@ public class UserSerivceImpl implements UserService {
 		//userDto.setRequest();
 		return userDto;
 	}
+<<<<<<< HEAD
+=======
+
+	@Override
+	public User getNativeUserbyToken(String requestTokenHeader) {
+		// TODO Auto-generated method stub
+		logger.info("Start get User");
+
+		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
+		
+		User user = Optional.ofNullable(userRepository.findByUsername(username))
+				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
+		logger.info("End get User");
+		return user;
+	}
+>>>>>>> origin/develop
 	
 	@Override
 	public User getUserbyTokenAuth(String requestTokenHeader) {
@@ -193,6 +248,10 @@ public class UserSerivceImpl implements UserService {
 		Address address = addressService.mapAddress(userDto.getAddress());
 		user.setAddress(address);
 		user.setIsActive(true);
+<<<<<<< HEAD
+=======
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
+>>>>>>> origin/develop
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setUser_sos(new SOS(1, address));
@@ -227,11 +286,21 @@ public class UserSerivceImpl implements UserService {
 		Address addressOrg = addressService.mapAddress(userDto.getOrganization().getAddress());
 		user.setAddress(address);
 		user.getOrganization().setAddress(addressOrg);
+<<<<<<< HEAD
 		user.setIsActive(false);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to register", null, user);
+=======
+		user.getOrganization().setCreate_time(DateUtils.getCurrentSqlDate());
+		//user.setIsActive(false);
+		user.setStatus(Constants.USER_STATUS_UNACTIVE);
+//		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		// user.setGroups_user(lstTem);G
+		Request req = createRequestRegister("Request to register", null, user);
+>>>>>>> origin/develop
 
 		userRepository.save(user);
 		logger.info("End save Organization");
@@ -243,7 +312,11 @@ public class UserSerivceImpl implements UserService {
 
 	@Transactional
 	@Override
+<<<<<<< HEAD
 	public void registerOrganizationUser_v2(UserDto userDto) {
+=======
+	public void registerOrganizationUser_v2(UserDto userDto, User admin) {
+>>>>>>> origin/develop
 		logger.info("Start save Organizational User");
 		User u = userRepository.findByUsername(userDto.getUsername());
 		if (u != null) {
@@ -253,6 +326,7 @@ public class UserSerivceImpl implements UserService {
 		if (userRepository.findByPhone(userDto.getPhone()).isPresent()) {
 			throw new AppException(403, "Phone is exsit!");
 		}
+<<<<<<< HEAD
 		List<GroupDto> lstTem = userDto.getGroups_user();
 		for (GroupDto groupDto : lstTem) {
 			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
@@ -262,11 +336,23 @@ public class UserSerivceImpl implements UserService {
 		}
 
 		Organization organization = organizationRepository.findById(userDto.getOrganization().getId())
+=======
+//		List<GroupDto> lstTem = userDto.getGroups_user();
+//		for (GroupDto groupDto : lstTem) {
+//			Optional<Group> grTemp = groupRepository.findById(groupDto.getId());
+//			if (grTemp.isEmpty()) {
+//				throw new AppException(403, "Group is not exist!");
+//			}
+//		}
+
+		Organization organization = organizationRepository.findById(admin.getOrganization().getId())
+>>>>>>> origin/develop
 				.orElseThrow(() -> new AppException(403, "organization is not exist!"));
 		// chưa check admin organization phải tồn tại
 
 		User user = modelMapper.map(userDto, User.class);
 		Address address = addressService.mapAddress(userDto.getAddress());
+<<<<<<< HEAD
 		Address addressOrg = addressService.mapAddress(userDto.getOrganization().getAddress());
 		user.setAddress(address);
 		user.getOrganization().setAddress(addressOrg);
@@ -281,6 +367,28 @@ public class UserSerivceImpl implements UserService {
 		Request req = createRequestRegister("request to register", null, user);
 		requestRepository.save(req);
 		logger.info("End save Request");
+=======
+		Address addressOrg = addressService.mapAddress(mapStructMapper.addressToAddressDto(address));
+		user.setAddress(address);
+//		user.getOrganization().setAddress(addressOrg);
+		user.setOrganization(organization);
+
+		user.setIsActive(true);
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
+		user.setCreate_time(DateUtils.getCurrentSqlDate());
+		//user.create_by(null);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		Group g = groupRepository.findByCode(Constants.ORG_USER_PER_CODE);
+		List<Group> user_gr = new ArrayList<Group>();
+		user_gr.add(g);
+		user.setGroups_user(user_gr);
+		userRepository.save(user);
+		logger.info("End save Organization user");
+//		logger.info("Start save request");
+//		Request req = createRequestRegister("request to register", null, user);
+//		requestRepository.save(req);
+//		logger.info("End save Request");
+>>>>>>> origin/develop
 		// return user;
 	}
 
@@ -309,13 +417,21 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(address);
 
 		user.setIsActive(false);
+<<<<<<< HEAD
+=======
+		user.setStatus(Constants.USER_STATUS_UNACTIVE);
+>>>>>>> origin/develop
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to create store", "Create Store", user);
+<<<<<<< HEAD
 
 		userRepository.save(user);
 		logger.info("End save Organization");
+=======
+		userRepository.save(user);
+>>>>>>> origin/develop
 		logger.info("Start save Request");
 		requestRepository.save(req);
 		logger.info("End save Request");
@@ -342,9 +458,15 @@ public class UserSerivceImpl implements UserService {
 		if (u.getGroups_user().get(0).getId() == 3) {
 			req.setOrganization(u.getOrganization());
 		} else {
+<<<<<<< HEAD
 			Group g = new Group();
 			// sai set id. ID phải là id của admin
 			g.setId(10);
+=======
+			Group g = groupRepository.findByCode(Constants.SYSTEM_ADMIN_PER_CODE);
+			// sai set id. ID phải là id của admin
+//			g.setId(10);
+>>>>>>> origin/develop
 			req.setGroup(g);
 		}
 
@@ -391,6 +513,7 @@ public class UserSerivceImpl implements UserService {
 		if(encNewPass.equals(userDto.getPassword())) {
 			throw new AppException(402,"Password must not the same old passs");
 		}
+<<<<<<< HEAD
 		
 		User user = mapStructMapper.userDtoToUser(userDto);
 		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
@@ -398,6 +521,15 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
 		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
 		userRepository.save(user);
+=======
+		userRepository.updateUser(userDto.getId(), encNewPass);
+//		User user = mapStructMapper.userDtoToUser(userDto);
+//		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
+//		user.setPassword(encNewPass);
+//		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
+//		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
+//		userRepository.save(user);
+>>>>>>> origin/develop
 	}
 
 	@Override
@@ -552,4 +684,87 @@ public class UserSerivceImpl implements UserService {
 		}
 		return gdto;
 	}
+<<<<<<< HEAD
+=======
+
+	@Override
+	public List<User> getUsernameLike(String name) {
+		List<User> rs = userRepository.searchByNameLike(name);
+		return rs;
+	}
+
+	@Override
+	public Map<String, Object> getOwnOrganizeUser(UserDto u, SearchFilterDto filter) {
+		List<UserDto> lstUsrRs = new ArrayList<UserDto>();
+		Sort sortable = null;
+	    if (filter.getSort()) {
+	      sortable = Sort.by("username").descending();
+	    }else {
+		      sortable = Sort.by("username").ascending();
+	    }
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(),sortable);
+		Page<User> lstRs = userRepository.getOwnOrganizeUser(u.getOrganization().getId(), u.getId(), filter.getSearch(), pageable);
+	    lstUsrRs = mapStructMapper.lstUserToUserDto(lstRs.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("users", lstUsrRs);
+        response.put("currentPage", lstRs.getNumber());
+        response.put("totalItems", lstRs.getTotalElements());
+        response.put("totalPages", lstRs.getTotalPages());
+		return response;
+	}
+
+	@Override
+	public User unActiveOrganizeUser(Long id) {
+		User u = userRepository.getById(id);
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		u.setIsActive(false);
+		u.setStatus(Constants.USER_STATUS_UNACTIVE);
+		return userRepository.saveAndFlush(u);
+	}
+
+	@Override
+	public User uploadStoreImg(ImageDto image) {
+
+		// TODO Auto-generated method stub
+		User u = userRepository.getById(image.getId());
+		if(null == u) {
+			throw new AppException(402,"User is not Found!");
+		}
+		String img_url = amazonClient.uploadFile(image);
+		u.setImages(new Image(img_url));
+//		st.getLstImage().add(new Image(st, img_url));
+		
+		return userRepository.save(u);
+	}
+
+	@Override
+	public void banUser(Long user_id) {
+		// TODO Auto-generated method stub
+		
+		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_ACTIVE).orElseThrow(() -> new AppException(403,"Account is not exist"));
+		user.setStatus(Constants.USER_STATUS_BANNED);
+		userRepository.save(user);
+		
+	}
+	
+	@Override
+	public void unbannedUser(Long user_id) {
+		// TODO Auto-generated method stub
+		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_BANNED).orElseThrow(() -> new AppException(403,"Account is not exist"));
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
+		userRepository.save(user);
+	}
+
+	@Override
+	public List<UserDto> getBannedUser() {
+		// TODO Auto-generated method stub
+		List<User> user = userRepository.getUserByStatus(Constants.USER_STATUS_BANNED);
+		
+		return mapStructMapper.lstBanUserToBanUserDto(user);
+	}
+
+
+>>>>>>> origin/develop
 }

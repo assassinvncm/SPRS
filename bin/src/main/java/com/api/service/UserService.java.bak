@@ -1,12 +1,25 @@
 package com.api.service;
 
 import java.util.List;
+<<<<<<< HEAD
 
 import com.api.dto.AddressDto;
+=======
+import java.util.Map;
+
+import com.api.dto.AddressDto;
+import com.api.dto.GrantAccessDto;
+import com.api.dto.ImageDto;
+import com.api.dto.SearchFilterDto;
+>>>>>>> origin/develop
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
+<<<<<<< HEAD
+=======
+import com.api.entity.Store;
+>>>>>>> origin/develop
 import com.api.entity.User;
 
 public interface UserService {
@@ -33,6 +46,15 @@ public interface UserService {
 	
 	/**
 	 * 
+<<<<<<< HEAD
+=======
+	 * @return user
+	 */
+	User getNativeUserbyToken(String requestTokenHeader);
+	
+	/**
+	 * 
+>>>>>>> origin/develop
 	 * @param requestTokenHeader
 	 * @return
 	 */
@@ -65,7 +87,11 @@ public interface UserService {
 	 * @param user
 	 * @return
 	 */
+<<<<<<< HEAD
 	void registerOrganizationUser_v2(UserDto userDto);
+=======
+	void registerOrganizationUser_v2(UserDto userDto, User admin);
+>>>>>>> origin/develop
 	
 	/**
 	 * 
@@ -111,6 +137,16 @@ public interface UserService {
 	
 	/**
 	 * 
+<<<<<<< HEAD
+=======
+	 * @param name
+	 * @return List<User>
+	 */
+	List<User> getUsernameLike(String name);
+	
+	/**
+	 * 
+>>>>>>> origin/develop
 	 * @param 
 	 * @return String
 	 */
@@ -136,4 +172,78 @@ public interface UserService {
 	 * @return SubcribeDto
 	 */
 	SubcribeDto getListSubcribe(Long id);
+<<<<<<< HEAD
+=======
+	
+	/**
+	 * grant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto grantGroup(GrantAccessDto gdto);
+	
+	/**
+	 * ungrant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto unGrantGroup(GrantAccessDto gdto);
+	
+	/**
+	 * grant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto grantPermission(GrantAccessDto gdto);
+	
+	/**
+	 * grant group for user
+	 * @param GrantAccessDto
+	 * @return GrantAccessDto
+	 */
+	GrantAccessDto unGrantPermission(GrantAccessDto gdto);
+	
+	/**
+	 * 
+	 * @param name
+	 * @return List<User>
+	 */
+	Map<String, Object> getOwnOrganizeUser(UserDto u, SearchFilterDto filter);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return user
+	 */
+	User unActiveOrganizeUser(Long id);
+	
+	/**
+	 * 
+	 * @param ImageDto
+	 * @return User
+	 */
+	User uploadStoreImg(ImageDto image);
+	
+	/**
+	 * banned user
+	 * @param Long
+	 * @return User
+	 */
+	void banUser(Long user_id);
+	
+	/**
+	 * unbanned user by user id
+	 * @param Long
+	 * @return User
+	 */
+	void unbannedUser(Long user_id);
+	
+	/**
+	 * get banned user
+	 * @param ImageDto
+	 * @return User
+	 */
+	List<UserDto> getBannedUser();
+
+>>>>>>> origin/develop
 }

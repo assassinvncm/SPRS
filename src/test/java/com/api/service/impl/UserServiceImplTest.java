@@ -402,67 +402,6 @@ public class UserServiceImplTest {
 		
 	    // Compare
 	    assertEquals(expectedMessage,actualMessage);
-//	}
-//	
-//	@Test
-//	public void registerOrganization_v2_UTCID03() {
-//		
-//		// Set data test
-//		Group g = new Group();
-//		g.setId(1);
-//		g.setLevel(1);
-//		List<Group> lstGr = new ArrayList<Group>();
-//		lstGr.add(g);
-//		Organization org = new Organization();
-//		org.setId(1);
-//		User u = new User();
-//		u.setId(1);
-//		u.setGroups_user(lstGr);
-//		u.setPhone("0912572299");
-//		u.setOrganization(org);
-//		GroupDto gdto = new GroupDto();
-//		gdto.setId(15);
-//		List<GroupDto> lstGrDto = new ArrayList<GroupDto>();
-//		lstGr.add(g);
-//		AddressDto adto = new AddressDto();
-//		adto.setId(1);
-//		OrganizationDto orgDto = new OrganizationDto();
-//		orgDto.setAddress(adto);
-//		UserDto udto = new UserDto();
-//		udto.setUsername("check");
-//		udto.setPhone("0912572299");
-//		udto.setUsername("duongpt");
-//		udto.setGroups_user(lstGrDto);
-//		udto.setOrganization(orgDto);
-//		
-//		Address address = new Address();
-//		address.setId(2);
-//		City c = new City();
-//		District d = new District();
-//		d.setCity(c);
-//		SubDistrict sd = new SubDistrict();
-//		sd.setDistrict(d);
-//		address.setSubDistrict(sd);
-//		address.setAddressLine("Ha Bằng");
-//		address.setGPS_Lati("21.243124323");
-//		address.setGPS_Long("24.154353443");
-//		// Mock
-//		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(null);
-//		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.empty());
-//		Mockito.when(groupRepository.findById(gdto.getId())).thenReturn( );
-//		Mockito.when(modelMapper.map(udto, User.class)).thenReturn(u);
-//		Mockito.when(addressService.mapAddress(udto.getAddress())).thenReturn(address);
-//		Mockito.when(addressService.mapAddress(udto.getOrganization().getAddress())).thenReturn(address);
-//		// Call method
-//		AppException appException = assertThrows(AppException.class, () -> {
-//			//call method
-//			userServ.registerOrganization_v2(udto);
-//	    }); 
-//		String expectedMessage = "Group is not exist!";
-//	    String actualMessage = appException.getMessage();
-//		
-//	    // Compare
-//	    assertEquals(expectedMessage,actualMessage);
-//	}
+	}
 	
 }
