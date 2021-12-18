@@ -370,7 +370,7 @@ class ReliefPointServiceImplTest {
 		AppException appException = assertThrows(AppException.class, () -> {
 			
 			//call method
-			reliefPointService.updateStatusReliefPoint(r_id, status);
+			//reliefPointService.updateStatusReliefPoint(r_id, status);
 	    }); 
 		String expectedMessage = "ReliefPoint not exist";
 	    String actualMessage = appException.getMessage();
