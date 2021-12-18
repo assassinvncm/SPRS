@@ -3,9 +3,15 @@ package com.common.utils;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import com.exception.AppException;
 
@@ -122,6 +128,35 @@ public class DateUtils {
 
 	}
 
+	public static String getDateAgo(String formatDate, int dateAgo) {
+		java.util.Date today = new java.util.Date();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.DAY_OF_MONTH, -dateAgo);
+		java.util.Date dates = cal.getTime();
+		SimpleDateFormat f = new SimpleDateFormat(formatDate);
+		String date = f.format(dates);
+		return date;
+	}
+
+	public static String getMonthAgo(String formatDate, int monthAgo) {
+		java.util.Date today = new java.util.Date();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(today);
+		cal.add(Calendar.MONTH, -monthAgo);
+		java.util.Date dates = cal.getTime();
+		SimpleDateFormat f = new SimpleDateFormat(formatDate);
+		String date = f.format(dates);
+		return date;
+	}
+
+	public static String getCurrentDate(String formatDate) {
+		java.util.Date today = new java.util.Date();
+		SimpleDateFormat f = new SimpleDateFormat(formatDate);
+		String date = f.format(today);
+		return date;
+	}
+
 	public static String getDatehhmm(java.sql.Date sqlDate) {
 
 		String rs = null;
@@ -137,5 +172,15 @@ public class DateUtils {
 		return null;
 
 	}
+	
+	public static boolean isDatePast(final Date date, final String dateFormat) {
+		DateFormat df = new SimpleDateFormat(dateFormat);  
+		String strDate = df.format(date);  
+		LocalDate localDate = LocalDate.now(ZoneId.systemDefault());
 
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateFormat);
+		LocalDate inputDate = LocalDate.parse(strDate, dtf);
+
+		return inputDate.isBefore(localDate);
+	}
 }

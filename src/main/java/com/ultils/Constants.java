@@ -10,23 +10,29 @@ public class Constants {
 	public static final String[] NONE_AUTH = { "/utilities/**", "/swagger-ui.html", "/swagger-ui/**",
 			"/sprs/api/address/**", "/v3/**", "/sprs/api/item", "/authenticate-web", "/authenticate-mobile",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
-			"/sprs/api/forgotPassword", "/sprs/api/reliefPoint-manage/get",
+			"/sprs/api/forgotPassword", //"/sprs/api/reliefPoint-manage/get",
 			"/sprs/api/organization-manage/origanization", "/sprs/api/user", "/sprs/api/users_v2/user",
-			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user",
+			"/sprs/api/manage-map/*", "/sprs/api/users_v2/organizationlAdmin", "/sprs/api/users_V2/user","/sprs/api/users_v2/ownStore",
 			"/sprs/api/users_v2/organizationalUser", "/sprs/api/group", "/sprs/api/group/{id}", "/sprs/api/generateOtp",
-			"/sprs/api/validateOtp", "/sprs/api/store-manage/uploadImg", "/sprs/api/groups-register-mobile", "/sprs/api/groups-register-web"
-			,"/sprs/api/groups-all","/sprs/api/*/common/**"};// ,
+			"/sprs/api/validateOtp", "/sprs/api/groups-register-mobile", "/sprs/api/groups-register-web"
+			,"/sprs/api/groups-all","/sprs/api/*/common/**", "/sprs/api/generateOtp-verify", "/sprs/api/validateOtp-verify"};// ,
 	public static final String RESET_PASSWORD_MESSAGE = "Mật khẩu mới của bạn là "; // "/sprs/api/generateOtp",
 	// "/sprs/api/validateOtp"
 	// constants config otp
 	public static final String ACCOUNT_SID = "ACaef9117a42d80b9837a3d4bc0acf8fe0";
-	public static final String AUTH_TOKEN = "cdca95f70ef578d4c4eac7a382195b2c";
-	public static final String FROM_NUMBER = "+14128967877";
+	public static final String AUTH_TOKEN = "c6e87bd6445ab2f230c3d053f1174be5";
+	public static final String FROM_NUMBER = "4128967877";
 
 	// constants for request status
 	public static final String REQUEST_STATUS_ACCEPT = "accept";
 	public static final String REQUEST_STATUS_REJECT = "reject";
 	public static final String REQUEST_STATUS_UNCHECK = "uncheck";
+	//constants for user status
+	public static final String USER_STATUS_BANNED = "Banned";
+	public static final String USER_STATUS_ACTIVE = "Actived";
+	public static final String USER_STATUS_WAIT_REQUEST = "Waiting Request";
+	public static final String USER_STATUS_UNACTIVE = "un Active";
+	public static final String USER_STATUS_REJECT = "Reject";
 	// constants for request status
 	public static final String IMAGE_URL = "https://image-bucket-sprs.s3.ap-southeast-1.amazonaws.com/";
 
@@ -53,4 +59,12 @@ public class Constants {
 	public static final String ORG_ADMIN_PER_CODE = "PER_ORGADM_ACEN";
 	public static final String STORE_PER_CODE = "PER_STR_ACEN";
 	public static final String SYSTEM_ADMIN_PER_CODE = "PER_SYSADM_ACEN";
+	
+	//Constant for status store
+	public static final int STORE_STATUS_OPEN = 0;
+	public static final int STORE_STATUS_CLOSED = 1;
+	public static final int STORE_STATUS_TEM_ClOSED = 2;
+	//Constant for status SOS
+	public static final int SOS_STATUS_TURNON = 0;
+	public static final int SOS_STATUS_TURNOF = 1;
 }

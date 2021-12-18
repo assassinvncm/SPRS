@@ -33,12 +33,15 @@ public class ReliefPointDto {
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
 	private Date close_time;
 
-	private Boolean status;
+	private int status;
 
 	private UserDto user_rp;
 
 	@JsonProperty("reliefInformations")
 	private List<ReliefInformationDto> reliefInformations;
+
+	@JsonProperty("lstUser_rp")
+	private List<UserDto> lstUser_rp;
 
 	@JsonProperty("address")
 	@NotNull
@@ -63,7 +66,7 @@ public class ReliefPointDto {
 		super();
 	}
 
-	public ReliefPointDto(long id, String name, String description, Date open_time, Date close_time, Boolean status,
+	public ReliefPointDto(long id, String name, String description, Date open_time, Date close_time, int status,
 			UserDto user_rp, List<ReliefInformationDto> reliefInformations, AddressDto address) {
 		super();
 		this.id = id;
@@ -75,6 +78,20 @@ public class ReliefPointDto {
 		this.user_rp = user_rp;
 		this.reliefInformations = reliefInformations;
 		this.address = address;
+	}
+
+	/**
+	 * @return the lstUser_rp
+	 */
+	public List<UserDto> getLstUser_rp() {
+		return lstUser_rp;
+	}
+
+	/**
+	 * @param lstUser_rp the lstUser_rp to set
+	 */
+	public void setLstUser_rp(List<UserDto> lstUser_rp) {
+		this.lstUser_rp = lstUser_rp;
 	}
 
 	/**
@@ -131,11 +148,11 @@ public class ReliefPointDto {
 		this.close_time = close_time;
 	}
 
-	public Boolean getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

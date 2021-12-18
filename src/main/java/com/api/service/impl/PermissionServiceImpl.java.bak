@@ -87,7 +87,7 @@ public class PermissionServiceImpl implements PermissionService{
 			throw new AppException(403, "Group is not existed!");
 		}
 		List<Permission> lstAuthoried = g.getPermissions();
-		List<Permission> lstAll = perRepo.getAllPermissionByLevel(2);
+		List<Permission> lstAll = perRepo.findAll();
 		for (Permission permission : lstAll) {
 			int check = 1;
 			for (Permission permission2 : lstAuthoried) {
@@ -121,16 +121,7 @@ public class PermissionServiceImpl implements PermissionService{
 		if(u==null) {
 			throw new AppException(403, "User is not existed!");
 		}
-		List<Permission> listPermissions = new ArrayList<Permission>();
-		u.getGroups_user().forEach(r -> {
-			r.getPermissions() .forEach(
-				p -> {
-					if(p.getLevel()==2) {
-						listPermissions.add(p);
-					}
-				}
-			);
-		});
+		List<Permission> listPermissions = perRepo.getAllPermissionByLevel(2);
 		return listPermissions;
 	}
 

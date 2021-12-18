@@ -1,5 +1,6 @@
 package com.api.service.impl;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
 import com.api.service.AmazonClient;
+import com.api.service.NotificationService;
 import com.api.service.StoreService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
@@ -57,6 +59,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
 	private AmazonClient amazonClient;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -96,6 +101,7 @@ public class StoreServiceImpl implements StoreService{
 			Address address = addressService.mapAddress(s.getAddress());
 			store.setLocation(address);
 			store.setStatus(1); 
+			store.setCreate_time(DateUtils.getCurrentSqlDate());
 			str = storeRepository.save(store);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -132,7 +138,7 @@ public class StoreServiceImpl implements StoreService{
 		});
 
 		//BeanUtils.copyProperties(rp, reliefPoint);
-		Store storeTemp = mapStructMapper.storeDtoToStore(s);
+		//Store storeTemp = mapStructMapper.storeDtoToStore(s);
 		List<StoreCategoryDto> lstStoreDetailDto = s.getStoreDetail();
 		List<StoreCategory> lstStoreDetail = lstStoreDetailDto.stream().map(storeDetailDto -> {
 			StoreCategory storeDetail = new StoreCategory();
@@ -140,26 +146,31 @@ public class StoreServiceImpl implements StoreService{
 			storeDetail.setName(storeDetailDto.getName());
 			return storeDetail;
 		}).collect(Collectors.toList());
-		storeTemp.setStore_category(lstStoreDetail);
+		st.setStore_category(lstStoreDetail);
 		Address address = addressService.mapAddress(s.getAddress());
-		storeTemp.setLocation(address);
-		storeTemp.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
-		storeTemp.setDescription(s.getDescription());
-		storeTemp.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
-		storeTemp.setStatus(s.getStatus());
-		storeTemp.setName(s.getName());
+		st.setLocation(address);
+		st.setClose_time(DateUtils.stringToTimeHHMM(s.getClose_time()));
+		st.setDescription(s.getDescription());
+		st.setOpen_time(DateUtils.stringToTimeHHMM(s.getOpen_time()));
+		st.setStatus(s.getStatus());
+		st.setName(s.getName());
 		
-		return storeRepository.saveAndFlush(storeTemp);
+		return storeRepository.saveAndFlush(st);
 	}
 
 	@Override
 	public Store openCloseStore(StoreDto s) {
 		// TODO Auto-generated method stub
 		Store st = storeRepository.getById(s.getId());
+		Time currTime = new Time(System.currentTimeMillis());
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		st.setStatus(s.getStatus());
+		if(s.getStatus() == 0) {
+			st.setOpen_time(currTime);
+		}else if(s.getStatus() == 1) {
+			st.setClose_time(currTime);
+		}
 		
 		return storeRepository.save(st);
 	}
@@ -217,5 +228,27 @@ public class StoreServiceImpl implements StoreService{
         response.put("totalItems", pageStore.getTotalElements());
         response.put("totalPages", pageStore.getTotalPages());
 		return response;
+	}
+	
+	@Override
+	public Map<String, Object> getStoreCommon(long store_id, User user) {
+		// TODO Auto-generated method stub
+		Store st = storeRepository.getById(store_id);
+		boolean isSubcribe = false;
+		if(user != null){
+			List<User> lstU = st.getStore_user();
+			for(User u : lstU) {
+				if(user.getId() == u.getId()) {
+					isSubcribe = true;
+					break;
+				}
+			}
+		}
+		
+		StoreDto stDto =  mapStructMapper.storeToStoreDTO(st);
+		Map<String, Object> response = new HashMap<>();
+		response.put("stores", stDto);
+	    response.put("isSubcribe", isSubcribe);
+		return 	response;
 	}
 }

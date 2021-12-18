@@ -21,13 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.controller.UserController;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.GroupDto;
+import com.api.dto.ImageDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
+import com.api.dto.StoreDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Group;
+import com.api.entity.Image;
 import com.api.entity.Organization;
 import com.api.entity.Request;
 import com.api.entity.SOS;
@@ -40,6 +44,7 @@ import com.api.repositories.RequestRepository;
 import com.api.repositories.StoreRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+import com.api.service.AmazonClient;
 import com.api.service.SOSService;
 import com.api.service.UserService;
 import com.common.utils.DateUtils;
@@ -90,6 +95,9 @@ public class UserSerivceImpl implements UserService {
 	
 	@Autowired
 	SOSService sosServ;
+	
+	@Autowired
+	private AmazonClient amazonClient;
 
 	@Override
 	public List<User> getAllUser() {
@@ -123,6 +131,12 @@ public class UserSerivceImpl implements UserService {
 		userDto.setAddress(mapStructMapper.addressToAddressDto(user.getAddress()));
 		userDto.setOrganization(mapStructMapper.organizationToOrganizationDto(user.getOrganization()));
 		userDto.setPassword(user.getPassword());
+
+		userDto.setImages(user.getImages());
+//		if(user.getImages()!=null) {
+//			user.getImages().setImg_url(user.getImages().getImg_url());
+//			userDto.setImages(user.getImages());
+//		}
 		//userDto.setRequest();
 		return userDto;
 	}
@@ -130,14 +144,17 @@ public class UserSerivceImpl implements UserService {
 	@Override
 	public User getNativeUserbyToken(String requestTokenHeader) {
 		// TODO Auto-generated method stub
-		logger.info("Start get User");
+		logger.info("Start get native User");
 
 		String username = jwtTokenUtil.getUserNameByToken(requestTokenHeader);
 		
 		User user = Optional.ofNullable(userRepository.findByUsername(username))
 				.orElseThrow(() -> new AppException(501, "Error when query to get user"));
-		logger.info("End get User");
-		return user;
+		
+		User uRs = userRepository.getById(user.getId());
+		
+		logger.info("End get native User");
+		return uRs;
 	}
 	
 	@Override
@@ -215,9 +232,10 @@ public class UserSerivceImpl implements UserService {
 		Address address = addressService.mapAddress(userDto.getAddress());
 		user.setAddress(address);
 		user.setIsActive(true);
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setUser_sos(new SOS(1, address));
+		user.setUser_sos(new SOS(1, address,1));
 		userRepository.save(user);
 //		sosServ.createSOS(user);
 		logger.info("End save User");
@@ -249,11 +267,13 @@ public class UserSerivceImpl implements UserService {
 		Address addressOrg = addressService.mapAddress(userDto.getOrganization().getAddress());
 		user.setAddress(address);
 		user.getOrganization().setAddress(addressOrg);
-		user.setIsActive(false);
+		user.getOrganization().setCreate_time(DateUtils.getCurrentSqlDate());
+		//user.setIsActive(false);
+		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		// user.setGroups_user(lstTem);G
-		Request req = createRequestRegister("request to register", null, user);
+		Request req = createRequestRegister("Request to register", null, user);
 
 		userRepository.save(user);
 		logger.info("End save Organization");
@@ -295,6 +315,7 @@ public class UserSerivceImpl implements UserService {
 		user.setOrganization(organization);
 
 		user.setIsActive(true);
+		user.setStatus(Constants.USER_STATUS_ACTIVE);
 		user.setCreate_time(DateUtils.getCurrentSqlDate());
 		//user.create_by(null);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -336,8 +357,10 @@ public class UserSerivceImpl implements UserService {
 		user.setAddress(address);
 
 		user.setIsActive(false);
+		user.setStatus(Constants.USER_STATUS_UNACTIVE);
 //		user.setCreate_time(Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy")));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setUser_sos(new SOS(1, address,1));
 		// user.setGroups_user(lstTem);G
 		Request req = createRequestRegister("request to create store", "Create Store", user);
 		userRepository.save(user);
@@ -407,22 +430,49 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
+	public User getUserByPhone(String phone) {
+		User uRs = new User();
+		if(phone !=null || !phone.equals("")) {
+			phone = "0"+phone.substring(3);
+			Optional<User> u = userRepository.findByPhone(phone);
+			if(!u.isEmpty()) {
+				uRs = u.get();
+			}else {
+				throw new AppException(404, "Số điện thoại không tồn tại trong hệ thống");
+			}
+		}else {
+			throw new AppException(404, "Số điện thoại không được để trống");
+		}
+		return uRs;
+	}
+
+	@Override
+	public boolean checkRegisUser(String phone, String username) {
+		if(phone !=null || !phone.equals("")) {
+			phone = "0"+phone.substring(3);
+			Optional<User> u = userRepository.findByPhone(phone);
+			User ucheck = userRepository.findByUsername(username);
+			if(!u.isEmpty()||ucheck!=null) {
+				return true;
+			}else {
+				return false;
+			}
+		}else {
+			throw new AppException(404, "Số điện thoại không được để trống");
+		}
+	}
+
+	@Override
 	public void updatePassword(UserDto userDto, UpdatePasswordDto updatePasswordDto) {
 		// TODO Auto-generated method stub
 		String encNewPass = passwordEncoder.encode(updatePasswordDto.getNewPassword());
 		if(!passwordEncoder.matches(updatePasswordDto.getOldPassword(), userDto.getPassword())) {
-			throw new AppException(402,"Old Password not correct");
+			throw new AppException(402,"Mật khẩu không chính xác");
 		}
 		if(encNewPass.equals(userDto.getPassword())) {
-			throw new AppException(402,"Password must not the same old passs");
+			throw new AppException(402,"Mật khẩu không được giống mật khẩu cũ");
 		}
 		userRepository.updateUser(userDto.getId(), encNewPass);
-//		User user = mapStructMapper.userDtoToUser(userDto);
-//		user.setGroups_user(mapStructMapper.lstGroupDtoToGroup(userDto.getGroups_user()));
-//		user.setPassword(encNewPass);
-//		user.setAddress(mapStructMapper.addressDtoToAddress(userDto.getAddress()));
-//		user.setOrganization(mapStructMapper.organizationDtoToOrganization(userDto.getOrganization()));
-//		userRepository.save(user);
 	}
 
 	@Override
@@ -579,9 +629,23 @@ public class UserSerivceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> getUsernameLike(String name) {
-		List<User> rs = userRepository.searchByNameLike(name);
-		return rs;
+	public Map<String, Object> getUsernameLike(SearchFilterDto sft) {
+		List<UserDto> lstUserRs = new ArrayList<UserDto>();
+		Sort sortable = null;
+	    if (sft.getSort()) {
+	    	sortable = Sort.by("username").descending();
+	    }else {
+	    	sortable = Sort.by("username").descending();
+	    }
+	    Pageable pageable = PageRequest.of(sft.getPageIndex(), sft.getPageSize(), sortable);
+	    Page<User> pageUser = userRepository.searchByNameLike(sft.getSearch(), pageable);
+	    lstUserRs = mapStructMapper.lstUserToUserDto(pageUser.getContent());
+	    Map<String, Object> response = new HashMap<>();
+        response.put("users", lstUserRs);
+        response.put("currentPage", pageUser.getNumber());
+        response.put("totalItems", pageUser.getTotalElements());
+        response.put("totalPages", pageUser.getTotalPages());
+		return response;
 	}
 
 	@Override
@@ -590,9 +654,11 @@ public class UserSerivceImpl implements UserService {
 		Sort sortable = null;
 	    if (filter.getSort()) {
 	      sortable = Sort.by("username").descending();
+	    }else {
+		      sortable = Sort.by("username").ascending();
 	    }
 	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(),sortable);
-		Page<User> lstRs = userRepository.getOwnOrganizeUser(u.getOrganization().getId(), u.getId(), pageable);
+		Page<User> lstRs = userRepository.getOwnOrganizeUser(u.getOrganization().getId(), u.getId(), filter.getSearch(), pageable);
 	    lstUsrRs = mapStructMapper.lstUserToUserDto(lstRs.getContent());
 	    Map<String, Object> response = new HashMap<>();
         response.put("users", lstUsrRs);
@@ -601,4 +667,119 @@ public class UserSerivceImpl implements UserService {
         response.put("totalPages", lstRs.getTotalPages());
 		return response;
 	}
+
+	@Override
+	public User unActiveOrganizeUser(Long id) {
+		User u = userRepository.getById(id);
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		u.setIsActive(false);
+		//u.setStatus(Constants.USER_STATUS_UNACTIVE);
+		return userRepository.saveAndFlush(u);
+	}
+
+	@Override
+	public User activeOrganizeUser(Long id) {
+		User u = userRepository.getById(id);
+		if(u==null) {
+			throw new AppException(403, "User is not existed!");
+		}
+		u.setIsActive(true);
+		//u.setStatus(Constants.USER_STATUS_ACTIVE);
+		return userRepository.saveAndFlush(u);
+	}
+
+	@Override
+	public User uploadUserImg(ImageDto image) {
+
+		// TODO Auto-generated method stub
+		User u = userRepository.getById(image.getId());
+		if(null == u) {
+			throw new AppException(402,"User is not Found!");
+		}
+		String img_url = amazonClient.uploadFile(image);
+		u.setImages(new Image(img_url));
+//		st.getLstImage().add(new Image(st, img_url));
+		
+		return userRepository.save(u);
+	}
+
+	@Override
+	public void banUser(Long user_id) {
+		// TODO Auto-generated method stub
+		
+		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_ACTIVE).orElseThrow(() -> new AppException(403,"Account is not exist"));
+		List<Group> lstGroup = user.getGroups_user();
+		
+		boolean flag = true;
+		//loop to find user is Admin of Organization
+		for(Group g : lstGroup) {
+			if(g.getCode().equals(Constants.ORG_ADMIN_PER_CODE)) {
+				userRepository.updateStatusUserByOrg(user.getOrganization().getId(),Constants.USER_STATUS_BANNED);
+				flag = false;
+				break;
+			}
+		}
+		if(flag) {
+			user.setStatus(Constants.USER_STATUS_BANNED);
+			userRepository.save(user);
+		}
+
+	}
+	
+	@Override
+	public void unbannedUser(Long user_id) {
+		// TODO Auto-generated method stub
+		User user = userRepository.findUserByIdAndStatus(user_id,Constants.USER_STATUS_BANNED).orElseThrow(() -> new AppException(403,"Account is not exist"));
+		List<Group> lstGroup = user.getGroups_user();
+		boolean flag = true;
+		//loop to find user is Admin of Organization
+		for(Group g : lstGroup) {
+			if(g.getCode().equals(Constants.ORG_ADMIN_PER_CODE)) {
+				userRepository.updateStatusUserByOrg(user.getOrganization().getId(),Constants.USER_STATUS_ACTIVE);
+				flag = false;
+				break;
+			}
+		}
+		
+		if(flag) {
+			user.setStatus(Constants.USER_STATUS_ACTIVE);
+			userRepository.save(user);
+		}
+	}
+
+	@Override
+	public PagingResponse<UserDto> getUserByAdmin(List<String> filterGroup,List<String> filterStatus, String searchStr,int pageIndex, int pageSize) {
+		// TODO Auto-generated method stub
+		if(filterGroup == null || filterGroup.isEmpty()) {
+			filterGroup = new ArrayList<String>();
+			filterGroup.add(Constants.ORG_ADMIN_PER_CODE);
+			filterGroup.add(Constants.STORE_PER_CODE);
+			filterGroup.add(Constants.USER_PER_CODE);
+		}
+		
+		if(filterStatus == null || filterStatus.isEmpty()) {
+			filterStatus = new ArrayList<String>();
+			filterStatus.add(Constants.USER_STATUS_ACTIVE);
+			filterStatus.add(Constants.USER_STATUS_BANNED);
+//			filterStatus.add(Constants.USER_STATUS_REJECT);
+//			filterStatus.add(Constants.USER_STATUS_UNACTIVE);
+//			filterStatus.add(Constants.USER_STATUS_WAIT_REQUEST);
+		}
+		pageIndex = pageIndex - 1;
+		
+		Pageable page = PageRequest.of(pageIndex,pageSize);
+		
+		Page<User> pageUser = userRepository.getUserByGroup(Constants.ORG_USER_PER_CODE,filterGroup,filterStatus, searchStr, page);
+		List<UserDto> userDto = mapStructMapper.lstBanUserToBanUserDto(pageUser.getContent());
+		
+		PagingResponse<UserDto> pagingRes = new PagingResponse<UserDto>();
+		pagingRes.setObject(userDto);
+		pagingRes.setTotalPage(pageUser.getTotalPages());
+		pagingRes.setTotalRecord(pageUser.getTotalElements());
+		return pagingRes;
+	}
+
+
 }

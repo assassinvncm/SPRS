@@ -26,29 +26,12 @@ public class ReportDto {
 	private int type_chart;
 	
 	@JsonProperty("type_point")
-	private int[] type_point;
-	
-	@JsonProperty("org_id")
-	private Long org_id;
+	private int type_point;
 	
 	public ReportDto() {
 		super();
 		date_from = "";
 		date_to = "";
-	}
-
-	/**
-	 * @return the org_id
-	 */
-	public Long getOrg_id() {
-		return org_id;
-	}
-
-	/**
-	 * @param org_id the org_id to set
-	 */
-	public void setOrg_id(Long org_id) {
-		this.org_id = org_id;
 	}
 
 	public String getDate_from() {
@@ -107,11 +90,11 @@ public class ReportDto {
 		this.city_id = city_id;
 	}
 
-	public int[] getType_point() {
+	public int getType_point() {
 		return type_point;
 	}
 
-	public void setType_point(int[] type_point) {
+	public void setType_point(int type_point) {
 		this.type_point = type_point;
 	}
 }

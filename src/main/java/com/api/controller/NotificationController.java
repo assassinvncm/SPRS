@@ -7,6 +7,7 @@ import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -125,6 +126,7 @@ public class NotificationController {
 	}
 
 	@PostMapping("/send-notifications")
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> sendNotifications(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody AdminPushNotifcationRequest admPns) {
 

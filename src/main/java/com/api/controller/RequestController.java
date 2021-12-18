@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -38,6 +39,7 @@ public class RequestController {
 	private JwtTokenUtil jwtTokenUtil;
 
 	@RequestMapping("/request-organizationalAdmin")
+	@PreAuthorize("hasAnyAuthority('PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getRequestOrgAdmin(@RequestHeader("Authorization") String requestTokenHeader) {
 		
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
@@ -47,6 +49,7 @@ public class RequestController {
 	}
 	
 	@RequestMapping("/request-organizationalAdmin/{status}")
+	@PreAuthorize("hasAnyAuthority('PER_ORGADM_ACEN')")
 	public ResponseEntity<?> filterRequestOrgAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@PathVariable("status") String status) {
 		
@@ -57,6 +60,7 @@ public class RequestController {
 	}
 
 	@RequestMapping("/request-systemAdmin")
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> getRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader) {
 		
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
@@ -66,6 +70,7 @@ public class RequestController {
 	}
 	
 	@RequestMapping("/request-systemAdmin/{status}")
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> filterRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@PathVariable("status") String status, @RequestParam(required = false, value = "search", defaultValue = "") String search) {
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
@@ -76,6 +81,7 @@ public class RequestController {
 	}
 
 	@RequestMapping(value = "/admin/register/accept", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> acceptRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody List<Long> rId) {
 
@@ -86,6 +92,7 @@ public class RequestController {
 	}
 
 	@RequestMapping(value = "/admin/register/reject", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> rejectRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody List<Long> rId) {
 
@@ -96,6 +103,7 @@ public class RequestController {
 	}
 
 	@RequestMapping(value = "/request-systemAdmin", method = RequestMethod.PUT)
+	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
 	public ResponseEntity<?> updateRequestSysAdmin(@RequestHeader("Authorization") String requestTokenHeader,
 			@RequestBody Request request) {
 		

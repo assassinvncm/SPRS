@@ -9,9 +9,11 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ultils.Ultilities;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +56,28 @@ public class SOS extends BaseEntity implements Serializable{
 	@JsonIgnore
     private Address address;
 	
+	@Column(updatable = false,columnDefinition = "TIMESTAMP")
+	public Timestamp create_time;
+	
+	@OneToMany(mappedBy = "sos", fetch = FetchType.LAZY)
+    private List<Notification> notifications;
+	
 	public SOS() {
 		super();
+	}
+
+	/**
+	 * @return the create_time
+	 */
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
 	}
 
 	public SOS(String description, int level, Integer status, String gPS_Long, String gPS_Lati) {
@@ -65,10 +87,12 @@ public class SOS extends BaseEntity implements Serializable{
 		this.status = status;
 	}
 
-	public SOS(Integer status, Address address) {
+	public SOS(Integer status, Address address, int level) {
 		super();
 		this.status = status;
 		this.address = address;
+		this.level = level;
+		this.create_time = Ultilities.toSqlDate(Ultilities.getCurrentDate("dd/MM/yyyy"));
 	}
 
 	public Address getAddress() {
@@ -102,5 +126,15 @@ public class SOS extends BaseEntity implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+	
+	
 	
 }

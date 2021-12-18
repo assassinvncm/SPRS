@@ -3,6 +3,7 @@ package com.api.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -17,6 +20,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "SPRS_Relief_Point")
@@ -41,7 +45,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	private Timestamp close_time;
 	
 	@Column(name = "status")
-	private Boolean status;
+	private int status;
 	
 	@Column(updatable = false)
 	public String create_by;
@@ -72,9 +76,53 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	@JsonIgnore
     private List<Notification> notifications;	
 	
+	@OneToMany(mappedBy = "reliefPoint", fetch = FetchType.LAZY)
+	@JsonIgnore
+	@JsonProperty("request")
+	private List<Request> request;
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "image_id")
 	private Image images;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true)
+	private Organization organization;
+
+	@ManyToMany(cascade = CascadeType.REMOVE)
+	@JoinTable(name = "SPRS_user_relief",
+		joinColumns = @JoinColumn(name = "relief_id",insertable = true, updatable = false),
+		inverseJoinColumns = @JoinColumn(name ="u_id"))
+	private List<User> relief_user = new ArrayList<User>();
+
+	/**
+	 * @return the relief_user
+	 */
+	
+	public List<User> getRelief_user() {
+		return relief_user;
+	}
+
+	/**
+	 * @param relief_user the relief_user to set
+	 */
+	public void setRelief_user(List<User> relief_user) {
+		this.relief_user = relief_user;
+	}
+
+	/**
+	 * @return the organization
+	 */
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	/**
+	 * @param organization the organization to set
+	 */
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
 
 	/**
 	 * @return the images
@@ -122,11 +170,11 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 		this.close_time = close_time;
 	}
 
-	public Boolean getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	
@@ -201,4 +249,14 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
 	}
+
+	public List<Request> getRequest() {
+		return request;
+	}
+
+	public void setRequest(List<Request> request) {
+		this.request = request;
+	}
+	
+	
 }

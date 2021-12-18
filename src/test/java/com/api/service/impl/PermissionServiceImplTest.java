@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.api.entity.Group;
 import com.api.entity.Permission;
+import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
 import com.api.repositories.PermissionRepository;
@@ -206,6 +207,55 @@ public class PermissionServiceImplTest {
 		// Call method
 
 		List<Permission> pcheck = perServ.getAllPermissionAuthoriedByGroup(id);
+		
+	    //compare
+	    assertEquals(1,pcheck.get(0).getId());
+	}
+	
+	@Test
+	public void testGetOwnPermission_UTCID01() {
+		
+		// Set data test
+		long id = 1;
+		
+		// Mock
+		Mockito.when(userRepo.getById(id)).thenReturn(null);
+		
+		// Call method
+		AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+			perServ.getOwnPermission(id);
+	    }); 
+		String expectedMessage = "User is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    //compare
+	    assertEquals(expectedMessage,actualMessage);
+	}
+	
+	@Test
+	public void testGetOwnPermission_UTCID02() {
+		
+		// Set data test
+		long id = 1;
+		
+		// Mock
+		Permission p = new Permission();
+		p.setId(1);
+		List<Permission> lstPer = new ArrayList<Permission>();
+		lstPer.add(p);
+		Group g = new Group();
+		g.setId(1);
+		g.setPermissions(lstPer);
+		User u = new User();
+		List<Group> lstGr = new ArrayList<Group>();
+		lstGr.add(g);
+		u.setGroups_user(lstGr);
+		Mockito.when(userRepo.getById(id)).thenReturn(u);
+		
+		// Call method
+
+		List<Permission> pcheck = perServ.getOwnPermission(id);
 		
 	    //compare
 	    assertEquals(1,pcheck.get(0).getId());

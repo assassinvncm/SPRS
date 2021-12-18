@@ -1,5 +1,6 @@
 package com.api.service.impl;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +35,11 @@ import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
 import com.api.service.AmazonClient;
+import com.api.service.NotificationService;
 import com.api.service.StoreService;
 import com.common.utils.DateUtils;
 import com.exception.AppException;
+import com.ultils.Constants;
 
 @Service
 public class StoreServiceImpl implements StoreService{
@@ -57,6 +60,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
 	private AmazonClient amazonClient;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@Override
 	public Store getStoreById(Long id) {
@@ -96,6 +102,7 @@ public class StoreServiceImpl implements StoreService{
 			Address address = addressService.mapAddress(s.getAddress());
 			store.setLocation(address);
 			store.setStatus(1); 
+			store.setCreate_time(DateUtils.getCurrentSqlDate());
 			str = storeRepository.save(store);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,6 +126,7 @@ public class StoreServiceImpl implements StoreService{
 //		
 //		return storeRepository.save(st);
 		Store st = storeRepository.getById(s.getId());
+
 		if (null == st) {
 			throw new AppException(402, "Store is not Found!");
 		}
@@ -149,17 +157,33 @@ public class StoreServiceImpl implements StoreService{
 		st.setStatus(s.getStatus());
 		st.setName(s.getName());
 		
-		return storeRepository.saveAndFlush(st);
+		Store storeRsp = storeRepository.saveAndFlush(st);
+		
+		return storeRsp;
 	}
 
 	@Override
 	public Store openCloseStore(StoreDto s) {
 		// TODO Auto-generated method stub
 		Store st = storeRepository.getById(s.getId());
+//		Time currTime = new Time(System.currentTimeMillis());
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
+		int stBf = st.getStatus();
+//		if(s.getStatus() == 0) {
+//			st.setOpen_time(currTime);
+//			st.setStatus(0);
+//		}else if(s.getStatus() == 1) {
+//			st.setClose_time(currTime);
+//			st.setStatus(1);
+//		}
 		st.setStatus(s.getStatus());
+		
+		//check open store to send notification
+		if(s.getStatus() != stBf && s.getStatus() == Constants.STORE_STATUS_OPEN) {
+			notificationService.sendPnsToDeviceSubcribeStore(st, "Cửa hàng đã mở cửa trở lại");
+		}
 		
 		return storeRepository.save(st);
 	}
@@ -191,7 +215,7 @@ public class StoreServiceImpl implements StoreService{
 		if(null == st) {
 			throw new AppException(402,"Store is not Found!");
 		}
-		storeRepository.delete(st);
+		storeRepository.deleteStore(st.getId());
 		return st;
 	}
 
@@ -206,9 +230,11 @@ public class StoreServiceImpl implements StoreService{
 		List<StoreDto> lstStoreRs = new ArrayList<StoreDto>();
 		Sort sortable = null;
 	    if (filter.getSort()) {
-	      sortable = Sort.by("name").descending();
+	    	sortable = Sort.by("name").descending();
+	    }else {
+	    	sortable = Sort.by("name").ascending();
 	    }
-	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize());
+	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
 		Page<Store> pageStore = storeRepository.getStoreByStatusOrType(user_id, filter.getStatus_store(),filter.getType(),pageable);
 		lstStoreRs = mapStructMapper.lstStoreToStoreDto(pageStore.getContent());
 	    Map<String, Object> response = new HashMap<>();

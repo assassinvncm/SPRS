@@ -29,6 +29,7 @@ import com.api.dto.SubscriptionRequest;
 import com.api.entity.Device;
 import com.api.entity.Notification;
 import com.api.entity.ReliefPoint;
+import com.api.entity.SOS;
 import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
@@ -138,8 +139,10 @@ public class NotificationServiceImpl implements NotificationService {
 		// List<TokenDevice> tokenDevices =
 		// tokenDeviceRepository.findByIdIn(pushNotificationRequestModel.getUids());
 		// List<String> tokenDevices = deviceService.getDeviceTokenByCity(null);
-		if (pushNotificationRequest.getTarget().isEmpty())
+		if (pushNotificationRequest.getTarget().isEmpty()) {
+			log.info("Not have target token, Token is empty");
 			return null;
+		}
 		MulticastMessage multicastMessage = MulticastMessage.builder().addAllTokens(pushNotificationRequest.getTarget())
 				.setNotification(new com.google.firebase.messaging.Notification(pushNotificationRequest.getTitle(),
 						pushNotificationRequest.getBody()))
@@ -176,20 +179,10 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public void sendPnsToDeviceInCity(Long city_id) {
-		// TODO Auto-generated method stub
-//		List<Device> lstToken = deviceService.getDeviceTokenByCity(city_id);
-//		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
-//		pushNotificationRequest.setTarget(lstToken);
-//		pushNotificationRequest.setTitle("");
-//		pushNotificationRequest.setBody("Có một địa điểm cứu trợ mới được tạo gần đây");
-//		sendPnsToDevices(pushNotificationRequest);
-	}
-
-	@Override
 	public void sendPnsToDeviceSubcribeStore(Store store, String message) {
 		// TODO Auto-generated method stub
-
+		
+		log.info("START save notification to user that subcribe STORE ");
 		List<Device> lstDevice = deviceService.getDeviceTokenByStoreId(store.getId());
 		List<Notification> notifications = new ArrayList<Notification>();
 		List<String> lstToken = new ArrayList<String>();
@@ -205,6 +198,7 @@ public class NotificationServiceImpl implements NotificationService {
 		}
 		// set notification
 		Notification notification = new Notification();
+		// notification.setTitle(store.getName());
 		notification.setMessage(message);
 		notification.setStore(store);
 		notification.setType(Constants.NOTIFICATION_TYPE_STORE);
@@ -213,7 +207,8 @@ public class NotificationServiceImpl implements NotificationService {
 		notification.setReceiver(user);
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
-
+		log.info("END save notification to user that subcribe STORE ");
+		log.info("START send notification to user that subcribe STORE ");
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
@@ -224,22 +219,21 @@ public class NotificationServiceImpl implements NotificationService {
 		data.put("type", notificationRes.getType());
 		data.put("sender", String.valueOf(store.getId()));
 		pushNotificationRequest.setData(data);
+
 		this.sendPnsToDevices(pushNotificationRequest);
+		log.info("end send notification to user that subcribe STORE ");
 	}
 
+	@Override
 	public void sendPnsToDeviceWhenCreateReliefPoint(ReliefPoint rp, String message) {
+		
+		log.info("START save notification to user that subcribe RELIEFPOINT ");
 		List<Device> lstDevice = deviceService.getDeviceTokenByCity(rp.getUsers().getId(),
 				rp.getAddress().getSubDistrict().getDistrict().getCity().getId());
-		List<String> lstToken = new ArrayList<String>();
 
-		// set notification
-		Notification notification = new Notification();
-		notification.setMessage(message);
-		notification.setReliefPoint(rp);
-		notification.setType(Constants.NOTIFICATION_TYPE_RELIEFPOINT);
-		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
-		notification.setCreate_time(DateUtils.getCurrentSqlDate());
+		List<String> lstToken = new ArrayList<String>();
 		List<User> user = new ArrayList<User>();
+		
 		for (Device d : lstDevice) {
 			user.add(d.getUser());
 			lstToken.add(d.getToken());
@@ -247,10 +241,20 @@ public class NotificationServiceImpl implements NotificationService {
 		if (lstToken.isEmpty()) {
 			return;
 		}
+		
+		// set notification
+		Notification notification = new Notification();
+		// notification.setTitle(rp.getName());
+		notification.setMessage(message);
+		notification.setReliefPoint(rp);
+		notification.setType(Constants.NOTIFICATION_TYPE_RELIEFPOINT);
+		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
+		notification.setCreate_time(DateUtils.getCurrentSqlDate());
 		notification.setReceiver(user);
 		// save notification
 		Notification notificationRes = this.saveNotification(notification);
-
+		log.info("END save notification to user that subcribe RELIEFPOINT ");
+		log.info("START send notification to user that subcribe RELIEFPOINT ");
 		// set data push notification
 		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
 		pushNotificationRequest.setTarget(lstToken);
@@ -261,9 +265,57 @@ public class NotificationServiceImpl implements NotificationService {
 		data.put("type", notificationRes.getType());
 		data.put("sender", String.valueOf(rp.getId()));
 		pushNotificationRequest.setData(data);
+		
+		// send push notification to device
+		this.sendPnsToDevices(pushNotificationRequest);
+		log.info("END send notification to user that subcribe RELIEFPOINT ");
+	}
+	
+	@Override
+	public void sendPnsToDeviceWhenOpenSOS(User user, String message) {
+		SOS sos = user.getUser_sos();
+		log.info("START save notification to user that subcribe RELIEFPOINT ");
+		List<Device> lstDevice = deviceService.getDeviceTokenByCity(user.getId(),
+				sos.getAddress().getSubDistrict().getDistrict().getCity().getId());
+
+		List<String> lstToken = new ArrayList<String>();
+		List<User> lstUser = new ArrayList<User>();
+
+		for (Device d : lstDevice) {
+			lstUser.add(d.getUser());
+			lstToken.add(d.getToken());
+		}
+		if (lstToken.isEmpty()) {
+			return;
+		}
+
+		// set notification
+		Notification notification = new Notification();
+		notification.setTitle(user.getFull_name());
+		notification.setMessage(message);
+		notification.setSos(sos);
+		notification.setType(Constants.NOTIFICATION_TYPE_SOS);
+		notification.setStatus(Constants.NOTIFICATION_STATUS_UNCHECK);
+		notification.setCreate_time(DateUtils.getCurrentSqlDate());
+		notification.setReceiver(lstUser);
+		// save notification
+		Notification notificationRes = this.saveNotification(notification);
+		log.info("END save notification to user that subcribe RELIEFPOINT ");
+		log.info("START sent notification to user that subcribe RELIEFPOINT ");
+		// set data push notification
+		PushNotificationRequest pushNotificationRequest = new PushNotificationRequest();
+		pushNotificationRequest.setTarget(lstToken);
+		// pushNotificationRequest.setTitle(SOS.getName());
+		pushNotificationRequest.setBody(message);
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("id", String.valueOf(notificationRes.getId()));
+		data.put("type", notificationRes.getType());
+		// data.put("sender", String.valueOf(rp.getId()));
+		pushNotificationRequest.setData(data);
 
 		// send push notification to device
 		this.sendPnsToDevices(pushNotificationRequest);
+		log.info("END sent notification to user that subcribe RELIEFPOINT ");
 	}
 
 	@Override
@@ -281,7 +333,7 @@ public class NotificationServiceImpl implements NotificationService {
 		PagingResponse<NotificationDto> pagingResonpne = new PagingResponse<NotificationDto>();
 		pagingResonpne.setObject(mapStructMapper.lstNotificationToNotificationDto(lstNotification.get()));
 		pagingResonpne.setTotalPage(lstNotification.getTotalPages());
-		pagingResonpne.setTotalRecord(lstNotification.getNumber());
+		pagingResonpne.setTotalRecord(lstNotification.getTotalElements());
 		return pagingResonpne;
 	}
 
@@ -330,6 +382,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 		// set notification
 		Notification notification = new Notification();
+		notification.setTitle(admPsn.getTitle());
 		notification.setMessage(admPsn.getMessage());
 		notification.setSender(admin);
 		notification.setType(Constants.NOTIFICATION_TYPE_ADMIN);
@@ -373,7 +426,7 @@ public class NotificationServiceImpl implements NotificationService {
 			noti.setData(data);
 			return noti;
 		}).collect(Collectors.toList());
-		
+
 		jobScheduler.enqueue(lstPushNotificationRequest.stream(), (pushnotification) -> {
 			sendPnsToDevices(pushnotification);
 		});

@@ -50,19 +50,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 		User user = Optional.ofNullable(userRepository.findByUsername(username)).orElseThrow(() -> new UsernameNotFoundException("User not found with username: "+username));
 		
 		if(user.getStatus() != null && user.getStatus().equals(Constants.USER_STATUS_BANNED)) {
-			throw new AppException(201, "Tài khoản bị khóa");
+			throw new AuthenException("Account is banned");
 		}
 		
 		if(user.getStatus() != null && user.getStatus().equals(Constants.USER_STATUS_UNACTIVE)) {
-			throw new AppException(202, "Tài khoản chưa được duyệt");
+			throw new AuthenException("Account is not active");
 		}
 		
 		if(user.getStatus() != null && user.getStatus().equals(Constants.USER_STATUS_REJECT)) {
-			throw new AppException(203, "Tài khoản không được duyệt");
-		}
-		
-		if(user.getIsActive() != null && user.getIsActive() == false) {
-			throw new AuthenException("Account is not active");
+			throw new AuthenException("Account is reject");
 		}
 
 		List<Group> lstGr = user.getGroups_user();
@@ -71,9 +67,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 			if(group.getPlatform() == platform) {
 				check = true;
 			}
-		}
-		if(!check) {
-			throw new AppException(204, "Tài khoản không được phép truy cập!");
+			if(!check) {
+				throw new AuthenException("Account is not ready for this platform!");
+			}
 		}
 //		Set<String> authorities = new HashSet<>();
 //        if (null != user.getGroups_user()) user.getGroups_user().forEach(r -> {

@@ -18,14 +18,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.dto.GrantAccessDto;
+import com.api.dto.ImageDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.SPRSResponse;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
+import com.api.entity.Store;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.GroupRepository;
@@ -51,13 +55,13 @@ public class UserController {
 	@Autowired
 	MapStructMapper mapper;
 	
-	@RequestMapping(value = "/users/search/{name}", method = RequestMethod.GET)
+	@RequestMapping(value = "/users/search", method = RequestMethod.POST)
 	@PreAuthorize("hasAnyAuthority('PER_SYSADM_ACEN')")
-	public ResponseEntity<?> getSearch(@PathVariable(value = "name") String name) {
+	public ResponseEntity<?> getSearch(@RequestBody SearchFilterDto sft) {
 		logger.info("Start get search User like");
-		List<User> lst = userService.getUsernameLike(name);
+		Map<String, Object> rs = userService.getUsernameLike(sft);
 		logger.info("End get search User like");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Search like User success!", "", null, mapper.lstUserToUserDto(lst)));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Search like User success!", "", rs, null));
 	}
 	
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -70,19 +74,36 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/getOwnOrg", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_ORGADM_ACEN')")
 	public ResponseEntity<?> getOwnOrganizeUser(@RequestHeader("Authorization") String requestTokenHeader, @RequestBody SearchFilterDto filter) {
 
 		UserDto userDto = userService.getUserbyToken(requestTokenHeader);
 		Map<String, Object> lstRs = userService.getOwnOrganizeUser(userDto, filter);
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get own organize user success", "", lstRs, null));
 	}
+
+	@RequestMapping(value = "/org-user-unactive/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> unActiveOrganizeUser(@PathVariable(value = "id") Long id) {
+		logger.info("Start un-Active organize User");
+		User u = userService.unActiveOrganizeUser(id);
+		logger.info("End un-Active organize User");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get own organize user success", "", mapper.userToUserDto(u), null));
+	}
+
+	@RequestMapping(value = "/org-user-active/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> activeOrganizeUser(@PathVariable(value = "id") Long id) {
+		logger.info("Start un-Active organize User");
+		User u = userService.activeOrganizeUser(id);
+		logger.info("End un-Active organize User");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Get own organize user success", "", mapper.userToUserDto(u), null));
+	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserbyToken(@RequestHeader ("Authorization") String requestTokenHeader){
 		logger.info("Start get User");
-		UserDto useDto = userService.getUserbyToken(requestTokenHeader);
+		User u = userService.getNativeUserbyToken(requestTokenHeader);
 		logger.info("End get User");
-		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", useDto, null));
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "", "", mapper.userToUserDto_getUController(u), null));
 	}
 	
 //	@RequestMapping(value = "/user", method = RequestMethod.POST)
@@ -171,6 +192,45 @@ public class UserController {
 		logger.info("End update password");
 		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Update password success!", "", null, null));
 	}
+
+	@RequestMapping(value = "/user/uploadImg", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
+		logger.info("Start uploadImg user");
+		User u = userService.uploadUserImg(image);
+		logger.info("End uploadImg user");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "Upload image for user success", "", "", null));
+	}
 	
+	@RequestMapping(value = "users/admin", method = RequestMethod.GET)
+	public ResponseEntity<?> getBanUser(@RequestParam(required = false,value="filterGroup") List<String> filterGroup,
+			@RequestParam(required = false,value="filterStatus") List<String> filterStatus, 
+			@RequestParam( required = false,value="Search", defaultValue = "") String search,
+			@RequestParam(required = false, value="pageIndex") int pageIndex,
+			@RequestParam(required = false, value="pageSize") int pageSize){
+		logger.info("Start get banned User");
+		PagingResponse<UserDto> uDto = userService.getUserByAdmin(filterGroup,filterStatus,search,pageIndex,pageSize);
+		logger.info("End get banned User");
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "get list banned user success!", "", uDto, null));
+	}
 	
+	@RequestMapping(value = "/user/ban", method = RequestMethod.PUT)
+	public ResponseEntity<?> banUser(@RequestHeader ("Authorization") String requestTokenHeader, @RequestParam("uId") Long uid){
+		
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		logger.info("Start ban User id: "+user.getId());
+		userService.banUser(uid);
+		logger.info("End ban User id: "+user.getId());
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "ban user success!", "", null, null));
+	}
+	
+	@RequestMapping(value = "/user/unbanned", method = RequestMethod.PUT)
+	public ResponseEntity<?> unbannedUser(@RequestHeader ("Authorization") String requestTokenHeader, @RequestParam("uId") Long uid){
+		
+		User user = userService.getUserbyTokenAuth(requestTokenHeader);
+		logger.info("Start unban User id: "+user.getId());
+		userService.unbannedUser(uid);
+		logger.info("Start unban User id: "+user.getId());
+		return ResponseEntity.ok(new SPRSResponse(Constants.SUCCESS, "unbanned user success!", "", null, null));
+	}
+
 }

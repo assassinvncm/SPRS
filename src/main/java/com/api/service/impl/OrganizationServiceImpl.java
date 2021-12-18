@@ -32,6 +32,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 		// TODO Auto-generated method stub
 		List<Organization> orgs = organizationRepository.findAll();
 		List<OrganizationDto> orgDto = orgs.stream().map(org -> modelMapper.map(org, OrganizationDto.class)).collect(Collectors.toList()); 
+		int x;
 		return orgs;
 	}
 

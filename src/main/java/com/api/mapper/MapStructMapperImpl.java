@@ -118,7 +118,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		UserDto udto = new UserDto();
 		udto.setId(user.getId());
 		udto.setUsername(user.getUsername());
-
+		udto.setPhone(user.getPhone());
+		udto.setAddress(addressToAddressDto(user.getAddress()));
+		udto.setFull_name(user.getFull_name());
+		udto.setDob(user.getDob());
+		udto.setStatus(user.getStatus());
 		return udto;
 	}
 
@@ -148,7 +152,7 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<UserDto> lstUserDto = lstUser.stream().map(user -> {
 			return userToUserDto_forGet(user);
 		}).collect(Collectors.toList());
-
+		
 		return lstUserDto;
 	}
 
@@ -212,6 +216,40 @@ public class MapStructMapperImpl implements MapStructMapper {
 		userDto.setCreate_time(null);
 		userDto.setPassword(user.getPassword());
 		userDto.setIsActive(user.getIsActive());
+//		userDto.setImages(user.getImages());
+
+//		if(user.getImages()!=null) {
+//			user.getImages().setImg_url(Constants.IMAGE_URL+user.getImages().getImg_url());
+//			userDto.setImages(user.getImages());
+//		}
+		return userDto;
+	}
+
+	@Override
+	public UserDto userToUserDto_getUController(User user) {
+		// TODO Auto-generated method stub
+		if (user == null) {
+			return null;
+		}
+
+		UserDto userDto = new UserDto();
+		userDto.setId(user.getId());
+		userDto.setPhone(user.getPhone());
+		userDto.setUsername(user.getUsername());
+		userDto.setFull_name(user.getFull_name());
+		userDto.setDob(user.getDob());
+		userDto.setCreate_time(null);
+		userDto.setPassword(user.getPassword());
+		userDto.setIsActive(user.getIsActive());
+		userDto.setOrganization(organizationToOrganizationDto(user.getOrganization()));
+		userDto.setImages(user.getImages());
+		userDto.setGroups_user(lstGroupToGroupDto(user.getGroups_user()));
+		userDto.setAddress(addressToAddressDto(user.getAddress()));
+
+//		if(user.getImages()!=null) {
+//			user.getImages().setImg_url(Constants.IMAGE_URL+user.getImages().getImg_url());
+//			userDto.setImages(user.getImages());
+//		}
 		return userDto;
 	}
 
@@ -387,12 +425,18 @@ public class MapStructMapperImpl implements MapStructMapper {
 		List<ReliefInformationDto> rpDto = reliefPoint.getReliefInformations().stream().map(rpInfor -> {
 			return reliefInforToReliefInforDto(rpInfor);
 		}).collect(Collectors.toList());
-		reliefPointDto.setReliefInformations(rpDto);
 
-		if(reliefPointDto.getImages()!=null) {
-			reliefPoint.getImages().setImg_url(Constants.IMAGE_URL+reliefPoint.getImages().getImg_url());
-			reliefPointDto.setImages(reliefPoint.getImages());
-		}
+		List<UserDto> lstURP = reliefPoint.getRelief_user().stream().map(
+			u -> {return userToUserDto(u);}
+		).collect(Collectors.toList());
+		reliefPointDto.setLstUser_rp(lstURP);
+		reliefPointDto.setReliefInformations(rpDto);
+		reliefPointDto.setImages(reliefPoint.getImages());
+
+//		if(reliefPoint.getImages()!=null) {
+//			reliefPoint.getImages().setImg_url(Constants.IMAGE_URL+reliefPoint.getImages().getImg_url());
+//			reliefPointDto.setImages(reliefPoint.getImages());
+//		}
 //		reliefPointDto.setUser_rp(userToUserDto(reliefPoint.getUser_rp()));
 
 		return reliefPointDto;
@@ -414,10 +458,11 @@ public class MapStructMapperImpl implements MapStructMapper {
 		storeDto.setAddress(addressToAddressDto(store.getLocation()));
 		storeDto.setStoreDetail(lstStoreCateToStoreCateDto(store.getStore_category()));
 		storeDto.setUser_st(userToUserDto(store.getUsers()));
-		if(store.getImages()!=null) {
-			store.getImages().setImg_url(Constants.IMAGE_URL+store.getImages().getImg_url());
-			storeDto.setImages(store.getImages());
-		}
+//		if(store.getImages()!=null) {
+//			store.getImages().setImg_url(Constants.IMAGE_URL+store.getImages().getImg_url());
+//			storeDto.setImages(store.getImages());
+//		}
+		storeDto.setImages(store.getImages());
 		return storeDto;
 	}
 
@@ -752,6 +797,31 @@ public class MapStructMapperImpl implements MapStructMapper {
 			return  reliefPointToreliefPointDto(rp);
 		}).collect(Collectors.toList());
 		return lstReliefPointDto;
+	}
+
+	@Override
+	public List<UserDto> lstBanUserToBanUserDto(List<User> lstUser) {
+		// TODO Auto-generated method stub
+		if(lstUser == null) {
+			return null;
+		}
+		List<UserDto>  lstUserDto = new ArrayList<UserDto>();
+		for(User user : lstUser) {
+			UserDto userDto = new UserDto();
+			userDto.setId(user.getId());
+			userDto.setPhone(user.getPhone());
+			userDto.setUsername(user.getUsername());
+			userDto.setFull_name(user.getFull_name());
+			userDto.setDob(user.getDob());
+			userDto.setCreate_time(null);
+			userDto.setPassword(user.getPassword());
+			userDto.setIsActive(user.getIsActive());
+			userDto.setStatus(user.getStatus());
+			userDto.setAddress(addressToAddressDto(user.getAddress()));
+			lstUserDto.add(userDto);
+		}
+		
+		return lstUserDto;
 	}
 	
 //	private List<PermissionDto> addChildrenToParent(Permission p, List<Permission> pl){

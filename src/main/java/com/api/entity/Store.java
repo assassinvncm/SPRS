@@ -3,6 +3,7 @@ package com.api.entity;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +71,29 @@ public class Store extends BaseEntity implements Serializable{
 			inverseJoinColumns = @JoinColumn(name ="category_id"))
 	private List<StoreCategory> store_category;
 
-	@ManyToMany(mappedBy = "user_store")
+	@ManyToMany(mappedBy = "user_store", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<User> store_user = new ArrayList<User>();
 	
 	@OneToMany(mappedBy = "store", fetch = FetchType.LAZY)
     private List<Notification> notifications;
+	
+	@Column(updatable = false,columnDefinition = "TIMESTAMP")
+	public Timestamp create_time;
+
+	/**
+	 * @return the create_time
+	 */
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	/**
+	 * @param create_time the create_time to set
+	 */
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
+	}
 
 	/**
 	 * @return the images

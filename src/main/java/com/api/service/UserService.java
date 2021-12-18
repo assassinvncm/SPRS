@@ -3,13 +3,18 @@ package com.api.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.api.dto.AddressDto;
 import com.api.dto.GrantAccessDto;
+import com.api.dto.ImageDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
+import com.api.entity.Store;
 import com.api.entity.User;
 
 public interface UserService {
@@ -27,6 +32,20 @@ public interface UserService {
 	 * @return username
 	 */
 	String getUsernameByPhone(String phone);
+	
+	/**
+	 * 
+	 * @param phone number
+	 * @return username
+	 */
+	User getUserByPhone(String phone);
+	
+	/**
+	 * 
+	 * @param phone number
+	 * @return username
+	 */
+	boolean checkRegisUser(String phone, String username);
 	
 	/**
 	 * 
@@ -123,7 +142,7 @@ public interface UserService {
 	 * @param name
 	 * @return List<User>
 	 */
-	List<User> getUsernameLike(String name);
+	Map<String, Object> getUsernameLike(SearchFilterDto sft);
 	
 	/**
 	 * 
@@ -187,4 +206,47 @@ public interface UserService {
 	 * @return List<User>
 	 */
 	Map<String, Object> getOwnOrganizeUser(UserDto u, SearchFilterDto filter);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return user
+	 */
+	User unActiveOrganizeUser(Long id);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return user
+	 */
+	User activeOrganizeUser(Long id);
+	
+	/**
+	 * 
+	 * @param ImageDto
+	 * @return User
+	 */
+	User uploadUserImg(ImageDto image);
+	
+	/**
+	 * banned user
+	 * @param Long
+	 * @return User
+	 */
+	void banUser(Long user_id);
+	
+	/**
+	 * unbanned user by user id
+	 * @param Long
+	 * @return User
+	 */
+	void unbannedUser(Long user_id);
+	
+	/**
+	 * get banned user
+	 * @param ImageDto
+	 * @return User
+	 */
+	PagingResponse<UserDto> getUserByAdmin(List<String> groupCode,List<String> filterStatus ,String searchStr, int pageIndex, int pageSize);
+
 }

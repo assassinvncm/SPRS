@@ -31,6 +31,7 @@ import com.api.entity.Item;
 import com.api.entity.ReliefInformation;
 import com.api.entity.ReliefPoint;
 import com.api.entity.SubDistrict;
+import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
 import com.api.repositories.ReliefPointRepository;
 import com.api.service.AddressService;
@@ -91,8 +92,9 @@ class ReliefPointServiceImplTest {
 	 */
 	@Test
 	void testCreateReliefPoint_UTCID01() {
-		
 		//set data input for method
+		User u = new User();
+		u.setId(1);
 		AddressDto addressDto = new AddressDto();
 		addressDto.setId(0);
 		CityDto c = new CityDto();
@@ -123,7 +125,7 @@ class ReliefPointServiceImplTest {
 		Mockito.doNothing().when(notificationService).sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
 		
 		//call method
-		ReliefPoint rpRes = reliefPointService.createReliefPoint(rpDto);
+		ReliefPoint rpRes = reliefPointService.createReliefPoint(rpDto,u);
 		assertEquals(rp.getId(), rpRes.getId());
 	}
 
@@ -347,7 +349,7 @@ class ReliefPointServiceImplTest {
 	@Test
 	void testUpdateStatusReliefPoint_UTCID01() {
 		Long r_id = new Long(1);
-		Boolean status = true;
+		int status = 1;
 		ReliefPoint rp = new ReliefPoint();
 		Optional<ReliefPoint> reliefPoint = Optional.of(rp);
 		Mockito.<Optional<ReliefPoint>>when(reliefPointRepository.findById(r_id)).thenReturn(reliefPoint);
@@ -361,7 +363,7 @@ class ReliefPointServiceImplTest {
 	@Test
 	void testUpdateStatusReliefPoint_UTCID02() {
 		Long r_id = new Long(1);
-		Boolean status = true;
+		int status = 1;
 		ReliefPoint rp = new ReliefPoint();
 		Optional<ReliefPoint> reliefPoint = Optional.empty();
 		Mockito.<Optional<ReliefPoint>>when(reliefPointRepository.findById(r_id)).thenReturn(reliefPoint);

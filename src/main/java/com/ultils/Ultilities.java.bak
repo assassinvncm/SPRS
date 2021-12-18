@@ -52,16 +52,18 @@ public class Ultilities {
         return sql;
 	}
 	
-	public static List<String> getLabelReport(List<String> arrListNumber) {
-		List<String> arrTemp = new ArrayList<String>();
-	    for (int i = 0; i < arrListNumber.size(); i++) {
-	        if (!arrTemp.contains(arrListNumber.get(i))) {
-	            arrTemp.add(arrListNumber.get(i));
-	        }
-	    }
-	    arrTemp.sort(Comparator.naturalOrder());
-	    return arrTemp;
-	}
+//	public static int[] getLabelReport(int[] arrListNumber) {
+//		List<Integer> arrTemp = new ArrayList<Integer>();
+//		List<String> rs = new ArrayList<String>();
+//	    for (int i = 0; i < arrListNumber.len(); i++) {
+//	        if (!arrTemp.contains(arrListNumber.get(i))) {
+//	            arrTemp.add(arrListNumber.get(i));
+//	        }
+//	    }
+//	    arrTemp.sort(Comparator.naturalOrder());
+////	    arrTemp.forEach(t -> {rs.add("")});
+//	    return arrTemp;
+//	}
 	
 	public static boolean checkExistIn(int value, int[] inputValues) {
 		boolean isExist = false;

@@ -56,7 +56,7 @@ public class StoreController {
 	private MapStructMapper structMapper;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> createStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody StoreDto s) {
 		logger.info("Start create Store");
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
@@ -68,7 +68,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> getStoreFilter(@RequestHeader ("Authorization") String requestTokenHeader,
 			@RequestBody SearchFilterDto sft) {
 		logger.info("Start get Store filter");
@@ -79,7 +79,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> getStoreOwer(@RequestHeader ("Authorization") String requestTokenHeader) {
 		logger.info("Start get Store owner");
 		List<StoreDto> lstStore = storeService.getStoreOwner();
@@ -88,7 +88,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> getAll() {
 		logger.info("Start get all Store");
 		List<StoreDto> lstStore = storeService.getAllStore();
@@ -97,7 +97,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> getStoreById(@PathVariable(value = "id") Long id) {
 		logger.info("Start get Store by id: "+id);
 		Store st = storeService.getStoreById(id);
@@ -119,7 +119,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> updateStore(@RequestBody StoreDto storeDto) {
 		logger.info("Start update Store");
 		storeService.updateStore(storeDto);
@@ -128,7 +128,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/openCloseStore", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> openCloseStore(@RequestBody StoreDto storeDto) {
 		logger.info("Start update Store");
 		storeService.openCloseStore(storeDto);
@@ -137,7 +137,7 @@ public class StoreController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.PUT)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> deleteStore(@RequestBody StoreDto storeDto) {
 		logger.info("Start delete Store");
 		storeService.deleteStore(storeDto);
@@ -154,6 +154,7 @@ public class StoreController {
 //	}
 
 	@RequestMapping(value = "/uploadImg", method = RequestMethod.POST)
+	@PreAuthorize("hasAnyAuthority('PER_MOB_STORE')")
 	public ResponseEntity<?> uploadImg(@RequestBody ImageDto image) {
 		logger.info("Start uploadImg Store");
 		Store st = storeService.uploadStoreImg(image);
@@ -162,7 +163,7 @@ public class StoreController {
 	}
 	
 	@RequestMapping(value = "/subcribe", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_SUBCRIBE')")
 	public ResponseEntity<?> subcribeStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody SubcribeDto s) {
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
 		s.setUser_id(userDto.getId());
@@ -172,7 +173,7 @@ public class StoreController {
 	}
 	
 	@RequestMapping(value = "/unsubcribe", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_SUBCRIBE')")
 	public ResponseEntity<?> unSubcribeStore(@RequestHeader ("Authorization") String requestTokenHeader,@RequestBody SubcribeDto s) {
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
 		s.setUser_id(userDto.getId());
@@ -182,7 +183,7 @@ public class StoreController {
 	}
 	
 	@RequestMapping(value = "/getSubcribe", method = RequestMethod.GET)
-	@PreAuthorize("hasAnyAuthority('PER_STR_ACEN')")
+	@PreAuthorize("hasAnyAuthority('PER_MOB_SUBCRIBE')")
 	public ResponseEntity<?> getListSubcribe(@RequestHeader ("Authorization") String requestTokenHeader) {
 		UserDto userDto = userSerivce.getUserbyToken(requestTokenHeader);
 		SubcribeDto sdto = userSerivce.getListSubcribe(userDto.getId());
