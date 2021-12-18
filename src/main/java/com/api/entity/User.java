@@ -2,20 +2,28 @@ package com.api.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "SPRS_Users")
@@ -32,6 +40,7 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "phone")
 	private String phone;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name = "password")
 	private String password;
 	
@@ -41,54 +50,133 @@ public class User extends BaseEntity implements Serializable{
 	@Column(name = "dob")
 	private String dob;
 	
-	@Column(name = "address")
-	private String address;
-	
-	@Column(name = "create_time")
-	private Date create_time;
+	@Column(name = "status")
+	private String status;
 	
 	@Column(name = "isActive")
 	private Boolean isActive;
+	
+	//@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id",insertable = true, updatable = false)
+	private Address address;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true, updatable = false)
+	private Organization organization;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JsonIgnore
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "SPRS_user_group",
-			joinColumns = @JoinColumn(name = "user_id"),
+			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
 			inverseJoinColumns = @JoinColumn(name ="group_id"))
-	private List<Group> groups_user = new ArrayList<Group>();
+	private List<Group> groups_user;
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 	@JsonIgnore
-    private List<Acceptance> acceptances;
+	private List<Request> request;
 	
-//	@OneToMany(mappedBy = "user_rp")
-//	private List<ReliefPoint> reliefPoints = new ArrayList<ReliefPoint>();
-//
-//	@OneToMany(mappedBy = "users_dv")
-//	private List<Device> devices = new ArrayList<Device>();
-//	
-//	public List<ReliefPoint> getReliefPoints() {
-//		return reliefPoints;
-//	}
-//
-//	public void setReliefPoints(List<ReliefPoint> reliefPoints) {
-//		this.reliefPoints = reliefPoints;
-//	}
-//
-//	public List<Device> getDevices() {
-//		return devices;
-//	}
-//
-//	public void setDevices(List<Device> devices) {
-//		this.devices = devices;
-//	}
+	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+	private List<ReliefPoint> reliefPoints;
+	
+	@OneToMany(mappedBy="users")
+    private List<Store> lstStore;
 
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@JoinTable(name = "SPRS_store_subcribe",
+			joinColumns = @JoinColumn(name = "user_id",insertable = true, updatable = false),
+			inverseJoinColumns = @JoinColumn(name ="store_id"))
+	private List<Store> user_store;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "sos_id")
+	@JsonIgnore
+    private SOS user_sos;
+	
+	@OneToMany(mappedBy = "sender_user",fetch = FetchType.LAZY)
+	private List<Notification> notifications_sender;
+	
+	@ManyToMany(mappedBy = "receivers")
+	private List<Notification> notification_receiver;
+	
+	@Column(updatable = false)
+	public String create_by;
+	
+	@Column(updatable = false,columnDefinition = "TIMESTAMP")
+	public Timestamp create_time;
+	
+	@Column
+	public String modified_by;
+	
+	@Column(columnDefinition = "TIMESTAMP")
+	public Timestamp modified_date;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "image_id")
+	private Image images;
+	
+	@ManyToMany(mappedBy = "relief_user", cascade = CascadeType.REMOVE)
+	@JsonIgnore
+	private List<ReliefPoint> user_relief;
+	
+	/**
+	 * @return the user_relief
+	 */
+	public List<ReliefPoint> getUser_relief() {
+		return user_relief;
+	}
+
+	/**
+	 * @param user_relief the user_relief to set
+	 */
+	public void setUser_relief(List<ReliefPoint> user_relief) {
+		this.user_relief = user_relief;
+	}
+
+	/**
+	 * @return the images
+	 */
+	public Image getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(Image images) {
+		this.images = images;
+	}
+
+	public List<Store> getLstStore() {
+		return lstStore;
+	}
+
+	public SOS getUser_sos() {
+		return user_sos;
+	}
+
+	public void setUser_sos(SOS user_sos) {
+		this.user_sos = user_sos;
+	}
+
+	public void setLstStore(List<Store> lstStore) {
+		this.lstStore = lstStore;
+	}
+
+//	@JsonIgnore
 	public List<Group> getGroups_user() {
 		return groups_user;
 	}
 
-	public User(String username, String phone, String password, String full_name, String dob, String address,
-		Date create_time, Boolean isActive, List<Group> groups_user, List<Acceptance> acceptances) {
+	public List<Store> getUser_store() {
+		return user_store;
+	}
+
+	public void setUser_store(List<Store> user_store) {
+		this.user_store = user_store;
+	}
+
+	public User(String username, String phone, String password, String full_name, String dob, Address address,
+		Date create_time, Boolean isActive, List<Group> groups_user) {
 	super();
 	this.username = username;
 	this.phone = phone;
@@ -96,22 +184,12 @@ public class User extends BaseEntity implements Serializable{
 	this.full_name = full_name;
 	this.dob = dob;
 	this.address = address;
-	this.create_time = create_time;
 	this.isActive = isActive;
 	this.groups_user = groups_user;
-	this.acceptances = acceptances;
 }
 
 	public User() {
 		super();
-	}
-
-	public List<Acceptance> getAcceptances() {
-		return acceptances;
-	}
-
-	public void setAcceptances(List<Acceptance> acceptances) {
-		this.acceptances = acceptances;
 	}
 
 	public void setGroups_user(List<Group> groups_user) {
@@ -158,20 +236,12 @@ public class User extends BaseEntity implements Serializable{
 		this.dob = dob;
 	}
 
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
-	}
-
-	public Date getCreate_time() {
-		return create_time;
-	}
-
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
 	}
 
 	public Boolean getIsActive() {
@@ -181,4 +251,87 @@ public class User extends BaseEntity implements Serializable{
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public List<Request> getRequest() {
+		return request;
+	}
+
+	public void setRequest(List<Request> request) {
+		this.request = request;
+	}
+
+	public List<ReliefPoint> getReliefPoints() {
+		return reliefPoints;
+	}
+
+	public void setReliefPoints(List<ReliefPoint> reliefPoints) {
+		this.reliefPoints = reliefPoints;
+	}
+	
+
+	public String getCreate_by() {
+		return create_by;
+	}
+
+	public void setCreate_by(String create_by) {
+		this.create_by = create_by;
+	}
+
+	public Timestamp getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(Timestamp create_time) {
+		this.create_time = create_time;
+	}
+
+	public String getModified_by() {
+		return modified_by;
+	}
+
+	public void setModified_by(String modified_by) {
+		this.modified_by = modified_by;
+	}
+
+	public Timestamp getModified_date() {
+		return modified_date;
+	}
+
+	public void setModified_date(Timestamp modified_date) {
+		this.modified_date = modified_date;
+	}
+
+	@Override
+	public String toString() {
+		String rs = "Access Code is: ";
+//		groups_user.forEach(r -> {
+//			rs+=r.getCode();
+//			r.getPermissions().forEach(p -> rs+=p.getCode());
+//		});
+		for (Group group : groups_user) {
+			rs+=group.getCode()+" ,";
+			for (Permission grouPermission : group.getPermissions()) {
+				rs+=grouPermission.getCode()+" ,";
+			}
+		}
+		return rs;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 }

@@ -1,8 +1,13 @@
 package com.ultils;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -42,8 +47,28 @@ public class Ultilities {
 		return check;
 	}
 	
-	public static java.sql.Date toSqlDate(Date d) {
-        java.sql.Date sql = new java.sql.Date(d.getTime());
+	public static Timestamp toSqlDate(Date d) {
+        java.sql.Timestamp sql = new java.sql.Timestamp(d.getTime());
         return sql;
+	}
+	
+	public static List<String> getLabelReport(List<String> arrListNumber) {
+		List<String> arrTemp = new ArrayList<String>();
+	    for (int i = 0; i < arrListNumber.size(); i++) {
+	        if (!arrTemp.contains(arrListNumber.get(i))) {
+	            arrTemp.add(arrListNumber.get(i));
+	        }
+	    }
+	    arrTemp.sort(Comparator.naturalOrder());
+	    return arrTemp;
+	}
+	
+	public static boolean checkExistIn(int value, int[] inputValues) {
+		boolean isExist = false;
+		for (int i = 0; i < inputValues.length; i++) {
+			if(value == inputValues[i])
+				isExist = true;
+		}
+		return isExist;
 	}
 }
