@@ -91,6 +91,14 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
+	public ReliefPointDto getReliefPointByIdORG(Long id) {
+		// TODO Auto-generated method stub
+		ReliefPoint rp = reliefPointRepository.getById(id);
+		ReliefPointDto rpDto = mapStructMapper.reliefPointToreliefPointDto(rp);
+		return rpDto;
+	}
+
+	@Override
 	public ReliefPoint getReliefPointByUser(User user) {
 		// TODO Auto-generated method stub
 
@@ -146,9 +154,10 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setAddress(address);
 		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		reliefPoint.setStatus(true);
+		reliefPoint.setStatus(1);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		reliefPoint.setOrganization(user.getOrganization());
+		reliefPoint.setUsers(user);
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
 		
 //		notificationService.sendPnsToDeviceWhenCreateReliefPoint(rp,"Có một địa điểm cứu trợ được tạo gần bạn");
@@ -168,7 +177,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setAddress(address);
 		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
-		reliefPoint.setStatus(true);
+		reliefPoint.setStatus(1);
 		reliefPoint.setCreate_time(DateUtils.getCurrentSqlDate());
 		reliefPoint.setUser_rp(user);
 		ReliefPoint rp = reliefPointRepository.save(reliefPoint);
@@ -198,6 +207,8 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 				throw new AppException(402, "Id of Item is not Found!");
 			}
 		});
+
+		//BeanUtils.copyProperties(rp, reliefPoint);
 		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
 		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
 			rf.setReliefPoint(reliefPoint);
@@ -212,8 +223,11 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
 		reliefPoint.setDescription(reliefPointDto.getDescription());
 		reliefPoint.setName(reliefPointDto.getName());
-		reliefPoint.setImages(rp.getImages());
 		reliefPoint.setStatus(rp.getStatus());
+		reliefPoint.setImages(rp.getImages());
+		reliefPoint.setUsers(rp.getUsers());
+		reliefPoint.setOrganization(rp.getOrganization());
+		reliefPoint.setRelief_user(rp.getRelief_user());
 		
 		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
@@ -273,6 +287,44 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 //		rp.setModified_date(DateUtils.getCurrentSqlDate());
 		return reliefPointRepository.saveAndFlush(reliefPoint);
 	}
+	@Override
+	public ReliefPoint updateReliefPointORG(ReliefPointDto reliefPointDto) {
+		// TODO Auto-generated method stub
+		ReliefPoint rp = reliefPointRepository.getById(reliefPointDto.getId());
+		if (null == rp) {
+			throw new AppException(402, "Relief point is not Found!");
+		}
+		if (reliefPointDto.getAddress().getId() == 0) {
+			throw new AppException(402, "Id of Address is not Found!");
+		}
+		reliefPointDto.getReliefInformations().forEach((rpIf) -> {
+			if(rpIf.getItem().getId() == 0) {
+				throw new AppException(402, "Id of Item is not Found!");
+			}
+		});
+
+		//BeanUtils.copyProperties(rp, reliefPoint);
+		ReliefPoint reliefPoint = mapStructMapper.reliefPointDtoToreliefPoint(reliefPointDto);
+		List<ReliefInformation> lstRIfor = reliefPoint.getReliefInformations().stream().map(rf -> {
+			rf.setReliefPoint(reliefPoint);
+			return rf;
+		}).collect(Collectors.toList());
+		
+		Address address = addressService.mapAddress(reliefPointDto.getAddress());
+		reliefPoint.setReliefInformations(lstRIfor);
+		reliefPoint.setAddress(address);
+		reliefPoint.setModified_date(DateUtils.getCurrentSqlDate());
+		reliefPoint.setOpen_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getOpen_time()));
+		reliefPoint.setClose_time(DateUtils.convertJavaDateToSqlDate(reliefPointDto.getClose_time()));
+		reliefPoint.setDescription(reliefPointDto.getDescription());
+		reliefPoint.setName(reliefPointDto.getName());
+		reliefPoint.setStatus(rp.getStatus());
+		reliefPoint.setImages(rp.getImages());
+		reliefPoint.setUsers(rp.getUsers());
+		reliefPoint.setOrganization(rp.getOrganization());
+		reliefPoint.setRelief_user(rp.getRelief_user());
+		return reliefPointRepository.save(reliefPoint);
+	}
 
 	@Override
 	public List<ReliefPointDto> getAllReliefPoint() {
@@ -299,6 +351,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	}
 
 	@Override
+	public List<ReliefPointDto> getEvent(Long uId,ReliefPointFilterDto reliefPointFilterDto) {
+		// TODO Auto-generated method stub
+		List<ReliefPoint> reliefPoints = reliefPointRepository.findByTypeOrStatusEv(uId, reliefPointFilterDto);
+		return mapStructMapper.lstReliefPointToreliefPointDto(reliefPoints);
+	}
+
+	@Override
 	public Map<String, Object> getReliefPointsAdmin(Long oId, SearchFilterDto filter) {
 		// TODO Auto-generated method stub
 		List<ReliefPointDto> lstRs = new ArrayList<ReliefPointDto>();
@@ -306,7 +365,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	    if (filter.getSort()) {
 	    	sortable = Sort.by("name").descending();
 	    }else {
-	    	sortable = Sort.by("name").descending();
+	    	sortable = Sort.by("name").ascending();
 	    }
 	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
 		Page<ReliefPoint> pageStore = reliefPointRepository.getOwnOrgReliefPoint(oId, filter.getStatus_store(), filter.getSearch(), pageable);
@@ -341,7 +400,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 
 	@Override
 	@Transactional
-	public ReliefPoint updateStatusReliefPoint(Long rId, Boolean status) {
+	public ReliefPoint updateStatusReliefPoint(Long rId, int status) {
 		// TODO Auto-generated method stub
 		ReliefPoint rp = reliefPointRepository.findById(rId)
 				.orElseThrow(() -> new AppException(402, "ReliefPoint not exist"));
@@ -354,6 +413,13 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	public void deleteReliefPointById(Long rId) {
 		// TODO Auto-generated method stub
 		reliefPointRepository.deleteById(rId);
+	}
+
+	@Override
+	@Transactional
+	public void deleteReliefPointEvent(Long rId) {
+		// TODO Auto-generated method stub
+		reliefPointRepository.deleteEvent(rId);
 	}
 
 	@Override

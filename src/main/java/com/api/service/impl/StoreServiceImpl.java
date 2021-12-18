@@ -232,7 +232,7 @@ public class StoreServiceImpl implements StoreService{
 	    if (filter.getSort()) {
 	    	sortable = Sort.by("name").descending();
 	    }else {
-	    	sortable = Sort.by("name").descending();
+	    	sortable = Sort.by("name").ascending();
 	    }
 	    Pageable pageable = PageRequest.of(filter.getPageIndex(), filter.getPageSize(), sortable);
 		Page<Store> pageStore = storeRepository.getStoreByStatusOrType(user_id, filter.getStatus_store(),filter.getType(),pageable);

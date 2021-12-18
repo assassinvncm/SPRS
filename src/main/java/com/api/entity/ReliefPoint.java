@@ -45,7 +45,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	private Timestamp close_time;
 	
 	@Column(name = "status")
-	private Boolean status;
+	private int status;
 	
 	@Column(updatable = false)
 	public String create_by;
@@ -86,7 +86,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	private Image images;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true, updatable = false)
+	@JoinColumn(name = "organization_id",referencedColumnName="id",insertable = true)
 	private Organization organization;
 
 	@ManyToMany(cascade = CascadeType.REMOVE)
@@ -98,6 +98,7 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 	/**
 	 * @return the relief_user
 	 */
+	
 	public List<User> getRelief_user() {
 		return relief_user;
 	}
@@ -169,11 +170,11 @@ public class ReliefPoint  extends BaseEntity implements Serializable{
 		this.close_time = close_time;
 	}
 
-	public Boolean getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	

@@ -37,6 +37,12 @@ public interface ReliefPointService {
 	 * 
 	 * @return
 	 */
+	List<ReliefPointDto> getEvent(Long uId,ReliefPointFilterDto reliefPointFilterDto);
+	
+	/**
+	 * 
+	 * @return
+	 */
 	Map<String, Object> getReliefPointsAdmin(Long oId, SearchFilterDto filter);
 	
 	/**
@@ -52,6 +58,11 @@ public interface ReliefPointService {
 	 * @return
 	 */
 	ReliefPointDto getReliefPointById(Long id);
+	/**
+	 * get  reliefpoint by id
+	 * @return
+	 */
+	ReliefPointDto getReliefPointByIdORG(Long id);
 	
 	/**
 	 * 
@@ -99,6 +110,12 @@ public interface ReliefPointService {
 	 * @return
 	 */
 	ReliefPoint updateReliefPoint(ReliefPointDto reliefPoint);
+	/**
+	 * 
+	 * @param reliefPoint
+	 * @return
+	 */
+	ReliefPoint updateReliefPointORG(ReliefPointDto reliefPoint);
 	
 	/**
 	 * 
@@ -112,7 +129,7 @@ public interface ReliefPointService {
 	 * @param reliefPoint
 	 * @return
 	 */
-	ReliefPoint updateStatusReliefPoint(Long rId, Boolean status);
+	ReliefPoint updateStatusReliefPoint(Long rId, int status);
 	
 	/**
 	 * 
@@ -120,6 +137,13 @@ public interface ReliefPointService {
 	 * 
 	 */
 	void deleteReliefPointById(Long rId);
+	
+	/**
+	 * 
+	 * @param rId
+	 * 
+	 */
+	void deleteReliefPointEvent(Long rId);
 	
 	/**
 	 * 

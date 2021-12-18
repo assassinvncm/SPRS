@@ -33,7 +33,7 @@ public class ReliefPointDto {
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm", timezone = "Asia/Ho_Chi_Minh")
 	private Date close_time;
 
-	private Boolean status;
+	private int status;
 
 	private UserDto user_rp;
 
@@ -66,7 +66,7 @@ public class ReliefPointDto {
 		super();
 	}
 
-	public ReliefPointDto(long id, String name, String description, Date open_time, Date close_time, Boolean status,
+	public ReliefPointDto(long id, String name, String description, Date open_time, Date close_time, int status,
 			UserDto user_rp, List<ReliefInformationDto> reliefInformations, AddressDto address) {
 		super();
 		this.id = id;
@@ -148,11 +148,11 @@ public class ReliefPointDto {
 		this.close_time = close_time;
 	}
 
-	public Boolean getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

@@ -199,16 +199,116 @@ public class ReportServiceImpl implements ReportService{
         response.put("label", labels);
 		return response;
 	}
-
+	
 	@Override
-	public List<ReportResultDto> getReportOverview(ReportDto rpdto) {
-		String group_by = "1=1";
-		String type_point = "1,2,3,4";
-		List<Object[]> lstObj = rpRepo.getReport(rpdto.getDistrict_id()
+	public Map<String, Object> getReportYearORG(ReportDto rpdto) {
+		String group_by = "m_month";
+		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
+		String monthAgo = DateUtils.getMonthAgo("yyyy-MM-dd", 12);
+		String type_point = "";
+		rpdto.setDate_from(monthAgo);
+		rpdto.setDate_to(currDate);
+		for (int i = 0; i < rpdto.getType_point().length; i++) {
+			type_point+=String.valueOf(rpdto.getType_point()[i]);
+			if(i!=rpdto.getType_point().length-1) {
+				type_point+=",";
+			}
+		}
+		List<Object[]> lstObj = rpRepo.getReportORG(rpdto.getDistrict_id()
 				, rpdto.getSub_district_id()
 				, rpdto.getCity_id()
 				, rpdto.getDate_from()
 				, rpdto.getDate_to()
+				, type_point
+				, group_by
+				, rpdto.getOrg_id());
+		
+		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
+		final List<String> labelsTemp = new ArrayList<String>();
+		List<String> labels = new ArrayList<String>();
+		lstRs.forEach(l -> labelsTemp.add(l.getYear()+"-"+l.getMonth()));
+		labels = Ultilities.getLabelReport(labelsTemp);
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("ReliefPoint", lstRs);
+		Map<String, Object> response = new HashMap<>();
+        response.put("data", data);
+        response.put("label", labels);
+		return response;
+	}
+
+	@Override
+	public Map<String, Object> getReportMonthORG(ReportDto rpdto) {
+		String group_by = "m_day";
+		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
+		String dayAgo = DateUtils.getDateAgo("yyyy-MM-dd", 30);
+		String type_point = "";
+		rpdto.setDate_from(dayAgo);
+		rpdto.setDate_to(currDate);
+		for (int i = 0; i < rpdto.getType_point().length; i++) {
+			type_point+=String.valueOf(rpdto.getType_point()[i]);
+			if(i!=rpdto.getType_point().length-1) {
+				type_point+=",";
+			}
+		}
+		List<Object[]> lstObj = rpRepo.getReportORG(rpdto.getDistrict_id()
+				, rpdto.getSub_district_id()
+				, rpdto.getCity_id()
+				, rpdto.getDate_from()
+				, rpdto.getDate_to()
+				, type_point
+				, group_by
+				, rpdto.getOrg_id());
+		
+		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
+		final List<String> labelsTemp = new ArrayList<String>();
+		List<String> labels = new ArrayList<String>();
+		lstRs.forEach(l -> labelsTemp.add(l.getDay()+"-"+l.getMonth()+"-"+l.getYear()));
+		labels = Ultilities.getLabelReport(labelsTemp);
+
+		Map<String, Object> data = new HashMap<>();
+		data.put("ReliefPoint", lstRs);
+		Map<String, Object> response = new HashMap<>();
+        response.put("data", data);
+        response.put("label", labels);
+		return response;
+	}
+
+	@Override
+	public List<ReportResultDto> getReportOverview() {
+		String group_by = "1=1";
+		String type_point = "1,2,3,4";
+		List<Object[]> lstObj = rpRepo.getReport(0
+				, 0
+				, 0
+				, ""
+				, ""
+				, type_point
+				, group_by);
+		
+		List<ReportResultDto> lstRs = mapper.reportMapping(lstObj);
+		int total = 0;
+		for (ReportResultDto reportResultDto : lstRs) {
+			total += reportResultDto.getTotal();
+		}
+
+		for (ReportResultDto reportResultDto : lstRs) {
+			double percent = reportResultDto.getTotal()*100/total;
+			reportResultDto.setTotal(percent);
+		}
+		
+		return lstRs;
+	}
+
+	@Override
+	public List<ReportResultDto> getReportUserORGOverview() {
+		String group_by = "1=1";
+		String type_point = "1,2,3,4";
+		List<Object[]> lstObj = rpRepo.getReport(0
+				, 0
+				, 0
+				, ""
+				, ""
 				, type_point
 				, group_by);
 		
@@ -307,6 +407,54 @@ public class ReportServiceImpl implements ReportService{
         response.put("data", data);
         response.put("label", labels);
 		return response;
+	}@Override
+	public Map<String, Object> getReportProvinceORG(ReportDto rpdto) {
+		String type_point = "";
+		for (int i = 0; i < rpdto.getType_point().length; i++) {
+			type_point+=String.valueOf(rpdto.getType_point()[i]);
+			if(i!=rpdto.getType_point().length-1) {
+				type_point+=",";
+			}
+		}
+		List<Object[]> lstObj = rpRepo.getReportCityORG(rpdto.getDistrict_id()
+				, rpdto.getSub_district_id()
+				, rpdto.getCity_id()
+				, rpdto.getDate_from()
+				, rpdto.getDate_to()
+				, type_point
+				, ""
+				, rpdto.getOrg_id());
+		
+		List<ReportResultDto> lstRs = mapper.reportMappingProvince(lstObj);
+		final List<String> labelsTemp = new ArrayList<String>();
+		List<String> labels = new ArrayList<String>();
+		lstRs.forEach(l -> labelsTemp.add(l.getName()));
+		labels = Ultilities.getLabelReport(labelsTemp);
+
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("ReliefPoint", lstRs);
+		Map<String, Object> response = new HashMap<>();
+        response.put("data", data);
+        response.put("label", labels);
+		return response;
+	}
+
+
+	@Override
+	public Map<String, Object> getReportTopUserORG(Long o_id) {
+		String currDate = DateUtils.getCurrentDate("yyyy-MM-dd");
+		String dayAgo = DateUtils.getDateAgo("yyyy-MM-dd", 30);
+		List<Object[]> lstObj = rpRepo.getReportTopUserORG(
+				  dayAgo
+				, currDate
+				, o_id);
+		
+		List<ReportResultDto> lstRs = mapper.reportMappingTopUser(lstObj);
+		
+		Map<String, Object> data = new HashMap<>();
+		data.put("data", lstRs);
+		return data;
 	}
 
 }

@@ -74,4 +74,15 @@ public class ProcedureMapper {
 		}
 		return rs;
 	}
+	
+	public List<ReportResultDto> reportMappingTopUser(List<Object[]> lstObj) {
+		List<ReportResultDto> rs = new ArrayList<ReportResultDto>();
+		for(Object[] obj : lstObj) {
+			ReportResultDto rpRs = new ReportResultDto();
+			rpRs.setTotal(((BigInteger) obj[0]).doubleValue());
+			rpRs.setName((String) obj[1]);
+			rs.add(rpRs);
+		}
+		return rs;
+	}
 }

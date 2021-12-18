@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +23,9 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>,
 
 	@Query("select rp from ReliefPoint rp inner join rp.address address inner join address.subDistrict sd inner join sd.district d inner join d.city  where d.city.id = :cId")
 	List<ReliefPoint> findReliefPointByArea(@Param("cId") long id);
+
+//	@Query("SELECT rp FROM User u inner join u.user_relief rp WHERE :name IS NULL OR :name = '' OR u.username LIKE %:name%")
+//	Page<ReliefPoint> getEvent(@Param("name") String name, Pageable pageable);
 
 	@Query("select rp from User u inner join u.reliefPoints rp where u.id = :uId and rp.id = :rpId")
 	Optional<ReliefPoint> findByIdAndUser(@Param("rpId") Long rpId, @Param("uId") Long uId);
@@ -47,6 +51,11 @@ public interface ReliefPointRepository extends JpaRepository<ReliefPoint, Long>,
 	@Transactional
 	@Procedure(procedureName = "prc_event_delete")
 	String deleteEvent(@Param("p_id") long p_id);
+
+	@Modifying
+	@Transactional
+	@Query("update ReliefPoint rp set rp.status = :status where rp.id = :rId")
+	void updateUser(@Param("rId") Long rId, @Param("status") String status);
 
 //	@Query("select rp from User u inner join u.reliefPoints rp inner join rp.reliefInformations rif inner join rif.item i where u.id = :uId and (rp.status =:status or i.id = :typeId)")
 //	Slice<ReliefPoint> findByTypeOrStatus(@Param("uId") Long uId,@Param("typeId") Long typeId ,@Param("status") Boolean status,Pageable pageRequest);
