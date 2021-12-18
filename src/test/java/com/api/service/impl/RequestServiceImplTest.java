@@ -13,7 +13,10 @@ import com.ultils.Constants;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -24,6 +27,8 @@ import java.util.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class RequestServiceImplTest {
 
 	private RequestServiceImpl requestServiceImplUnderTest;

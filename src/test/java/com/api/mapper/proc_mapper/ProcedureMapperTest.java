@@ -8,12 +8,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.api.dto.ReportResultDto;
 import com.api.entity.Device;
 import com.api.entity.Store;
 
-
+@ExtendWith(MockitoExtension.class)
 class ProcedureMapperTest {
 
 	private ProcedureMapper procedureMapperUnderTest;
