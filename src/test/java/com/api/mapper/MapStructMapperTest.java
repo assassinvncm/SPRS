@@ -36,7 +36,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testAddressToAddressDto() {
+    void testAddressToAddressDto_UTCID01() {
         // Setup
         final Address address = new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati");
 
@@ -47,7 +47,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testAddressDtoToAddress() {
+    void testAddressDtoToAddress_UTCID01() {
         // Setup
         final AddressDto addressDto = new AddressDto(new CityDto(0L, "code", "name"), new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"), Arrays.asList(new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList(new Address("city", "province", "district", null, "addressLine", "gPS_Long", "gPS_Lati"))))), new SubDistrictDto(0L, "code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList(new Address("city", "province", "district", null, "addressLine", "gPS_Long", "gPS_Lati"))))), Arrays.asList()), "addressLine1", "addressLine2", "gPS_long", "gPS_lati");
 
@@ -58,7 +58,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testGroupToGroupDto() {
+    void testGroupToGroupDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -84,7 +84,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testUserToUserDto_forGet() {
+    void testUserToUserDto_forGet_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -111,7 +111,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstGroupToGroupDto() {
+    void testLstGroupToGroupDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -138,7 +138,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstUserToUserDto() {
+    void testLstUserToUserDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -165,7 +165,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testOrganizationToOrganizationDto() {
+    void testOrganizationToOrganizationDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -224,7 +224,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testGroupDtoToGroup() {
+    void testGroupDtoToGroup_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -242,7 +242,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testOrganizationDtoToOrganization() {
+    void testOrganizationDtoToOrganization_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -267,7 +267,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testUserToUserDto() {
+    void testUserToUserDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -294,7 +294,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testUserToUserDto_getUController() {
+    void testUserToUserDto_getUController_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -321,7 +321,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testUserDtoToUser() {
+    void testUserDtoToUser_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -353,7 +353,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testRequestToRequestDto() {
+    void testRequestToRequestDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -412,7 +412,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstRequestToRequestDto() {
+    void testLstRequestToRequestDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
@@ -471,7 +471,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testItemToItemDto() {
+    void testItemToItemDto_UTCID01() {
         // Setup
         final Item item = new Item();
         item.setName("name");
@@ -561,7 +561,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testCateToCateDto() {
+    void testCateToCateDto_UTCID01() {
         // Setup
         final StoreCategory cate = new StoreCategory();
         final Store store = new Store();
@@ -617,7 +617,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testCateDtoToCate() {
+    void testCateDtoToCate_UTCID01() {
         // Setup
         final StoreCategoryDto cateDto = new StoreCategoryDto();
         cateDto.setName("name");
@@ -629,7 +629,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testItemDtoToItem() {
+    void testItemDtoToItem_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -654,7 +654,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstitemToItemDto() {
+    void testLstitemToItemDto_UTCID01() {
         // Setup
         final Item item = new Item();
         item.setName("name");
@@ -745,7 +745,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstStoreCateToStoreCateDto() {
+    void testLstStoreCateToStoreCateDto_UTCID01() {
         // Setup
         final StoreCategory storeCategory = new StoreCategory();
         final Store store = new Store();
@@ -802,7 +802,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstItemDtoToItem() {
+    void testLstItemDtoToItem_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -820,7 +820,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testReliefPointToreliefPointDto() {
+    void testReliefPointToreliefPointDto_UTCID01() {
         // Setup
         final ReliefPoint reliefPoint = new ReliefPoint();
         final Group group = new Group();
@@ -910,7 +910,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testStoreToStoreDTO() {
+    void testStoreToStoreDTO_UTCID01() {
         // Setup
         final Store store = new Store();
         store.setCreate_time(Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)));
@@ -966,7 +966,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testReliefPointDtoToreliefPoint() {
+    void testReliefPointDtoToreliefPoint_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -998,7 +998,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstGroupDtoToGroup() {
+    void testLstGroupDtoToGroup_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -1016,7 +1016,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstReliefPointToreliefPointDto() {
+    void testLstReliefPointToreliefPointDto_UTCID01() {
         // Setup
         final ReliefPoint reliefPoint = new ReliefPoint();
         final Group group = new Group();
@@ -1107,7 +1107,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testReliefInforToReliefInforDto() {
+    void testReliefInforToReliefInforDto_UTCID01() {
         // Setup
         final ReliefPoint reliefPoint = new ReliefPoint();
         final Group group = new Group();
@@ -1278,7 +1278,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testReliefInforDtoToReliefInfor() {
+    void testReliefInforDtoToReliefInfor_UTCID01() {
         // Setup
         final PermissionDto permissionDto = new PermissionDto();
         permissionDto.setCode("code");
@@ -1310,7 +1310,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstStoreToStoreDto() {
+    void testLstStoreToStoreDto_UTCID01() {
         // Setup
         final Store store = new Store();
         store.setCreate_time(Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)));
@@ -1367,7 +1367,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testStoreDtoToStore() {
+    void testStoreDtoToStore_UTCID01() {
         // Setup
         final StoreDto dto = new StoreDto();
         dto.setImages(new Image("img_url"));
@@ -1411,7 +1411,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstStoreCateDtoToStoreCate() {
+    void testLstStoreCateDtoToStoreCate_UTCID01() {
         // Setup
         final StoreCategoryDto storeCategoryDto = new StoreCategoryDto();
         storeCategoryDto.setName("name");
@@ -1424,7 +1424,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testDeviceToDeviceDto() {
+    void testDeviceToDeviceDto_UTCID01() {
         // Setup
         final Device device = new Device();
         device.setToken("token");
@@ -1455,7 +1455,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testDeviceDtoToDevice() {
+    void testDeviceDtoToDevice_UTCID01() {
         // Setup
         final DeviceDto deviceDto = new DeviceDto();
         deviceDto.setId(0L);
@@ -1492,7 +1492,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testSOSToSOSDto() {
+    void testSOSToSOSDto_UTCID01() {
         // Setup
         final SOS sos = new SOS("description", 0, 0, "gPS_Long", "gPS_Lati");
 
@@ -1503,7 +1503,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testSOSDtoToSOS() {
+    void testSOSDtoToSOS_UTCID01() {
         // Setup
         final SOSDto sosDto = new SOSDto();
         sosDto.setAddress(new AddressDto(new CityDto(0L, "code", "name"), new DistrictDto(0L, "code", "name", new CityDto(0L, "code", "name"), Arrays.asList(new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList(new Address("city", "province", "district", null, "addressLine", "gPS_Long", "gPS_Lati"))))), new SubDistrictDto(0L, "code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList(new SubDistrict("code", "name", null, Arrays.asList(new Address("city", "province", "district", null, "addressLine", "gPS_Long", "gPS_Lati"))))), Arrays.asList()), "addressLine1", "addressLine2", "gPS_long", "gPS_lati"));
@@ -1541,7 +1541,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testNotificationToNotificationDto() {
+    void testNotificationToNotificationDto_UTCID01() {
         // Setup
         final Notification notification = new Notification();
         final Store store = new Store();
@@ -1636,7 +1636,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstNotificationToNotificationDto() {
+    void testLstNotificationToNotificationDto_UTCID01() {
         // Setup
         final Notification notification = new Notification();
         final Store store = new Store();
@@ -1732,7 +1732,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testPermisisonToPermisionDto() {
+    void testPermisisonToPermisionDto_UTCID01() {
         // Setup
         final Permission per = new Permission();
         per.setLevel(0);
@@ -1751,7 +1751,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstPermissionToPermissionDto() {
+    void testLstPermissionToPermissionDto_UTCID01() {
         // Setup
         final Permission permission = new Permission();
         permission.setLevel(0);
@@ -1771,7 +1771,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstPermissionToLstGrantAccess() {
+    void testLstPermissionToLstGrantAccess_UTCID01() {
         // Setup
         final Permission permission = new Permission();
         permission.setLevel(0);
@@ -1791,7 +1791,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstReliefPointStreamToReliefPointDto() {
+    void testLstReliefPointStreamToReliefPointDto_UTCID01() {
         // Setup
         final ReliefPoint reliefPoint = new ReliefPoint();
         final Group group = new Group();
@@ -1882,7 +1882,7 @@ class MapStructMapperTest {
     }
 
     @Test
-    void testLstBanUserToBanUserDto() {
+    void testLstBanUserToBanUserDto_UTCID01() {
         // Setup
         final Group group = new Group();
         group.setPlatform(0);
