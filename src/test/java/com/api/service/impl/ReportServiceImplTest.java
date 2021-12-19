@@ -32,7 +32,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportYear() {
+    void testGetReportYear_UTCID01() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -70,7 +70,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportYear_ReportRepositoryReturnsNoItems() {
+    void testGetReportYear_UTCID02() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -108,7 +108,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportYear_ProcedureMapperReturnsNoItems() {
+    void testGetReportYear_UTCID03() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -135,7 +135,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportMonth() {
+    void testGetReportMonth_UTCID01() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -172,7 +172,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportMonth_ReportRepositoryReturnsNoItems() {
+    void testGetReportMonth_UTCID02() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -209,7 +209,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportMonth_ProcedureMapperReturnsNoItems() {
+    void testGetReportMonth_UTCID03() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -236,7 +236,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportYearORG() {
+    void testGetReportYearORG_UTCID01() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -273,7 +273,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportYearORG_ReportRepositoryReturnsNoItems() {
+    void testGetReportYearORG_UTCID02() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -310,7 +310,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportYearORG_ProcedureMapperReturnsNoItems() {
+    void testGetReportYearORG_UTCID03() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -337,7 +337,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportMonthORG() {
+    void testGetReportMonthORG_UTCID01() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -374,7 +374,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportMonthORG_ReportRepositoryReturnsNoItems() {
+    void testGetReportMonthORG_UTCID02() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -411,7 +411,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportMonthORG_ProcedureMapperReturnsNoItems() {
+    void testGetReportMonthORG_UTCID03() {
         // Setup
         final ReportDto rpdto = new ReportDto();
         rpdto.setOrg_id(0L);
@@ -438,7 +438,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportOverview() {
+    void testGetReportOverview_UTCID01() {
     	
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
@@ -465,7 +465,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportOverview_ReportRepositoryReturnsNoItems() {
+    void testGetReportOverview_UTCID02() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -492,7 +492,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportOverview_ProcedureMapperReturnsNoItems() {
+    void testGetReportOverview_UTCID03() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -509,7 +509,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportUserORGOverview() {
+    void testGetReportUserORGOverview_UTCID01() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -535,7 +535,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportUserORGOverview_ReportRepositoryReturnsNoItems() {
+    void testGetReportUserORGOverview_UTCID02() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -562,7 +562,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportUserORGOverview_ProcedureMapperReturnsNoItems() {
+    void testGetReportUserORGOverview_UTCID03() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -579,7 +579,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportProvince() {
+    void testGetReportProvince_UTCID01() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -616,7 +616,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportProvince_ReportRepositoryReturnsNoItems() {
+    void testGetReportProvince_UTCID02() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -653,7 +653,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportProvince_ProcedureMapperReturnsNoItems() {
+    void testGetReportProvince_UTCID03() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -680,7 +680,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportProvinceORG() {
+    void testGetReportProvinceORG_UTCID01() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -717,7 +717,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportProvinceORG_ReportRepositoryReturnsNoItems() {
+    void testGetReportProvinceORG_UTCID02() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -754,7 +754,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportProvinceORG_ProcedureMapperReturnsNoItems() {
+    void testGetReportProvinceORG_UTCID03() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -781,7 +781,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportTopUserORG() {
+    void testGetReportTopUserORG_UTCID01() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -807,7 +807,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportTopUserORG_ReportRepositoryReturnsNoItems() {
+    void testGetReportTopUserORG_UTCID02() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"
@@ -833,7 +833,7 @@ class ReportServiceImplTest {
     }
 
     @Test
-    void testGetReportTopUserORG_ProcedureMapperReturnsNoItems() {
+    void testGetReportTopUserORG_UTCID03() {
         List<Object[]> lstInput = new ArrayList<Object[]>();
         Object[] obj = new Object[] {
         		"value"

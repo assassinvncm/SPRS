@@ -81,7 +81,7 @@ class ProcedureMapperTest {
 	void testReportMappingTopUser() {
 		// Setup
 		List<Object[]> lstObject = new ArrayList<Object[]>();
-		Object[] obj = new Object[] { "value" };
+		Object[] obj = new Object[] { "12", "duongpt" };
 		lstObject.add(obj);
 		// Run the test
 		final List<ReportResultDto> result = procedureMapperUnderTest

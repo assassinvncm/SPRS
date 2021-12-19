@@ -1396,8 +1396,8 @@ class MapStructMapperTest {
         dto.setId(0L);
         dto.setName("name");
         dto.setDescription("description");
-        dto.setOpen_time("open_time");
-        dto.setClose_time("close_time");
+        dto.setOpen_time("09:30");
+        dto.setClose_time("16:30");
         dto.setStatus(0);
         final StoreCategoryDto storeCategoryDto = new StoreCategoryDto();
         storeCategoryDto.setName("name");
@@ -1627,6 +1627,7 @@ class MapStructMapperTest {
         final Group group5 = new Group();
         reliefPoint.setOrganization(new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Arrays.asList(new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group3))), Arrays.asList(new Request("type", "status", "message", Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)), new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group4)), group5, null))));
         notification.setReliefPoint(reliefPoint);
+        notification.setType("type");
 
         // Run the test
         final NotificationDto result = mapStructMapperImplUnderTest.notificationToNotificationDto(notification);
@@ -1721,6 +1722,7 @@ class MapStructMapperTest {
         final Group group5 = new Group();
         reliefPoint.setOrganization(new Organization("name", Date.valueOf(LocalDate.of(2020, 1, 1)), "description", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Arrays.asList(new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group3))), Arrays.asList(new Request("type", "status", "message", Timestamp.valueOf(LocalDateTime.of(2020, 1, 1, 0, 0, 0, 0)), new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group4)), group5, null))));
         notification.setReliefPoint(reliefPoint);
+        notification.setType("type");
         final Stream<Notification> lstNotificaiton = Stream.of(notification);
 
         // Run the test
