@@ -26,10 +26,10 @@ class ProcedureMapperTest {
 	}
 
 	@Test
-	void testGetStoreByStatusOrType_Mapper() {
+	void testGetStoreByStatusOrType_Mapper_UTCID01() {
 		// Setup
 		List<Object[]> lstObject = new ArrayList<Object[]>();
-		Object[] obj = new Object[] { "value" };
+		Object[] obj = new Object[] { 1,"09:12","okok","duongpt", "23:30", 1};
 		lstObject.add(obj);
 		// Run the test
 		final List<Store> result = procedureMapperUnderTest
@@ -39,10 +39,10 @@ class ProcedureMapperTest {
 	}
 
 	@Test
-	void testGetDevice() {
+	void testGetDevice_UTCID01() {
 		// Setup
 		List<Object[]> lstObject = new ArrayList<Object[]>();
-		Object[] obj = new Object[] { "value" };
+		Object[] obj = new Object[] { 1,"882hđmekdd","",1,"sgsjj27sg" };
 		lstObject.add(obj);
 		// Run the test
 		final List<Device> result = procedureMapperUnderTest.getDevice(lstObject);
@@ -51,10 +51,10 @@ class ProcedureMapperTest {
 	}
 
 	@Test
-	void testReportMapping() {
+	void testReportMapping_UTCID01() {
 		// Setup
 		List<Object[]> lstObject = new ArrayList<Object[]>();
-		Object[] obj = new Object[] { "value" };
+		Object[] obj = new Object[] { "12","12","2019","1","99" };
 		lstObject.add(obj);
 		// List<Object[]> lstObject = new A
 
@@ -65,10 +65,10 @@ class ProcedureMapperTest {
 	}
 
 	@Test
-	void testReportMappingProvince() {
+	void testReportMappingProvince_UTCID01() {
 		// Setup
 		List<Object[]> lstObject = new ArrayList<Object[]>();
-		Object[] obj = new Object[] { "value" };
+		Object[] obj = new Object[] { "Hà Nội", 1, 22 };
 		lstObject.add(obj);
 		// Run the test
 		final List<ReportResultDto> result = procedureMapperUnderTest
@@ -78,7 +78,7 @@ class ProcedureMapperTest {
 	}
 
 	@Test
-	void testReportMappingTopUser() {
+	void testReportMappingTopUser_UTCID01() {
 		// Setup
 		List<Object[]> lstObject = new ArrayList<Object[]>();
 		Object[] obj = new Object[] { "12", "duongpt" };
