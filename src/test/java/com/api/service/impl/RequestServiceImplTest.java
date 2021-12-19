@@ -226,7 +226,7 @@ class RequestServiceImplTest {
 		Long orgId = 2L;
 		String status = "active";
 		
-		when(requestServiceImplUnderTest.requestRepository.filterRequestOfOrgAdmin(0L, "status"))
+		when(requestServiceImplUnderTest.requestRepository.filterRequestOfOrgAdmin(orgId, status))
 				.thenReturn(Collections.emptyList());
 		
 		when(requestServiceImplUnderTest.mapStructMapper.lstRequestToRequestDto(requests)).thenReturn(Collections.emptyList());

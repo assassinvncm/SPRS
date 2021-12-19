@@ -1,6 +1,7 @@
 package com.api.service.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -53,18 +54,18 @@ class MapSerivceImplTest {
 
 		// mock data
 		List<Object[]> mapPoints = new ArrayList<Object[]>();
-		Object[] mappost = new Object[] { new BigInteger("1"), "abc", "12.3412123", "5.2132132", "acs" };
-		mapPoints.add(mappost);
-		mapPoints.add(mappost);
-		// mock
-		Mockito.when(mapRepository.getPoints(la, lo, radius, "s")).thenReturn(mapPoints);
+		Object[] mapPoint1 = new Object[] { new BigInteger("1"), "abc", "12.3412123", "5.2132132",new BigInteger("2"), "acs" };
+		Object[] mapPoint2 = new Object[] { new BigInteger("2"), "store", "11.3412123", "7.2132132",new BigInteger("4"), "abc" };
+		mapPoints.add(mapPoint1);
+		mapPoints.add(mapPoint2);
+		// mock method
+		Mockito.when(mapRepository.getPoints(la, lo,radius, "rp,sos,st,org")).thenReturn(mapPoints);
 
-		List<MapPointsDto> lstMapPoints = new ArrayList<MapPointsDto>();
 		// call api
-		lstMapPoints = mapSerivceImpl.findAllPoints(la, lo, radius, typePoint);
+		List<MapPointsDto> lstMapPoints = mapSerivceImpl.findAllPoints(la, lo, radius, typePoint);
 
 		// compare result
-		//assertEquals(mappost[0].toString(), lstMapPoints.get(0).getId().toString());
+		assertEquals(mapPoint1[0].toString(), lstMapPoints.get(0).getId().toString());
 
 	}
 	
@@ -78,18 +79,19 @@ class MapSerivceImplTest {
 
 		// mock data
 		List<Object[]> mapPoints = new ArrayList<Object[]>();
-		Object[] mappost = new Object[] { new BigInteger("1"), "abc", "12.3412123", "5.2132132", "acs" };
-		mapPoints.add(mappost);
-		mapPoints.add(mappost);
+		Object[] mapPoint1 = new Object[] { new BigInteger("1"), "abc", "12.3412123", "5.2132132",new BigInteger("2"), "acs" };
+		Object[] mapPoint2 = new Object[] { new BigInteger("2"), "store", "11.3412123", "7.2132132",new BigInteger("4"), "abc" };
+		mapPoints.add(mapPoint1);
+		mapPoints.add(mapPoint2);
 		// mock
-		Mockito.when(mapRepository.getPoints(la, lo, radius, "")).thenReturn(mapPoints);
+		Mockito.when(mapRepository.getPoints(la, lo, radius, "rp,sos,st,org")).thenReturn(mapPoints);
 
 		List<MapPointsDto> lstMapPoints = new ArrayList<MapPointsDto>();
 		// call api
 		lstMapPoints = mapSerivceImpl.findAllPoints(la, lo, radius, typePoint);
 
 		// compare result
-		//assertEquals(mappost[0].toString(), lstMapPoints.get(0).getId().toString());
+		assertEquals(mapPoint1[0].toString(), lstMapPoints.get(0).getId().toString());
 
 	}
 
@@ -103,9 +105,10 @@ class MapSerivceImplTest {
 
 		// data mock 
 		List<Object[]> mapPoints = new ArrayList<Object[]>();
-		Object[] mappost = new Object[] { new BigInteger("1"), "abc", "12.3412123", "5.2132132", "acs" };
-		mapPoints.add(mappost);
-		mapPoints.add(mappost);
+		Object[] mapPoint1 = new Object[] { new BigInteger("1"), "abc", "12.3412123", "5.2132132",new BigInteger("2"), "acs" };
+		Object[] mapPoint2 = new Object[] { new BigInteger("2"), "store", "11.3412123", "7.2132132",new BigInteger("4"), "abc" };
+		mapPoints.add(mapPoint1);
+		mapPoints.add(mapPoint2);
 		// mock
 		Mockito.when(mapRepository.getPoints(la, lo, radius, typePoint)).thenReturn(mapPoints);
 
@@ -114,7 +117,7 @@ class MapSerivceImplTest {
 		lstMapPoints = mapSerivceImpl.findAllPoints(la, lo, radius, typePoint);
 
 		// compare result
-		assertEquals(mappost[0].toString(), lstMapPoints.get(0).getId().toString());
+		assertEquals(mapPoint1[0].toString(), lstMapPoints.get(0).getId().toString());
 
 	}
 	

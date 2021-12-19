@@ -3,8 +3,9 @@
  */
 package com.api.service.impl;
 
-import static org.hamcrest.CoreMatchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.api.dto.ReliefInformationDto;
 import com.api.dto.ReliefPointDto;
 import com.api.dto.ReliefPointFilterDto;
 import com.api.dto.SubDistrictDto;
+import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.Item;
 import com.api.entity.ReliefInformation;
@@ -77,6 +79,9 @@ class ReliefPointServiceImplTest {
 		
 		//mock data
 		ReliefPoint rp = new ReliefPoint();
+		User user = new User();
+		user.setId(2L);
+		rp.setUser_rp(user);
 		//mock
 		Mockito.when(reliefPointRepository.getById(id)).thenReturn(rp);
 		ReliefPointDto rpDto = new ReliefPointDto();
@@ -87,6 +92,45 @@ class ReliefPointServiceImplTest {
 		ReliefPointDto rpDtoRes = reliefPointService.getReliefPointById(id);
 		assertEquals(rpDto.getId(), rpDtoRes.getId());
 	}
+	
+	@Test
+	void testGetReliefPointByIdORG_UTCID01() {
+		//set input data for method
+		long id = 2L;
+		
+		//mock data
+		ReliefPointDto rpDto = new ReliefPointDto();
+		UserDto userDto = new UserDto();
+		userDto.setId(2L);
+		rpDto.setUser_rp(userDto);
+		
+		ReliefPoint rp = new ReliefPoint();
+		User user = new User();
+		user.setId(2L);
+		rp.setUser_rp(user);
+		
+		//mock
+		Mockito.when(reliefPointRepository.getById(id)).thenReturn(rp);
+		Mockito.when(mapStructMapper.reliefPointToreliefPointDto(any(ReliefPoint.class))).thenReturn(rpDto);
+		
+		//call method
+		ReliefPointDto rpDtoRes = reliefPointService.getReliefPointByIdORG(id);
+		
+		//verify
+		assertEquals(rpDto.getId(), rpDtoRes.getId());
+	}
+	
+//	@Test
+//    void testGetReliefPointByUser() {
+//        // Setup
+//		User user = new User();
+//		user.setId(2L);
+//		
+//        // Run the test
+//        final ReliefPoint result = reliefPointService.getReliefPointByUser(user);
+//
+//        // Verify the results
+//    }
 		
 
 	/**
@@ -307,11 +351,12 @@ class ReliefPointServiceImplTest {
 	void testGetReliefPointByIdAndUser_UTCID02() {
 		long rpId = 2;
 		long uId =3;
-		ReliefPoint rp = new ReliefPoint();
-		ReliefPointDto rpDto = new ReliefPointDto();
+		
+		//setup input
 		Optional<ReliefPoint> reliefPoint = Optional.empty();
+		
+		//mock method with return empty
 		Mockito.<Optional<ReliefPoint>>when(reliefPointRepository.findByIdAndUser(rpId, uId)).thenReturn(reliefPoint);
-		Mockito.when(mapStructMapper.reliefPointToreliefPointDto(rp)).thenReturn(rpDto);
 		
 		AppException appException = assertThrows(AppException.class, () -> {
 			//call method
@@ -359,7 +404,9 @@ class ReliefPointServiceImplTest {
 		
 		//call method
 		reliefPointService.updateStatusReliefPoint(r_id, status);
-		assertEquals(status,true);
+		
+		// Verify the results
+        verify(reliefPointRepository).save(rp);
 	}
 	
 	@Test
@@ -372,7 +419,7 @@ class ReliefPointServiceImplTest {
 		AppException appException = assertThrows(AppException.class, () -> {
 			
 			//call method
-			//reliefPointService.updateStatusReliefPoint(r_id, status);
+			reliefPointService.updateStatusReliefPoint(r_id, status);
 	    }); 
 		String expectedMessage = "ReliefPoint not exist";
 	    String actualMessage = appException.getMessage();
