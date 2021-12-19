@@ -20,15 +20,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.api.dto.AddressDto;
+import com.api.dto.CityDto;
+import com.api.dto.DistrictDto;
 import com.api.dto.GroupDto;
 import com.api.dto.OrganizationDto;
+import com.api.dto.SOSDto;
 import com.api.dto.StoreDto;
+import com.api.dto.SubDistrictDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UserDto;
 import com.api.entity.Address;
 import com.api.entity.City;
 import com.api.entity.District;
 import com.api.entity.Group;
+import com.api.entity.Image;
 import com.api.entity.Organization;
 import com.api.entity.Permission;
 import com.api.entity.Store;
@@ -114,20 +119,54 @@ public class UserServiceImplTest {
 		String token = "hsjusnwkscyshwja";
 		User u = new User();
 		u.setId(1);
+		u.setPassword("password");
+		u.setImages(new Image());
+		UserDto udto = new UserDto();
+		udto.setId(2);
+		Address a = new Address();
+		a.setId(1);
+		u.setAddress(a);
+		AddressDto addressDto = new AddressDto();
+		addressDto.setId(2);
+		CityDto c = new CityDto();
+		addressDto.setCity(c);
+		DistrictDto d = new DistrictDto();
+		addressDto.setDistrict(d);
+		SubDistrictDto sd = new SubDistrictDto();
+		addressDto.setSubDistrict(sd);
+		addressDto.setAddressLine1("Ha Bằng");
+		addressDto.setGPS_lati("21.243124323");
+		addressDto.setGPS_long("24.154353443");
+		OrganizationDto odto = new OrganizationDto();
+		odto.setId(1);
+		udto.setOrganization(odto);
+		Group g = new Group();
+		g.setId(1);
+		List<Group> lsgr = new ArrayList<Group>();
+		lsgr.add(g);
+		u.setGroups_user(lsgr);
+		GroupDto gdto = new GroupDto();
+		gdto.setId(1);
+		List<GroupDto> lsgdto = new ArrayList<GroupDto>();
+		lsgdto.add(gdto);
+		Organization o = new Organization();
+		o.setId(1);
+		u.setOrganization(o);
+		
 		// Mock
 		Mockito.when(jwtTokenUtil.getUserNameByToken(token)).thenReturn("Duong123");
 		Mockito.when(userRepository.findByUsername("Duong123")).thenReturn(u);
-		Mockito.when(mapStructMapper.userToUserDto(u)).thenReturn(new UserDto());
-		Mockito.when(mapStructMapper.lstGroupToGroupDto(new ArrayList<Group>())).thenReturn(new ArrayList<GroupDto>());
-		Mockito.when(mapStructMapper.addressToAddressDto(new Address())).thenReturn(new AddressDto());
-		Mockito.when(mapStructMapper.organizationToOrganizationDto(new Organization())).thenReturn(new OrganizationDto());
+		Mockito.when(mapStructMapper.userToUserDto(u)).thenReturn(udto);
+		Mockito.when(mapStructMapper.lstGroupToGroupDto(u.getGroups_user())).thenReturn(lsgdto);
+		Mockito.when(mapStructMapper.addressToAddressDto(u.getAddress())).thenReturn(addressDto);
+		Mockito.when(mapStructMapper.organizationToOrganizationDto(u.getOrganization())).thenReturn(odto);
 		
 		// Call method
 
 		UserDto ucheck = userServ.getUserbyToken(token);
 		
 	    // Compare
-	    assertEquals(0,ucheck.getId());
+	    assertEquals(2,ucheck.getId());
 	}
 	
 	@Test
@@ -247,15 +286,16 @@ public class UserServiceImplTest {
 		g.setId(1);
 		g.setLevel(1);
 		List<Group> lstGr = new ArrayList<Group>();
-		lstGr.add(new Group());
+		lstGr.add(g);
 		User u = new User();
 		u.setId(1);
 		u.setGroups_user(lstGr);
 		u.setPhone("0912572299");
+		u.setUsername("duongpt");
 		// Mock
-		Mockito.when(userRepository.findByUsername("duongpt")).thenReturn(null);
+		Mockito.when(userRepository.findByUsername(u.getUsername())).thenReturn(null);
 		Mockito.when(userRepository.findByPhone(u.getPhone())).thenReturn(Optional.empty());
-		Mockito.when(groupRepository.findById(gid)).thenReturn(Optional.empty());
+		Mockito.when(groupRepository.findById(g.getId())).thenReturn(Optional.empty());
 		
 		// Call method
 		AppException appException = assertThrows(AppException.class, () -> {
@@ -283,8 +323,9 @@ public class UserServiceImplTest {
 		u.setId(1);
 		u.setGroups_user(lstGr);
 		u.setPhone("0912572299");
+		u.setUsername("Duong123");
 		// Mock
-		Mockito.when(userRepository.findByUsername("Duong123")).thenReturn(null);
+		Mockito.when(userRepository.findByUsername(u.getUsername())).thenReturn(null);
 		Mockito.when(userRepository.findByPhone(u.getPhone())).thenReturn(Optional.of(u));
 		
 		// Call method
@@ -292,7 +333,7 @@ public class UserServiceImplTest {
 			//call method
 			userServ.registerUser(u);
 	    }); 
-		String expectedMessage = "Group is not exist!";
+		String expectedMessage = "Phone is exsit!";
 	    String actualMessage = appException.getMessage();
 		
 	    // Compare
@@ -799,9 +840,9 @@ public class UserServiceImplTest {
 		udto.setUsername("duongpt");
 		udto.setGroups_user(lstGrDto);
 		// Mock
-		Mockito.when(userRepository.findByUsername("duongpt")).thenReturn(null);
+		Mockito.when(userRepository.findByUsername(udto.getUsername())).thenReturn(null);
 		Mockito.when(userRepository.findByPhone(udto.getPhone())).thenReturn(Optional.empty());
-		Mockito.when(organizationRepository.findById(org.getId())).thenReturn(Optional.empty());
+		Mockito.when(groupRepository.findById(gdto.getId())).thenReturn(Optional.empty());
 		
 		// Call method
 		AppException appException = assertThrows(AppException.class, () -> {
@@ -864,7 +905,7 @@ public class UserServiceImplTest {
 		u.setGroups_user(lstGr);
 		String phone ="+84966048002";
 		// Mock
-		Mockito.when(userRepository.findByPhone(phone)).thenReturn(Optional.empty());
+		Mockito.when(userRepository.findByPhone("0966048002")).thenReturn(Optional.empty());
 
 	    // Call method
 		AppException appException = assertThrows(AppException.class, () -> {
@@ -927,7 +968,7 @@ public class UserServiceImplTest {
 		u.setGroups_user(lstGr);
 		String phone ="+84966048002";
 		// Mock
-		Mockito.when(userRepository.findByPhone(phone)).thenReturn(Optional.empty());
+		Mockito.when(userRepository.findByPhone("0966048002")).thenReturn(Optional.empty());
 
 	    // Call method
 		AppException appException = assertThrows(AppException.class, () -> {

@@ -183,8 +183,10 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "Username is existed!");
 		}
 
-		Optional.ofNullable(userRepository.findByPhone(user.getPhone())).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
-
+		if (userRepository.findByPhone(user.getPhone()).isPresent()) {
+			throw new AppException(403, "Phone is exsit!");
+		}
+		
 		List<Group> lstTem = user.getGroups_user();
 		for (Group group : lstTem) {
 			Optional<Group> grTemp = groupRepository.findById(group.getId());
@@ -370,10 +372,6 @@ public class UserSerivceImpl implements UserService {
 		// return user;
 	}
 
-	private void checkRoleAndUser() {
-
-	}
-
 //	public boolean checkRq_v2(User user) {
 //		
 //	}
@@ -531,12 +529,6 @@ public class UserSerivceImpl implements UserService {
 		User u = userRepository.findByUsername(username);
 		// u.getGroups_user();
 		return u;
-	}
-
-	@Override
-	public User getOne(Long id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

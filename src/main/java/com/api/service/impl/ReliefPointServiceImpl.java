@@ -466,7 +466,7 @@ public class ReliefPointServiceImpl implements ReliefPointService {
 	@Override
 	public List<User> getAllAssignUser(Long rp_id, String search) {
 		Optional<ReliefPoint> rp = reliefPointRepository.findById(rp_id);
-		if (rp == null) {
+		if (rp.isEmpty()) {
 			throw new AppException(403, "Relief point is not existed!");
 		}
 		List<User> lsRs = new ArrayList<User>();

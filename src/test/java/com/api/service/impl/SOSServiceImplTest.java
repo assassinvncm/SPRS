@@ -33,6 +33,7 @@ import com.api.mapper.MapStructMapper;
 import com.api.repositories.SOSRepository;
 import com.api.repositories.UserRepository;
 import com.api.service.AddressService;
+import com.api.service.NotificationService;
 import com.api.service.SOSService;
 import com.exception.AppException;
 
@@ -56,6 +57,9 @@ public class SOSServiceImplTest {
 
 	@Mock
 	AddressService addressService;
+	
+	@Mock
+	NotificationService notificationService;
 	
 	@InjectMocks
 	SOSService sosServ = new SOSServiceImpl();
@@ -115,25 +119,29 @@ public class SOSServiceImplTest {
 		addressDto.setGPS_lati("21.243124323");
 		addressDto.setGPS_long("24.154353443");
 		SOSDto sdto = new SOSDto();
+		sdto.setId(1);
 		sdto.setDescription("test");
 		sdto.setAddress(addressDto);
 		sdto.setStatus(1);
 		sdto.setLevel(1);
-
-		//mock
 		User u = new User();
 		SOS s = new SOS();
 		s.setDescription("test");
-		s.setStatus(1);
+		s.setStatus(0);
 		s.setLevel(1);
-		Mockito.when(mapStructMapper.SOSDtoToSOS(sdto)).thenReturn(s);
-		u.setUser_sos(mapStructMapper.SOSDtoToSOS(sdto));
+		u.setUser_sos(s);
+
+		//mock
 		Mockito.when(userRepo.getById(udto.getId())).thenReturn(u);
 		Mockito.when(addressService.mapAddress(sdto.getAddress())).thenReturn(new Address());
-		Mockito.when(sosRepo.save(s)).thenReturn(s);
+		Mockito.when(userRepo.save(u)).thenReturn(u);
+		Mockito.doNothing().when(notificationService).sendPnsToDeviceWhenOpenSOS(u, "Có một địa điểm SOS được tạo gần bạn");
 
 		//call method
-		sosServ.updateStatusSOS(sdto, udto);
+		SOSDto scheck = sosServ.updateStatusSOS(sdto, udto);
+		
+		//
+		assertEquals(sdto.getId(), scheck.getId());
 	}
 	
 	@Test
@@ -165,12 +173,13 @@ public class SOSServiceImplTest {
 		s.setDescription("test");
 		s.setStatus(1);
 		s.setLevel(1);
+		Address a = new Address();
+		a.setId(1);
 		u.setUser_sos(s);
+		u.setAddress(a);
 		
 		//mock
 		Mockito.when(userRepo.getUserBySosId(id)).thenReturn(Optional.empty());
-		Mockito.when(mapStructMapper.SOSToSOSDto(s)).thenReturn(sdto);
-		Mockito.when(mapStructMapper.addressToAddressDto(new Address())).thenReturn(addressDto);
 		
 		//call method
 		AppException appException = assertThrows(AppException.class, () -> {
@@ -211,10 +220,13 @@ public class SOSServiceImplTest {
 		s.setStatus(1);
 		s.setLevel(1);
 		u.setUser_sos(s);
+		u.setFull_name("Duongpt");
+		u.setPhone("12345");
+		u.setId(1);
 		//mock
 		Mockito.when(userRepo.getUserBySosId(id)).thenReturn(Optional.of(u));
-		Mockito.when(mapStructMapper.SOSToSOSDto(s)).thenReturn(sdto);
-		Mockito.when(mapStructMapper.addressToAddressDto(new Address())).thenReturn(addressDto);
+		Mockito.when(mapStructMapper.SOSToSOSDto(u.getUser_sos())).thenReturn(sdto);
+		Mockito.when(mapStructMapper.addressToAddressDto(u.getAddress())).thenReturn(addressDto);
 
 		//call method
 		sosServ.getSOSCommon(id);

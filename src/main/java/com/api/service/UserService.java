@@ -132,13 +132,6 @@ public interface UserService {
 	
 	/**
 	 * 
-	 * @param id
-	 * @return
-	 */
-	User getOne(Long id);
-	
-	/**
-	 * 
 	 * @param name
 	 * @return List<User>
 	 */

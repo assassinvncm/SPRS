@@ -94,8 +94,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -966,14 +964,19 @@ class ReliefPointServiceImplTest {
         final ImageDto image = new ImageDto();
         image.setImageName("imageName");
         image.setEncodedImage("encodedImage");
-        image.setId(0L);
+        image.setId((long) 1);
+        ReliefPoint rp = new ReliefPoint();
+        rp.setId(1);
 
+        when(reliefPointRepository.getById(image.getId())).thenReturn(rp);
         when(mockAmazonClient.uploadFile(any(ImageDto.class))).thenReturn("result");
+        when(reliefPointRepository.save(rp)).thenReturn(rp);
 
         // Run the test
         final ReliefPoint result = reliefPointService.uploadReliefImg(image);
 
         // Verify the results
+        assertEquals(image.getId(), result.getId());
     }
 
     @Test
@@ -983,12 +986,34 @@ class ReliefPointServiceImplTest {
         gdto.setSource_id(0L);
         gdto.setTarget_id(0L);
 
-        when(reliefPointRepository.assignRef(0L, 0L)).thenReturn("result");
+        when(reliefPointRepository.assignRef(gdto.getSource_id(), gdto.getTarget_id())).thenReturn("DONE-E0001-result");
 
         // Run the test
         final GrantAccessDto result = reliefPointService.assignRef(gdto);
 
         // Verify the results
+        assertEquals(gdto.getSource_id(), result.getSource_id());
+    }
+
+    @Test
+    void testAssignRef_UTCID02() {
+        // Setup
+        final GrantAccessDto gdto = new GrantAccessDto();
+        gdto.setSource_id(0L);
+        gdto.setTarget_id(0L);
+
+        when(reliefPointRepository.assignRef(gdto.getSource_id(), gdto.getTarget_id())).thenReturn("FAIL-E0001-result");
+
+        // Call method
+ 		AppException appException = assertThrows(AppException.class, () -> {
+ 			//call method
+ 			reliefPointService.assignRef(gdto);
+ 	    }); 
+ 		String expectedMessage = "result";
+ 	    String actualMessage = appException.getMessage();
+ 		
+ 	    //compare
+ 	    assertEquals(expectedMessage,actualMessage);
     }
 
     @Test
@@ -1009,15 +1034,104 @@ class ReliefPointServiceImplTest {
     @Test
     void testGetAllAssignUser_UTCID01() {
         // Setup
+    	Long rp_id = (long) 1;
+    	String search = "s";
+    	ReliefPoint rp = new ReliefPoint();
+    	rp.setId(1);
+    	List<User> lstUser = new ArrayList<User>();
+    	User u = new User();
+    	u.setId(1);
+    	u.setUsername("ss");
+    	User u1 = new User();
+    	u1.setId(1);
+    	u1.setUsername("uu");
+    	lstUser.add(u1);
+    	lstUser.add(u);
+    	rp.setRelief_user(lstUser);
         // Run the test
-        final List<User> result = reliefPointService.getAllAssignUser(0L, "search");
+        when(reliefPointRepository.findById(rp_id)).thenReturn(Optional.of(rp));
+        final List<User> result = reliefPointService.getAllAssignUser(rp_id,search);
 
         // Verify the results
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void testGetAllAssignUser_UTCID02() {
+        // Setup
+    	Long rp_id = (long) 1;
+    	String search = "";
+    	ReliefPoint rp = new ReliefPoint();
+    	rp.setId(1);
+    	List<User> lstUser = new ArrayList<User>();
+    	User u = new User();
+    	u.setId(1);
+    	u.setUsername("ss");
+    	User u1 = new User();
+    	u1.setId(1);
+    	u1.setUsername("uu");
+    	lstUser.add(u1);
+    	lstUser.add(u);
+    	rp.setRelief_user(lstUser);
+        // Run the test
+        when(reliefPointRepository.findById(rp_id)).thenReturn(Optional.of(rp));
+        final List<User> result = reliefPointService.getAllAssignUser(rp_id,search);
+
+        // Verify the results
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void testGetAllAssignUser_UTCID03() {
+        // Setup
+    	Long rp_id = (long) 2;
+    	String search = "";
+    	ReliefPoint rp = new ReliefPoint();
+    	rp.setId(1);
+    	List<User> lstUser = new ArrayList<User>();
+    	User u = new User();
+    	u.setId(1);
+    	u.setUsername("ss");
+    	User u1 = new User();
+    	u1.setId(1);
+    	u1.setUsername("uu");
+    	lstUser.add(u1);
+    	lstUser.add(u);
+    	rp.setRelief_user(lstUser);
+        // Run the test
+        when(reliefPointRepository.findById(rp_id)).thenReturn(Optional.empty());
+
+        AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+        	reliefPointService.getAllAssignUser(rp_id,search);
+	    }); 
+		String expectedMessage = "Relief point is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
     }
 
     @Test
     void testGetAllUnassignUser_UTCID01() {
         // Setup
+    	Long rp_id = (long) 1;
+    	String search = "s";
+    	ReliefPoint rp = new ReliefPoint();
+    	rp.setId(1);
+    	List<User> lstUser = new ArrayList<User>();
+    	User u = new User();
+    	u.setId(1);
+    	u.setUsername("ss");
+    	User u1 = new User();
+    	u1.setId(1);
+    	u1.setUsername("uu");
+    	lstUser.add(u1);
+    	lstUser.add(u);
+    	rp.setRelief_user(lstUser);
+    	Organization o = new Organization();
+    	o.setId(1);
+    	rp.setOrganization(o);
         // Configure UserRepository.getUserInOrg(...).
         final Group group = new Group();
         group.setPlatform(0);
@@ -1035,25 +1149,118 @@ class ReliefPointServiceImplTest {
         permission.setName("name");
         group.setGroup_permission(Arrays.asList(permission));
         group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+        
+        when(reliefPointRepository.getById(rp_id)).thenReturn(rp);
         final List<User> users = Arrays.asList(new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)));
-        when(mockUserRepo.getUserInOrg(0L)).thenReturn(users);
+        when(mockUserRepo.getUserInOrg(o.getId())).thenReturn(users);
 
         // Run the test
-        final List<User> result = reliefPointService.getAllUnassignUser(0L, "search");
+        final List<User> result = reliefPointService.getAllUnassignUser(rp_id, search);
 
         // Verify the results
+        assertEquals(1, result.size());
     }
 
     @Test
     void testGetAllUnassignUser_UTCID02() {
         // Setup
-        when(mockUserRepo.getUserInOrg(0L)).thenReturn(Collections.emptyList());
+    	Long rp_id = (long) 1;
+    	String search = "";
+    	ReliefPoint rp = new ReliefPoint();
+    	rp.setId(1);
+    	List<User> lstUser = new ArrayList<User>();
+    	User u = new User();
+    	u.setId(1);
+    	u.setUsername("ss");
+    	User u1 = new User();
+    	u1.setId(1);
+    	u1.setUsername("uu");
+    	lstUser.add(u1);
+    	lstUser.add(u);
+    	rp.setRelief_user(lstUser);
+    	Organization o = new Organization();
+    	o.setId(1);
+    	rp.setOrganization(o);
+        // Configure UserRepository.getUserInOrg(...).
+        final Group group = new Group();
+        group.setPlatform(0);
+        group.setName("name");
+        group.setLevel(0);
+        group.setCode("code");
+        final Permission permission = new Permission();
+        permission.setLevel(0);
+        permission.setNode_index(0);
+        permission.setNode_from(0);
+        permission.setNode_to(0);
+        permission.setTo_page("to_page");
+        permission.setIcon_name("icon_name");
+        permission.setCode("code");
+        permission.setName("name");
+        group.setGroup_permission(Arrays.asList(permission));
+        group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+        
+        when(reliefPointRepository.getById(rp_id)).thenReturn(rp);
+        final List<User> users = Arrays.asList(new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(group)));
+        when(mockUserRepo.getUserInOrg(o.getId())).thenReturn(users);
 
         // Run the test
-        final List<User> result = reliefPointService.getAllUnassignUser(0L, "search");
+        final List<User> result = reliefPointService.getAllUnassignUser(rp_id, search);
 
         // Verify the results
-        assertEquals(Collections.emptyList(), result);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void testGetAllUnassignUser_UTCID03() {
+        // Setup
+    	Long rp_id = (long) 1;
+    	String search = "";
+    	ReliefPoint rp = new ReliefPoint();
+    	rp.setId(1);
+    	List<User> lstUser = new ArrayList<User>();
+    	User u = new User();
+    	u.setId(1);
+    	u.setUsername("ss");
+    	User u1 = new User();
+    	u1.setId(1);
+    	u1.setUsername("uu");
+    	lstUser.add(u1);
+    	lstUser.add(u);
+    	rp.setRelief_user(lstUser);
+    	Organization o = new Organization();
+    	o.setId(1);
+    	rp.setOrganization(o);
+        // Configure UserRepository.getUserInOrg(...).
+        final Group group = new Group();
+        group.setPlatform(0);
+        group.setName("name");
+        group.setLevel(0);
+        group.setCode("code");
+        final Permission permission = new Permission();
+        permission.setLevel(0);
+        permission.setNode_index(0);
+        permission.setNode_from(0);
+        permission.setNode_to(0);
+        permission.setTo_page("to_page");
+        permission.setIcon_name("icon_name");
+        permission.setCode("code");
+        permission.setName("name");
+        group.setGroup_permission(Arrays.asList(permission));
+        group.setUsers_groups(Arrays.asList(new User("username", "phone", "password", "full_name", "dob", new Address("city", "province", "district", new SubDistrict("code", "name", new District("code", "name", new City("code", "name", Arrays.asList()), Arrays.asList()), Arrays.asList()), "addressLine", "gPS_Long", "gPS_Lati"), Date.valueOf(LocalDate.of(2020, 1, 1)), false, Arrays.asList(new Group()))));
+        
+        when(reliefPointRepository.getById(rp_id)).thenReturn(null);
+
+        // Run the test
+
+        AppException appException = assertThrows(AppException.class, () -> {
+			//call method
+        	reliefPointService.getAllUnassignUser(rp_id, search);
+	    }); 
+		String expectedMessage = "Relief point is not existed!";
+	    String actualMessage = appException.getMessage();
+		
+	    // Compare
+	    assertEquals(expectedMessage,actualMessage);
     }
 
 }
