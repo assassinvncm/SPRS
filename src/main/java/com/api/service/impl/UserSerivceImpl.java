@@ -372,10 +372,6 @@ public class UserSerivceImpl implements UserService {
 		// return user;
 	}
 
-	private void checkRoleAndUser() {
-
-	}
-
 //	public boolean checkRq_v2(User user) {
 //		
 //	}
@@ -533,12 +529,6 @@ public class UserSerivceImpl implements UserService {
 		User u = userRepository.findByUsername(username);
 		// u.getGroups_user();
 		return u;
-	}
-
-	@Override
-	public User getOne(Long id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
