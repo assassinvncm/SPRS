@@ -36,12 +36,18 @@ public class SOSServiceImpl implements SOSService{
 		s.setDescription(sosDto.getDescription());
 		s.setAddress(mapStructMapper.addressDtoToAddress(sosDto.getAddress()));
 		s.setLevel(sosDto.getLevel());
+<<<<<<< HEAD
+		s.setStatus(sosDto.isStatus());
+=======
 		s.setStatus(sosDto.getStatus());
+>>>>>>> origin/develop
 		u.setUser_sos(s);
 		userRepo.save(u);
 		return sosDto;
 	}
 
+<<<<<<< HEAD
+=======
 	@Override
 	public SOSDto getSOSCommon(long id) {
 		User u = userRepo.getUserBySosId(id).orElseThrow(()-> new AppException(403,"SOS not exist"));
@@ -57,4 +63,5 @@ public class SOSServiceImpl implements SOSService{
 		return SOSDto;
 	}
 
+>>>>>>> origin/develop
 }
