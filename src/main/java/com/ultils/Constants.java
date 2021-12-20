@@ -65,6 +65,6 @@ public class Constants {
 	public static final int STORE_STATUS_CLOSED = 1;
 	public static final int STORE_STATUS_TEM_ClOSED = 2;
 	//Constant for status SOS
-	public static final int SOS_STATUS_TURNON = 0;
-	public static final int SOS_STATUS_TURNOF = 1;
+	public static final int SOS_STATUS_TURNON = 1;
+	public static final int SOS_STATUS_TURNOF = 0;
 }
