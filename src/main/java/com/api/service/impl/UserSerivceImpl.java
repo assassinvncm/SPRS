@@ -183,7 +183,9 @@ public class UserSerivceImpl implements UserService {
 			throw new AppException(403, "Username is existed!");
 		}
 
-		Optional.ofNullable(userRepository.findByPhone(user.getPhone())).orElseThrow(() -> new AppException(403, "Phone is exsit!"));
+		if (userRepository.findByPhone(user.getPhone()).isPresent()) {
+			throw new AppException(403, "Phone is exsit!");
+		}
 
 		List<Group> lstTem = user.getGroups_user();
 		for (Group group : lstTem) {
