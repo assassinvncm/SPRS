@@ -1,15 +1,25 @@
 package com.api.service.impl;
 
+<<<<<<< HEAD
+import java.util.List;
+=======
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+>>>>>>> origin/develop
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
+import org.springframework.stereotype.Service;
+
+import com.api.dto.ReliefPointDto;
+import com.api.dto.StoreDto;
+=======
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +33,7 @@ import com.api.dto.SearchFilterDto;
 import com.api.dto.StoreCategoryDto;
 import com.api.dto.StoreDto;
 import com.api.dto.UserDto;
+>>>>>>> origin/develop
 import com.api.entity.Address;
 import com.api.entity.Image;
 import com.api.entity.ReliefInformation;
@@ -31,6 +42,12 @@ import com.api.entity.Store;
 import com.api.entity.StoreCategory;
 import com.api.entity.User;
 import com.api.mapper.MapStructMapper;
+<<<<<<< HEAD
+import com.api.mapper.proc_mapper.StoreFilterMapper;
+import com.api.repositories.StoreRepository;
+import com.api.service.AddressService;
+import com.api.service.StoreService;
+=======
 import com.api.mapper.proc_mapper.ProcedureMapper;
 import com.api.repositories.StoreRepository;
 import com.api.service.AddressService;
@@ -38,6 +55,7 @@ import com.api.service.AmazonClient;
 import com.api.service.NotificationService;
 import com.api.service.StoreService;
 import com.common.utils.DateUtils;
+>>>>>>> origin/develop
 import com.exception.AppException;
 
 @Service
@@ -54,6 +72,8 @@ public class StoreServiceImpl implements StoreService{
 	@Autowired
 	ModelMapper modelMapper;
 	
+<<<<<<< HEAD
+=======
 	@Autowired 
 	ProcedureMapper mapper;
 	
@@ -63,6 +83,7 @@ public class StoreServiceImpl implements StoreService{
 	@Autowired
 	NotificationService notificationService;
 	
+>>>>>>> origin/develop
 	@Override
 	public Store getStoreById(Long id) {
 		Store st = storeRepository.getById(id);
@@ -100,8 +121,12 @@ public class StoreServiceImpl implements StoreService{
 		try {
 			Address address = addressService.mapAddress(s.getAddress());
 			store.setLocation(address);
+<<<<<<< HEAD
+			store.setStatus(true); 
+=======
 			store.setStatus(1); 
 			store.setCreate_time(DateUtils.getCurrentSqlDate());
+>>>>>>> origin/develop
 			str = storeRepository.save(store);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,6 +135,29 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
+<<<<<<< HEAD
+	public Store updateStore(Store s) {
+		// TODO Auto-generated method stub
+		Store st = storeRepository.getById(s.getId());
+		if(null == st) {
+			throw new AppException(402,"Store is not Found!");
+		}
+		BeanUtils.copyProperties(st, s);
+		
+		return storeRepository.save(s);
+	}
+
+	@Override
+	public Store updateStoreImg(Store s, String img_url) {
+		// TODO Auto-generated method stub
+		Store st = storeRepository.getById(s.getId());
+		if(null == st) {
+			throw new AppException(402,"Store is not Found!");
+		}
+		st.getLstImage().add(new Image(st, img_url));
+		
+		return storeRepository.save(s);
+=======
 	public Store updateStore(StoreDto s) {
 		// TODO Auto-generated method stub
 //		Store st = storeRepository.getById(s.getId());
@@ -187,6 +235,7 @@ public class StoreServiceImpl implements StoreService{
 //		st.getLstImage().add(new Image(st, img_url));
 		
 		return storeRepository.save(st);
+>>>>>>> origin/develop
 	}
 
 	@Override
@@ -213,6 +262,11 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
+<<<<<<< HEAD
+	public List<User> getStoreFilterByType() {
+		List<User> stm = storeRepository.filterStoreByStatusType(true, "yess");
+		return stm;
+=======
 	public Map<String, Object> getStoreFilterByType(long user_id, SearchFilterDto filter) {
 		List<StoreDto> lstStoreRs = new ArrayList<StoreDto>();
 		Sort sortable = null;
@@ -250,5 +304,6 @@ public class StoreServiceImpl implements StoreService{
 		response.put("stores", stDto);
 	    response.put("isSubcribe", isSubcribe);
 		return 	response;
+>>>>>>> origin/develop
 	}
 }

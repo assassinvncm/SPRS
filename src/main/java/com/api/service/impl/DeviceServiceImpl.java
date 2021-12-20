@@ -164,7 +164,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public void deleteDeviceToken(Long device_id) {
 		// TODO Auto-generated method stub
-		Device device = deviceRepository.findById(device_id).orElseThrow(() -> new AppException());
+		Device device = deviceRepository.findById(device_id).orElseThrow(() -> new AppException(402,"Device not exist"));
 		device.setToken(null);
 		Device responseDevice = deviceRepository.save(device);
 	}
