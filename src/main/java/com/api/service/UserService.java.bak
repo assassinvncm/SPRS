@@ -3,9 +3,12 @@ package com.api.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.api.dto.AddressDto;
 import com.api.dto.GrantAccessDto;
 import com.api.dto.ImageDto;
+import com.api.dto.PagingResponse;
 import com.api.dto.SearchFilterDto;
 import com.api.dto.SubcribeDto;
 import com.api.dto.UpdatePasswordDto;
@@ -29,6 +32,20 @@ public interface UserService {
 	 * @return username
 	 */
 	String getUsernameByPhone(String phone);
+	
+	/**
+	 * 
+	 * @param phone number
+	 * @return username
+	 */
+	User getUserByPhone(String phone);
+	
+	/**
+	 * 
+	 * @param phone number
+	 * @return username
+	 */
+	boolean checkRegisUser(String phone, String username);
 	
 	/**
 	 * 
@@ -125,7 +142,7 @@ public interface UserService {
 	 * @param name
 	 * @return List<User>
 	 */
-	List<User> getUsernameLike(String name);
+	Map<String, Object> getUsernameLike(SearchFilterDto sft);
 	
 	/**
 	 * 
@@ -199,10 +216,17 @@ public interface UserService {
 	
 	/**
 	 * 
+	 * @param id
+	 * @return user
+	 */
+	User activeOrganizeUser(Long id);
+	
+	/**
+	 * 
 	 * @param ImageDto
 	 * @return User
 	 */
-	User uploadStoreImg(ImageDto image);
+	User uploadUserImg(ImageDto image);
 	
 	/**
 	 * banned user
@@ -223,6 +247,6 @@ public interface UserService {
 	 * @param ImageDto
 	 * @return User
 	 */
-	List<UserDto> getBannedUser();
+	PagingResponse<UserDto> getUserByAdmin(List<String> groupCode,List<String> filterStatus ,String searchStr, int pageIndex, int pageSize);
 
 }
